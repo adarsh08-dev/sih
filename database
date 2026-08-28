@@ -1,0 +1,210 @@
+CREATE DATABASE skillbridge_ai;
+
+USE skillbridge_ai;
+
+
+/* STUDENTS */
+
+CREATE TABLE students (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    name VARCHAR(150) NOT NULL,
+
+    course VARCHAR(100),
+
+    batch VARCHAR(20),
+
+    target_role VARCHAR(150),
+
+    career_readiness INT DEFAULT 0,
+
+    experience_score INT DEFAULT 0,
+
+    created_at TIMESTAMP
+    DEFAULT CURRENT_TIMESTAMP
+
+);
+
+
+/* SKILLS */
+
+CREATE TABLE skills (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    skill_name VARCHAR(100) NOT NULL,
+
+    category VARCHAR(100)
+
+);
+
+
+/* STUDENT SKILLS */
+
+CREATE TABLE student_skills (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    student_id INT,
+
+    skill_id INT,
+
+    proficiency INT DEFAULT 0,
+
+    FOREIGN KEY(student_id)
+        REFERENCES students(id),
+
+    FOREIGN KEY(skill_id)
+        REFERENCES skills(id)
+
+);
+
+
+/* MENTORS */
+
+CREATE TABLE mentors (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    name VARCHAR(150),
+
+    role VARCHAR(150),
+
+    company VARCHAR(150),
+
+    experience_years INT,
+
+    availability BOOLEAN DEFAULT TRUE
+
+);
+
+
+/* MENTOR BOOKINGS */
+
+CREATE TABLE mentor_bookings (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    student_id INT,
+
+    mentor_id INT,
+
+    session_date DATE,
+
+    session_time TIME,
+
+    duration_minutes INT DEFAULT 15,
+
+    status VARCHAR(30)
+    DEFAULT 'pending',
+
+    FOREIGN KEY(student_id)
+        REFERENCES students(id),
+
+    FOREIGN KEY(mentor_id)
+        REFERENCES mentors(id)
+
+);
+
+
+/* INDUSTRY COMPANIES */
+
+CREATE TABLE companies (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    company_name VARCHAR(150),
+
+    industry VARCHAR(100),
+
+    verified BOOLEAN DEFAULT FALSE
+
+);
+
+
+/* MICRO INTERNSHIP GIGS */
+
+CREATE TABLE gigs (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    company_id INT,
+
+    title VARCHAR(200),
+
+    description TEXT,
+
+    required_skill VARCHAR(100),
+
+    duration_hours INT,
+
+    payment DECIMAL(10,2),
+
+    status VARCHAR(30)
+    DEFAULT 'open',
+
+    created_at TIMESTAMP
+    DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(company_id)
+        REFERENCES companies(id)
+
+);
+
+
+/* GIG APPLICATIONS */
+
+CREATE TABLE gig_applications (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    gig_id INT,
+
+    student_id INT,
+
+    message TEXT,
+
+    status VARCHAR(30)
+    DEFAULT 'submitted',
+
+    created_at TIMESTAMP
+    DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(gig_id)
+        REFERENCES gigs(id),
+
+    FOREIGN KEY(student_id)
+        REFERENCES students(id)
+
+);
+
+
+/* EXPERIENCE PASSPORT */
+
+CREATE TABLE experience_records (
+
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    student_id INT,
+
+    title VARCHAR(200),
+
+    company_id INT,
+
+    experience_type VARCHAR(100),
+
+    verified BOOLEAN DEFAULT FALSE,
+
+    score INT DEFAULT 0,
+
+    created_at TIMESTAMP
+    DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(student_id)
+        REFERENCES students(id),
+
+    FOREIGN KEY(company_id)
+        REFERENCES companies(id)
+
+);
