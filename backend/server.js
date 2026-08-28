@@ -12,88 +12,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-/* ================= IN-MEMORY FALLBACK DATA ================= */
-const fallbackStudents = [
-  {
-    id: 1,
-    name: "Adarsh Pratap Singh",
-    course: "CSIT",
-    batch: "2025-29",
-    target_role: "Full Stack Software Engineer",
-    career_readiness: 81,
-    experience_score: 64
-  }
-];
-
-const fallbackMentors = [
-  {
-    id: 1,
-    name: "Rohan Mehta",
-    role: "Senior Software Architect",
-    company: "TechNova Labs",
-    experience_years: 12,
-    match: 94,
-    availability: true
-  },
-  {
-    id: 2,
-    name: "Priya Sharma",
-    role: "Engineering Manager",
-    company: "CloudSphere",
-    experience_years: 10,
-    match: 91,
-    availability: true
-  },
-  {
-    id: 3,
-    name: "Arjun Kapoor",
-    role: "AI/ML Lead",
-    company: "DataSphere AI",
-    experience_years: 14,
-    match: 88,
-    availability: true
-  },
-  {
-    id: 4,
-    name: "Aryan Mehrotra",
-    role: "Senior Software Developer",
-    company: "My Tech",
-    experience_years: 10,
-    match: 92,
-    availability: true
-  }
-];
-
-const fallbackGigs = [
-  {
-    id: 1,
-    title: "Build a Responsive Product Landing Page",
-    company: "TechNova Labs",
-    required_skill: "Web Development",
-    duration_hours: 3,
-    payment: 1500,
-    status: "open"
-  },
-  {
-    id: 2,
-    title: "Build an Authenticated REST API",
-    company: "CloudSphere",
-    required_skill: "Backend",
-    duration_hours: 5,
-    payment: 3500,
-    status: "open"
-  },
-  {
-    id: 3,
-    title: "SQL Business Analytics Challenge",
-    company: "FinEdge Solutions",
-    required_skill: "SQL",
-    duration_hours: 3,
-    payment: 1800,
-    status: "open"
-  }
-];
-
 /* ================= HEALTH & DB STATUS ================= */
 app.get("/api/health", async (req, res) => {
   const dbStatus = await db.checkDatabaseConnection();
@@ -130,16 +48,14 @@ app.get("/api/student", async (req, res) => {
     console.error("DB query error in /api/student:", err.message);
   }
 
-  // Fallback
-  const s = fallbackStudents[0];
   res.json({
-    id: s.id,
-    name: s.name,
-    course: s.course,
-    batch: s.batch,
-    targetRole: s.target_role,
-    careerReadiness: s.career_readiness,
-    experienceScore: s.experience_score
+    id: 1,
+    name: "Adarsh Pratap Singh",
+    course: "CSIT",
+    batch: "2025-29",
+    targetRole: "Full Stack Software Engineer",
+    careerReadiness: 81,
+    experienceScore: 64
   });
 });
 
@@ -149,7 +65,7 @@ app.get("/api/mentors", async (req, res) => {
     const result = await db.query(
       "SELECT id, name, role, company, experience_years, availability FROM mentors ORDER BY id ASC"
     );
-    if (result && result.rows.length > 0) {
+    if (result && result.rows) {
       const mapped = result.rows.map((m, idx) => ({
         id: m.id,
         name: m.name,
@@ -161,11 +77,11 @@ app.get("/api/mentors", async (req, res) => {
       }));
       return res.json(mapped);
     }
+    return res.json([]);
   } catch (err) {
     console.error("DB query error in /api/mentors:", err.message);
+    return res.status(500).json({ error: "Failed to fetch mentors from database" });
   }
-
-  res.json(fallbackMentors);
 });
 
 /* ================= BEST MENTOR ================= */
@@ -185,12 +101,11 @@ app.get("/api/mentors/best-match", async (req, res) => {
         match: 94
       });
     }
+    return res.status(404).json({ error: "No mentors found in database" });
   } catch (err) {
     console.error("DB query error in /api/mentors/best-match:", err.message);
+    return res.status(500).json({ error: "Database error fetching best mentor match" });
   }
-
-  const best = [...fallbackMentors].sort((a, b) => b.match - a.match)[0];
-  res.json(best);
 });
 
 /* ================= POST MENTOR ================= */
@@ -257,7 +172,7 @@ app.get("/api/gigs", async (req, res) => {
        LEFT JOIN companies c ON g.company_id = c.id
        ORDER BY g.id ASC`
     );
-    if (result && result.rows.length > 0) {
+    if (result && result.rows) {
       const mapped = result.rows.map((g) => ({
         id: g.id,
         title: g.title,
@@ -269,11 +184,11 @@ app.get("/api/gigs", async (req, res) => {
       }));
       return res.json(mapped);
     }
+    return res.json([]);
   } catch (err) {
     console.error("DB query error in /api/gigs:", err.message);
+    return res.status(500).json({ error: "Failed to fetch gigs from database" });
   }
-
-  res.json(fallbackGigs);
 });
 
 /* ================= POST NEW GIG ================= */
