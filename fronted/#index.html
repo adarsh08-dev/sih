@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillBridge AI | Industry Career OS</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">SB</div>
+
+        <div>
+            <h2>SkillBridge AI</h2>
+            <small>Industry Career OS</small>
+        </div>
+    </div>
+
+    <div class="menu-title">WORKSPACE</div>
+
+    <button class="nav active" onclick="openPage('dashboard',this)">
+        Dashboard
+    </button>
+
+    <button class="nav" onclick="openPage('career',this)">
+        AI Career Twin
+    </button>
+
+    <button class="nav" onclick="openPage('skills',this)">
+        Skill Intelligence
+    </button>
+
+    <button class="nav" onclick="openPage('mentors',this)">
+        AI Mentorship Matchmaker
+    </button>
+
+    <button class="nav" onclick="openPage('gigs',this)">
+        Micro-Internship Gig Board
+    </button>
+
+    <button class="nav" onclick="openPage('jobs',this)">
+        Internships & Placement
+    </button>
+
+    <button class="nav" onclick="openPage('industry',this)">
+        Industry Collaboration
+    </button>
+
+    <button class="nav" onclick="openPage('passport',this)">
+        Experience Passport
+    </button>
+
+    <div class="menu-title">ANALYTICS</div>
+
+    <button class="nav" onclick="openPage('analytics',this)">
+        Career Analytics
+    </button>
+
+    <div class="student-card">
+
+        <div class="student-avatar">
+            AS
+        </div>
+
+        <div>
+            <b>Adarsh Pratap Singh</b>
+
+            <small>
+                CSIT · Batch 2025–29
+            </small>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="search-area">
+
+            <input
+                id="globalSearch"
+                placeholder="Search skills, mentors, internships..."
+            >
+
+        </div>
+
+        <div class="profile">
+
+            <button onclick="showNotifications()" class="notification">
+                Alerts
+            </button>
+
+            <div class="avatar">
+                AS
+            </div>
+
+            <div>
+                <b>Adarsh Pratap Singh</b>
+
+                <small>
+                    CSIT · 2025–29
+                </small>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <div class="content">
+
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard" class="page active">
+
+            <div class="hero">
+
+                <div>
+
+                    <span class="eyebrow">
+                        AI-POWERED CAREER INTELLIGENCE
+                    </span>
+
+                    <h1>
+                        From classroom learning to
+                        verified industry experience.
+                    </h1>
+
+                    <p>
+                        SkillBridge AI connects students with
+                        industry mentors, skill intelligence,
+                        micro-internships, company challenges
+                        and placement opportunities through
+                        one integrated career ecosystem.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <button
+                            class="primary-btn"
+                            onclick="runAssessment()"
+                        >
+                            Run AI Career Assessment
+                        </button>
+
+                        <button
+                            class="dark-btn"
+                            onclick="openPage('gigs')"
+                        >
+                            Explore Industry Gigs
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-score">
+
+                    <span>Career Readiness</span>
+
+                    <strong>81%</strong>
+
+                    <small>
+                        +14% this semester
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <span>Industry Compatibility</span>
+
+                    <strong>89%</strong>
+
+                    <small>High alignment</small>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>Experience Score</span>
+
+                    <strong id="experienceScore">
+                        64
+                    </strong>
+
+                    <small>3 verified tasks</small>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>Placement Readiness</span>
+
+                    <strong>86</strong>
+
+                    <small>Top cohort segment</small>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>Active Mentorship</span>
+
+                    <strong>94%</strong>
+
+                    <small>Best mentor match</small>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI CARDS -->
+
+            <div class="section-heading">
+
+                <h2>
+                    AI Career Intelligence
+                </h2>
+
+                <p>
+                    Personalized recommendations based on
+                    skills, projects and industry requirements.
+                </p>
+
+            </div>
+
+
+            <div class="three-grid">
+
+                <div class="feature-card">
+
+                    <label>CAREER TWIN</label>
+
+                    <h3>
+                        Full Stack Software Engineer
+                    </h3>
+
+                    <p>
+                        Your current profile shows strong
+                        frontend and programming alignment.
+                    </p>
+
+                    <div class="progress">
+
+                        <span style="width:87%"></span>
+
+                    </div>
+
+                    <b>87% role compatibility</b>
+
+                    <button
+                        class="outline-btn"
+                        onclick="openPage('career')"
+                    >
+                        View Career Twin
+                    </button>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <label>SKILL GAP ENGINE</label>
+
+                    <h3>
+                        Backend Architecture
+                    </h3>
+
+                    <p>
+                        This is currently your highest-impact
+                        skill gap for the selected target role.
+                    </p>
+
+                    <div class="progress">
+
+                        <span style="width:42%"></span>
+
+                    </div>
+
+                    <b>42% current proficiency</b>
+
+                    <button
+                        class="outline-btn"
+                        onclick="generateRoadmap()"
+                    >
+                        Generate Roadmap
+                    </button>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <label>MENTOR MATCH</label>
+
+                    <h3>
+                        Rohan Mehta
+                    </h3>
+
+                    <p>
+                        Senior Software Architect with
+                        12 years of industry experience.
+                    </p>
+
+                    <strong class="match">
+                        94% Match
+                    </strong>
+
+                    <button
+                        class="primary-small"
+                        onclick="bookMentor('Rohan Mehta')"
+                    >
+                        Schedule 15-Minute Capsule
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- INDUSTRY DEMAND -->
+
+            <div class="section-heading">
+
+                <h2>
+                    Industry Demand Mapping
+                </h2>
+
+                <p>
+                    Compare your current skills with
+                    target-role requirements.
+                </p>
+
+            </div>
+
+
+            <div class="two-grid">
+
+                <div class="panel">
+
+                    <h3>
+                        Full Stack Role Demand
+                    </h3>
+
+                    <div class="skill-row">
+
+                        <div>
+                            <span>Backend Architecture</span>
+                            <b>96%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:96%"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="skill-row">
+
+                        <div>
+                            <span>React / Frontend</span>
+                            <b>91%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:91%"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="skill-row">
+
+                        <div>
+                            <span>SQL & Data</span>
+                            <b>83%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:83%"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="skill-row">
+
+                        <div>
+                            <span>Cloud Deployment</span>
+                            <b>78%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:78%"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h3>
+                        AI Recommended Actions
+                    </h3>
+
+                    <div class="recommendation">
+                        Complete one backend micro-gig
+                    </div>
+
+                    <div class="recommendation">
+                        Attend a system-design mentor capsule
+                    </div>
+
+                    <div class="recommendation">
+                        Deploy an authenticated REST API
+                    </div>
+
+                    <div class="recommendation">
+                        Complete one company-reviewed challenge
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CAREER -->
+
+        <section id="career" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>AI Career Twin</h1>
+
+                    <p>
+                        Your continuously evolving digital
+                        career profile.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="runAssessment()"
+                >
+                    Refresh AI Analysis
+                </button>
+
+            </div>
+
+
+            <div class="two-grid">
+
+                <div class="panel">
+
+                    <h2>
+                        Full Stack Software Engineer
+                    </h2>
+
+                    <p class="muted">
+                        Recommended target role
+                    </p>
+
+                    <div class="large-progress">
+
+                        <span style="width:87%"></span>
+
+                    </div>
+
+                    <h3>87% Compatibility</h3>
+
+                </div>
+
+
+                <div class="panel ai-panel">
+
+                    <label>AI PROJECTION</label>
+
+                    <strong>91%</strong>
+
+                    <h3>
+                        Projected Placement Readiness
+                    </h3>
+
+                    <p>
+                        Your profile is expected to improve
+                        significantly after completing the
+                        priority backend roadmap.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="section-heading">
+
+                <h2>
+                    Career Decision Engine
+                </h2>
+
+            </div>
+
+
+            <div class="three-grid">
+
+                <div class="panel">
+
+                    <span class="danger-badge">
+                        HIGH PRIORITY
+                    </span>
+
+                    <h3>Backend Architecture</h3>
+
+                    <p>
+                        Largest current gap against your
+                        target engineering role.
+                    </p>
+
+                    <button
+                        class="outline-btn"
+                        onclick="generateRoadmap()"
+                    >
+                        Add to Roadmap
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <span class="warning-badge">
+                        EXPERIENCE
+                    </span>
+
+                    <h3>REST API Project</h3>
+
+                    <p>
+                        Build a production-style API
+                        for portfolio evidence.
+                    </p>
+
+                    <button
+                        class="outline-btn"
+                        onclick="openPage('gigs')"
+                    >
+                        Find Related Gigs
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <span class="purple-badge">
+                        MENTORSHIP
+                    </span>
+
+                    <h3>Architecture Review</h3>
+
+                    <p>
+                        Get senior-level feedback on
+                        your system design.
+                    </p>
+
+                    <button
+                        class="outline-btn"
+                        onclick="openPage('mentors')"
+                    >
+                        Find Mentor
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SKILLS -->
+
+        <section id="skills" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>Skill Intelligence</h1>
+
+                    <p>
+                        Convert academic learning into
+                        measurable industry capability.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="runAssessment()"
+                >
+                    Run Assessment
+                </button>
+
+            </div>
+
+
+            <div class="two-grid">
+
+                <div class="panel">
+
+                    <h3>Your Current Skill Graph</h3>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>JavaScript</span>
+                            <b>86%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:86%"></span>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>React</span>
+                            <b>80%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:80%"></span>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Python</span>
+                            <b>72%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:72%"></span>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>SQL</span>
+                            <b>61%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:61%"></span>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Backend Architecture</span>
+                            <b>42%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:42%"></span>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div>
+                            <span>Git & Collaboration</span>
+                            <b>88%</b>
+                        </div>
+
+                        <div class="progress">
+                            <span style="width:88%"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="panel ai-panel">
+
+                    <label>AI GAP ANALYSIS</label>
+
+                    <h2>
+                        Priority Skill Gaps
+                    </h2>
+
+                    <div class="gap">
+                        Backend Architecture
+                        <b>Critical</b>
+                    </div>
+
+                    <div class="gap">
+                        REST API Design
+                        <b>High</b>
+                    </div>
+
+                    <div class="gap">
+                        Database Optimization
+                        <b>Medium</b>
+                    </div>
+
+                    <div class="gap">
+                        Cloud Deployment
+                        <b>Medium</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MENTORS -->
+
+        <section id="mentors" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        AI Mentorship Matchmaker
+                    </h1>
+
+                    <p>
+                        One focused 15-minute monthly
+                        conversation with an industry leader.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="findBestMentor()"
+                >
+                    Find Best Match
+                </button>
+
+            </div>
+
+
+            <div class="mentor-info">
+
+                <b>AI Matching Engine</b>
+
+                <p>
+                    Mentor recommendations consider target
+                    role, skill gaps, expertise, experience
+                    and availability.
+                </p>
+
+            </div>
+
+
+            <div id="mentorList" class="two-grid"></div>
+
+        </section>
+
+
+        <!-- GIGS -->
+
+        <section id="gigs" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        Micro-Internship Gig Board
+                    </h1>
+
+                    <p>
+                        Complete 2–5 hour industry tasks and
+                        create verified experience.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="postGig()"
+                >
+                    Post Industry Gig
+                </button>
+
+            </div>
+
+
+            <input
+                id="gigSearch"
+                class="filter-input"
+                placeholder="Search industry tasks..."
+                oninput="renderGigs()"
+            >
+
+
+            <div id="gigList" class="three-grid"></div>
+
+        </section>
+
+
+        <!-- JOBS -->
+
+        <section id="jobs" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        Internships & Placement
+                    </h1>
+
+                    <p>
+                        Opportunities ranked according
+                        to your profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Company</th>
+                            <th>Role</th>
+                            <th>Type</th>
+                            <th>AI Match</th>
+                            <th>Skills</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>TechNova Labs</td>
+                            <td>Full Stack Intern</td>
+                            <td>Internship</td>
+                            <td>93%</td>
+                            <td>React · Node · SQL</td>
+
+                            <td>
+                                <button
+                                    class="primary-small"
+                                    onclick="applyJob('TechNova Labs')"
+                                >
+                                    Apply
+                                </button>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>CloudSphere</td>
+                            <td>Frontend Developer</td>
+                            <td>Internship</td>
+                            <td>89%</td>
+                            <td>React · JavaScript</td>
+
+                            <td>
+                                <button
+                                    class="primary-small"
+                                    onclick="applyJob('CloudSphere')"
+                                >
+                                    Apply
+                                </button>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>FinEdge Systems</td>
+                            <td>Software Engineer</td>
+                            <td>Placement</td>
+                            <td>86%</td>
+                            <td>Java · SQL · APIs</td>
+
+                            <td>
+                                <button
+                                    class="primary-small"
+                                    onclick="applyJob('FinEdge Systems')"
+                                >
+                                    Apply
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- INDUSTRY -->
+
+        <section id="industry" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        Industry Collaboration Hub
+                    </h1>
+
+                    <p>
+                        Connect students, institutions and
+                        companies through real workflows.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="startCollaboration()"
+                >
+                    Start Collaboration
+                </button>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <span>Partner Companies</span>
+                    <strong>128</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Active Internships</span>
+                    <strong>342</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Micro-Gigs</span>
+                    <strong>876</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Senior Mentors</span>
+                    <strong>2,140</strong>
+                </div>
+
+            </div>
+
+
+            <div class="section-heading">
+
+                <h2>
+                    Industry Challenge Arena
+                </h2>
+
+            </div>
+
+
+            <div class="three-grid">
+
+                <div class="panel">
+
+                    <span class="purple-badge">
+                        API ENGINEERING
+                    </span>
+
+                    <h3>
+                        Optimize a Recommendation API
+                    </h3>
+
+                    <p>
+                        Improve API performance and document
+                        your engineering decisions.
+                    </p>
+
+                    <strong>₹5,000</strong>
+
+                    <button
+                        class="primary-small"
+                        onclick="acceptChallenge('Recommendation API')"
+                    >
+                        View Challenge
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <span class="blue-badge">
+                        PRODUCT UI
+                    </span>
+
+                    <h3>
+                        Student Analytics Interface
+                    </h3>
+
+                    <p>
+                        Create a responsive analytics interface
+                        for institutional users.
+                    </p>
+
+                    <strong>₹3,500</strong>
+
+                    <button
+                        class="primary-small"
+                        onclick="acceptChallenge('Student Analytics Interface')"
+                    >
+                        View Challenge
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <span class="orange-badge">
+                        DATA
+                    </span>
+
+                    <h3>
+                        Industry Skill Demand Analysis
+                    </h3>
+
+                    <p>
+                        Convert business data into actionable
+                        skill-demand insights.
+                    </p>
+
+                    <strong>₹4,000</strong>
+
+                    <button
+                        class="primary-small"
+                        onclick="acceptChallenge('Skill Demand Analysis')"
+                    >
+                        View Challenge
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PASSPORT -->
+
+        <section id="passport" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        Experience Passport
+                    </h1>
+
+                    <p>
+                        Your verified record of projects,
+                        mentorship and industry work.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="exportPassport()"
+                >
+                    Export Profile
+                </button>
+
+            </div>
+
+
+            <div class="panel passport-header">
+
+                <div class="passport-avatar">
+                    AS
+                </div>
+
+                <div>
+
+                    <h2>
+                        Adarsh Pratap Singh
+                    </h2>
+
+                    <p>
+                        CSIT · Batch 2025–29
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <strong>3</strong>
+                    <span>Industry Tasks</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>6</strong>
+                    <span>Credentials</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>8</strong>
+                    <span>Projects</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong id="passportScore">64</strong>
+                    <span>Experience Score</span>
+                </div>
+
+            </div>
+
+
+            <div class="section-heading">
+
+                <h2>
+                    Verified Experience Timeline
+                </h2>
+
+            </div>
+
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+
+                    <h3>
+                        Frontend Micro-Internship Completed
+                    </h3>
+
+                    <p>
+                        TechNova Labs · 3 hours · ₹1,500
+                    </p>
+
+                    <span class="green-badge">
+                        Company Verified
+                    </span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        AI Skill Assessment Completed
+                    </h3>
+
+                    <p>
+                        Full Stack competency evaluation
+                    </p>
+
+                    <span class="purple-badge">
+                        AI Evaluated
+                    </span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        Senior Mentor Capsule Completed
+                    </h3>
+
+                    <p>
+                        Software architecture discussion
+                    </p>
+
+                    <span class="blue-badge">
+                        Mentor Validated
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ANALYTICS -->
+
+        <section id="analytics" class="page">
+
+            <div class="page-title">
+
+                <div>
+
+                    <h1>
+                        Career Analytics
+                    </h1>
+
+                    <p>
+                        Track the factors influencing your
+                        industry readiness.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <span>Overall Readiness</span>
+                    <strong>81%</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Technical Skills</span>
+                    <strong>81%</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Industry Exposure</span>
+                    <strong>68%</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Communication</span>
+                    <strong>84%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="panel ai-panel">
+
+                <label>
+                    AI CAREER INTERPRETATION
+                </label>
+
+                <h2>
+                    Your highest-impact improvement
+                    opportunity is backend engineering.
+                </h2>
+
+                <p>
+                    Completing verified industry tasks,
+                    mentorship sessions and deployment
+                    projects can strengthen your profile.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<!-- COMMAND CENTER -->
+
+<div class="command-center">
+
+    <b>Career Command Center</b>
+
+    <p>
+        Quick access to actions that improve your
+        verified industry readiness.
+    </p>
+
+    <div class="command-buttons">
+
+        <button onclick="runAssessment()">
+            AI Assessment
+        </button>
+
+        <button onclick="openPage('mentors')">
+            Find Mentor
+        </button>
+
+        <button onclick="openPage('gigs')">
+            Find Paid Gig
+        </button>
+
+        <button onclick="openPage('passport')">
+            Experience Passport
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-top">
+
+            <h2 id="modalTitle">
+                SkillBridge AI
+            </h2>
+
+            <button onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div id="modalContent"></div>
+
+    </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
