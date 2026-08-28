@@ -691,6 +691,85 @@ function generateRoadmap() {
     );
 }
 
+/* ================= AUTHENTICATION & USER SESSION ================= */
+
+function getAuthToken() {
+    return localStorage.getItem("skillbridge_token");
+}
+
+function getCurrentUser() {
+    try {
+        const raw = localStorage.getItem("skillbridge_user");
+        return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function authFetch(url, options = {}) {
+    const token = getAuthToken();
+    const headers = options.headers ? { ...options.headers } : {};
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+    return fetch(url, { ...options, headers });
+}
+
+function initAuthUI() {
+    const token = getAuthToken();
+    const user = getCurrentUser();
+
+    if (!token || !user) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    const loggedOutSection = document.getElementById("authHeaderLoggedOut");
+    const loggedInSection = document.getElementById("authHeaderLoggedIn");
+
+    const topbarAvatar = document.getElementById("topbarUserAvatar");
+    const topbarName = document.getElementById("topbarUserName");
+    const topbarSub = document.getElementById("topbarUserSub");
+    const topbarRole = document.getElementById("topbarUserRoleBadge");
+
+    const sidebarAvatar = document.getElementById("sidebarUserAvatar");
+    const sidebarName = document.getElementById("sidebarUserName");
+    const sidebarSub = document.getElementById("sidebarUserSub");
+
+    if (user && user.name) {
+        // User is logged in
+        if (loggedOutSection) loggedOutSection.classList.add("hidden");
+        if (loggedInSection) loggedInSection.classList.remove("hidden");
+
+        const initials = user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+
+        if (topbarAvatar) topbarAvatar.innerText = initials;
+        if (topbarName) topbarName.innerText = user.name;
+        if (topbarRole) {
+            topbarRole.innerText = (user.role || "student").toUpperCase();
+            topbarRole.className = `user-role-badge role-${user.role || "student"}`;
+        }
+        if (topbarSub) {
+            topbarSub.innerText = user.email || "Active User";
+        }
+
+        if (sidebarAvatar) sidebarAvatar.innerText = initials;
+        if (sidebarName) sidebarName.innerText = user.name;
+        if (sidebarSub) {
+            sidebarSub.innerText = `${(user.role || "Student").toUpperCase()} · Online`;
+        }
+    }
+}
+
+function logoutUser() {
+    localStorage.removeItem("skillbridge_token");
+    localStorage.removeItem("skillbridge_user");
+    showToast("Signed out successfully.");
+    setTimeout(() => {
+        window.location.replace("login.html");
+    }, 400);
+}
+
 /* ================= UTILITY ================= */
 
 function escapeHtml(str) {
@@ -706,6 +785,9 @@ function escapeHtml(str) {
 /* ================= INITIALIZATION ================= */
 
 document.addEventListener("DOMContentLoaded", async function () {
+    // 0. Initialize authentication status
+    initAuthUI();
+
     // 1. Fetch live student record from database
     await fetchStudent();
 

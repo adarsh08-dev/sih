@@ -4,9 +4,12 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 require("dotenv").config();
 const db = require("./db");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || "skillbridge-secret-key-2026"
 
 /* ================= MIDDLEWARE ================= */
 app.use(cors());
@@ -25,6 +28,132 @@ app.get("/api/health", async (req, res) => {
     }
   });
 });
+/* ===========AUTHENTICATION ROUTES ========== */
+app.post("/api/auth/register", async (req, res) => {
+  const { name, email, password, role, extraInfo } = req.body;
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ error: "All fields are required" })
+  }
+
+  try {
+    const existing = await db.query("SELECT id FROM users WHERE email = $1",
+    [email.toLowerCase().trim()]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "An account with this email already exists"});
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    let studentID = null;
+    let mentorID = null;
+    let companyID = null;
+
+    if (role == "student") {
+      const sRes = await db.query(
+        `INSERT INTO students (name, course, batch, target_role, career_readiness, experience_score)
+          VALUES ($1, $2, $3, $4, 65, 45) RETURNING id`,
+          [name, extraInfo?.course || "CSIT", extraInfo?.batch || "2025-29", extraInfo?.targetRole || "Software Engineer" ]
+      );
+
+      studentID = sRes.rows[0].id;
+    } else if (role === "mentor" ) {
+      const mRes = await db.query(
+        `INSERT INTO mentors (name, role, company, experience_years, availability)
+        VALUES ($1, $2, $3, $4, true) RETURNING id`,
+        [name, extraInfo?.jobRole || "Industry Mentor", extraInfo?.company || "Independent", Number(extraInfo?.experience) || 5]
+      );
+      mentorID = mRes.rows[0].id;
+    } else if (role == "company") {
+      const cRes = await db.query(
+        `INSERT INTO companies (name, industry, location, verified)
+        VALUES ($1, $2, $3, true) RETURNING id`,
+        [name, extraInfo?.industry || "Technology", extraInfo?.location || "Remote"]
+      );
+      companyID = cRes.rows[0].id;
+    }
+
+    const uRes = await db.query(
+      `INSERT INTO users (name, email, password_hash, role, student_id, mentor_id, company_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id, name, email, role, student_id, mentor_id, company_id`,
+      [name, email.toLowerCase().trim(), passwordHash, role, studentID, mentorID, companyID]
+    )
+
+    const user = uRes.rows[0];
+    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+    res.status(201).json({success: true, token, user});
+  } catch (error) {
+    console.error("Register error:", error);
+    res.status(500).json({error: "Failed to register user"});
+  }
+})
+
+app.post("/api/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+
+  try {
+    const result = await db.query(
+      `SELECT id, name, email, password_hash, role, student_id, mentor_id, company_id
+      FROM users WHERE email = $1`,
+      [email.toLowerCase().trim()]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        studentId: user.student_id,
+        mentorId: user.mentor_id,
+        companyId: user.company_id
+      }
+    });
+  } catch (error) {
+    console.error("Login error: ", error);
+    res.status(500).json({ error: "Server login error" });
+  }
+})
+
+app.get("/api/auth/me", (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "No token provided" });
+  jwt.verify(token, JWT_SECRET, async (error, decoded) => {
+    if (error)
+      return res.status(403).json({ error: "Token invalid or expired" });
+    
+    try {
+      const result = await db.query(
+        `SELECT id, name, email, role, student_id, mentor_id, company_id
+        FROM users WHERE id = $1`,
+        [decoded.userId]
+      );
+
+      if (result.rows.length === 0)
+        return res.status(404).json({ error: "User not found"});
+      res.json({ user: result.rows[0] });
+    } catch (error) {
+      res.status(500).json({ error: "Database error" });
+    }
+  })
+})
 
 /* ================= STUDENT ================= */
 app.get("/api/student", async (req, res) => {
