@@ -92,19 +92,6 @@ CREATE TABLE IF NOT EXISTS experience_records (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 10. USERS (Authentication & Role Management)
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'company', 'admin')),
-    student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
-    mentor_id INTEGER REFERENCES mentors(id) ON DELETE SET NULL,
-    company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
 -- SEED DATA FOR DEMO / INITIALIZATION
 INSERT INTO students (id, name, course, batch, target_role, career_readiness, experience_score)
 VALUES (1, 'Adarsh Pratap Singh', 'CSIT', '2025-29', 'Full Stack Software Engineer', 81, 64)

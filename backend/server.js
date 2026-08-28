@@ -4,16 +4,95 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 require("dotenv").config();
 const db = require("./db");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || "skillbridge-secret-key-2026"
 
 /* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
+
+/* ================= IN-MEMORY FALLBACK DATA ================= */
+const fallbackStudents = [
+  {
+    id: 1,
+    name: "Adarsh Pratap Singh",
+    course: "CSIT",
+    batch: "2025-29",
+    target_role: "Full Stack Software Engineer",
+    career_readiness: 81,
+    experience_score: 64
+  }
+];
+
+const fallbackMentors = [
+  {
+    id: 1,
+    name: "Rohan Mehta",
+    role: "Senior Software Architect",
+    company: "TechNova Labs",
+    experience_years: 12,
+    match: 94,
+    availability: true
+  },
+  {
+    id: 2,
+    name: "Priya Sharma",
+    role: "Engineering Manager",
+    company: "CloudSphere",
+    experience_years: 10,
+    match: 91,
+    availability: true
+  },
+  {
+    id: 3,
+    name: "Arjun Kapoor",
+    role: "AI/ML Lead",
+    company: "DataSphere AI",
+    experience_years: 14,
+    match: 88,
+    availability: true
+  },
+  {
+    id: 4,
+    name: "Aryan Mehrotra",
+    role: "Senior Software Developer",
+    company: "My Tech",
+    experience_years: 10,
+    match: 92,
+    availability: true
+  }
+];
+
+const fallbackGigs = [
+  {
+    id: 1,
+    title: "Build a Responsive Product Landing Page",
+    company: "TechNova Labs",
+    required_skill: "Web Development",
+    duration_hours: 3,
+    payment: 1500,
+    status: "open"
+  },
+  {
+    id: 2,
+    title: "Build an Authenticated REST API",
+    company: "CloudSphere",
+    required_skill: "Backend",
+    duration_hours: 5,
+    payment: 3500,
+    status: "open"
+  },
+  {
+    id: 3,
+    title: "SQL Business Analytics Challenge",
+    company: "FinEdge Solutions",
+    required_skill: "SQL",
+    duration_hours: 3,
+    payment: 1800,
+    status: "open"
+  }
+];
 
 /* ================= HEALTH & DB STATUS ================= */
 app.get("/api/health", async (req, res) => {
@@ -23,272 +102,9 @@ app.get("/api/health", async (req, res) => {
     service: "SkillBridge AI Backend",
     version: "1.0.0",
     database: {
+      engine: "PostgreSQL",
       ...dbStatus
     }
-  });
-});
-
-app.get("/api/database/users", async (req, res) => {
-  try {
-    const pool = db.getPool();
-    if (pool) {
-      const pgUsers = await db.query(
-        "SELECT id, name, email, role, student_id, mentor_id, company_id, created_at FROM users ORDER BY id ASC"
-      );
-      if (pgUsers && pgUsers.rows) {
-        return res.json({
-          success: true,
-          database: "PostgreSQL",
-          count: pgUsers.rows.length,
-          users: pgUsers.rows
-        });
-      }
-    }
-    const users = db.getAllUsers();
-    res.json({
-      success: true,
-      database: "Local File Database",
-      count: users.length,
-      users
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to read database users", details: err.message });
-  }
-});
-
-/* ===========AUTHENTICATION ROUTES ========== */
-app.post("/api/auth/register", async (req, res) => {
-  const { name, email, password, role, extraInfo } = req.body;
-  if (!name || !email || !password || !role) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
-
-  const cleanEmail = email.toLowerCase().trim();
-
-  try {
-    const pool = db.getPool();
-    if (pool) {
-      const existing = await db.query("SELECT id FROM users WHERE email = $1", [cleanEmail]);
-      if (existing && existing.rows && existing.rows.length > 0) {
-        return res.status(400).json({ error: "An account with this email already exists in PostgreSQL database" });
-      }
-    } else {
-      const existingFileUser = db.findUserByEmail(cleanEmail);
-      if (existingFileUser) {
-        return res.status(400).json({ error: "An account with this email already exists in the database" });
-      }
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    let studentID = null;
-    let mentorID = null;
-    let companyID = null;
-
-    if (pool) {
-      try {
-        if (role == "student") {
-          const sRes = await db.query(
-            `INSERT INTO students (name, course, batch, target_role, career_readiness, experience_score)
-              VALUES ($1, $2, $3, $4, 65, 45) RETURNING id`,
-            [name, extraInfo?.course || "CSIT", extraInfo?.batch || "2025-29", extraInfo?.targetRole || "Software Engineer"]
-          );
-          studentID = sRes?.rows?.[0]?.id || 1;
-        } else if (role === "mentor") {
-          const mRes = await db.query(
-            `INSERT INTO mentors (name, role, company, experience_years, availability)
-            VALUES ($1, $2, $3, $4, true) RETURNING id`,
-            [name, extraInfo?.jobRole || "Industry Mentor", extraInfo?.company || "Independent", Number(extraInfo?.experience) || 5]
-          );
-          mentorID = mRes?.rows?.[0]?.id || 1;
-        } else if (role == "company") {
-          const cRes = await db.query(
-            `INSERT INTO companies (name, industry, location, verified)
-            VALUES ($1, $2, $3, true) RETURNING id`,
-            [name, extraInfo?.industry || "Technology", extraInfo?.location || "Remote"]
-          );
-          companyID = cRes?.rows?.[0]?.id || 1;
-        }
-
-        const uRes = await db.query(
-          `INSERT INTO users (name, email, password_hash, role, student_id, mentor_id, company_id)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-          RETURNING id, name, email, role, student_id, mentor_id, company_id`,
-          [name, cleanEmail, passwordHash, role, studentID, mentorID, companyID]
-        );
-
-        if (uRes && uRes.rows && uRes.rows.length > 0) {
-          const user = uRes.rows[0];
-          // Also sync to local database file
-          db.insertUser({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            password_hash: passwordHash,
-            role: user.role,
-            student_id: user.student_id,
-            mentor_id: user.mentor_id,
-            company_id: user.company_id,
-            extraInfo
-          });
-
-          const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
-          return res.status(201).json({ success: true, token, user, databasePersisted: true });
-        }
-      } catch (pgErr) {
-        console.warn("PostgreSQL insertion error, writing to persistent database file:", pgErr.message);
-      }
-    }
-
-    // Persist directly into local database file
-    const persistedUser = db.insertUser({
-      name,
-      email: cleanEmail,
-      password_hash: passwordHash,
-      role,
-      extraInfo
-    });
-
-    const token = jwt.sign({ userId: persistedUser.id, role: persistedUser.role, email: persistedUser.email }, JWT_SECRET, { expiresIn: "7d" });
-    return res.status(201).json({
-      success: true,
-      token,
-      user: {
-        id: persistedUser.id,
-        name: persistedUser.name,
-        email: persistedUser.email,
-        role: persistedUser.role,
-        studentId: persistedUser.student_id,
-        mentorId: persistedUser.mentor_id,
-        companyId: persistedUser.company_id
-      },
-      databasePersisted: true
-    });
-  } catch (error) {
-    console.error("Register error:", error);
-    res.status(500).json({ error: "Failed to register user in database", details: error.message });
-  }
-});
-
-app.post("/api/auth/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
-  }
-
-  const cleanEmail = email.toLowerCase().trim();
-
-  try {
-    const pool = db.getPool();
-    if (pool) {
-      const result = await db.query(
-        `SELECT id, name, email, password_hash, role, student_id, mentor_id, company_id
-        FROM users WHERE email = $1`,
-        [cleanEmail]
-      );
-
-      if (result && result.rows && result.rows.length > 0) {
-        const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password_hash);
-        if (isMatch) {
-          const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
-          return res.json({
-            success: true,
-            token,
-            user: {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-              studentId: user.student_id,
-              mentorId: user.mentor_id,
-              companyId: user.company_id
-            }
-          });
-        } else {
-          return res.status(401).json({ error: "Invalid email or password" });
-        }
-      }
-    }
-  } catch (error) {
-    console.warn("PostgreSQL login notice:", error.message);
-  }
-
-  // Lookup in persistent database file
-  const user = db.findUserByEmail(cleanEmail);
-  if (!user) {
-    return res.status(401).json({ error: "Invalid email or password" });
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password_hash);
-  if (!isMatch) {
-    return res.status(401).json({ error: "Invalid email or password" });
-  }
-
-  const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
-  res.json({
-    success: true,
-    token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      studentId: user.student_id,
-      mentorId: user.mentor_id,
-      companyId: user.company_id
-    }
-  });
-});
-
-app.get("/api/auth/me", (req, res) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "No token provided" });
-  jwt.verify(token, JWT_SECRET, async (error, decoded) => {
-    if (error)
-      return res.status(403).json({ error: "Token invalid or expired" });
-    
-    try {
-      const pool = db.getPool();
-      if (pool) {
-        const result = await db.query(
-          `SELECT id, name, email, role, student_id, mentor_id, company_id
-          FROM users WHERE id = $1`,
-          [decoded.userId]
-        );
-
-        if (result && result.rows && result.rows.length > 0) {
-          return res.json({ user: result.rows[0] });
-        }
-      }
-    } catch (error) {
-      console.warn("PostgreSQL auth/me error:", error.message);
-    }
-
-    const fileUser = db.findUserById(decoded.userId);
-    if (fileUser) {
-      return res.json({
-        user: {
-          id: fileUser.id,
-          name: fileUser.name,
-          email: fileUser.email,
-          role: fileUser.role,
-          studentId: fileUser.student_id,
-          mentorId: fileUser.mentor_id,
-          companyId: fileUser.company_id
-        }
-      });
-    }
-
-    return res.json({
-      user: {
-        id: decoded.userId,
-        email: decoded.email,
-        role: decoded.role || "student",
-        name: decoded.name || "Student User"
-      }
-    });
   });
 });
 
@@ -314,14 +130,16 @@ app.get("/api/student", async (req, res) => {
     console.error("DB query error in /api/student:", err.message);
   }
 
+  // Fallback
+  const s = fallbackStudents[0];
   res.json({
-    id: 1,
-    name: "Adarsh Pratap Singh",
-    course: "CSIT",
-    batch: "2025-29",
-    targetRole: "Full Stack Software Engineer",
-    careerReadiness: 81,
-    experienceScore: 64
+    id: s.id,
+    name: s.name,
+    course: s.course,
+    batch: s.batch,
+    targetRole: s.target_role,
+    careerReadiness: s.career_readiness,
+    experienceScore: s.experience_score
   });
 });
 
@@ -331,7 +149,7 @@ app.get("/api/mentors", async (req, res) => {
     const result = await db.query(
       "SELECT id, name, role, company, experience_years, availability FROM mentors ORDER BY id ASC"
     );
-    if (result && result.rows) {
+    if (result && result.rows.length > 0) {
       const mapped = result.rows.map((m, idx) => ({
         id: m.id,
         name: m.name,
@@ -343,11 +161,11 @@ app.get("/api/mentors", async (req, res) => {
       }));
       return res.json(mapped);
     }
-    return res.json([]);
   } catch (err) {
     console.error("DB query error in /api/mentors:", err.message);
-    return res.status(500).json({ error: "Failed to fetch mentors from database" });
   }
+
+  res.json(fallbackMentors);
 });
 
 /* ================= BEST MENTOR ================= */
@@ -367,11 +185,12 @@ app.get("/api/mentors/best-match", async (req, res) => {
         match: 94
       });
     }
-    return res.status(404).json({ error: "No mentors found in database" });
   } catch (err) {
     console.error("DB query error in /api/mentors/best-match:", err.message);
-    return res.status(500).json({ error: "Database error fetching best mentor match" });
   }
+
+  const best = [...fallbackMentors].sort((a, b) => b.match - a.match)[0];
+  res.json(best);
 });
 
 /* ================= POST MENTOR ================= */
@@ -438,7 +257,7 @@ app.get("/api/gigs", async (req, res) => {
        LEFT JOIN companies c ON g.company_id = c.id
        ORDER BY g.id ASC`
     );
-    if (result && result.rows) {
+    if (result && result.rows.length > 0) {
       const mapped = result.rows.map((g) => ({
         id: g.id,
         title: g.title,
@@ -450,11 +269,11 @@ app.get("/api/gigs", async (req, res) => {
       }));
       return res.json(mapped);
     }
-    return res.json([]);
   } catch (err) {
     console.error("DB query error in /api/gigs:", err.message);
-    return res.status(500).json({ error: "Failed to fetch gigs from database" });
   }
+
+  res.json(fallbackGigs);
 });
 
 /* ================= POST NEW GIG ================= */

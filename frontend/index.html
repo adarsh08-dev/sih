@@ -5,22 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SkillBridge AI | Industry Career OS</title>
-
-    <script>
-        // Auth Route Guard: Redirect unauthenticated visitors to login immediately
-        (function () {
-            try {
-                const token = localStorage.getItem("skillbridge_token");
-                const user = localStorage.getItem("skillbridge_user");
-                if (!token || !user) {
-                    window.location.replace("login.html");
-                }
-            } catch (e) {
-                window.location.replace("login.html");
-            }
-        })();
-    </script>
+    <title>SkillBridge AI</title>
+    <meta name="description" content="Industry Career OS connecting students with industry mentors, skill intelligence, micro-internships, and placement opportunities.">
+    <meta property="og:title" content="SkillBridge AI">
+    <meta property="og:description" content="Industry Career OS connecting students with industry mentors, skill intelligence, micro-internships, and placement opportunities.">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -80,16 +68,16 @@
         Career Analytics
     </button>
 
-    <div class="student-card" id="sidebarUserCard">
+    <div class="student-card">
 
-        <div class="student-avatar" id="sidebarUserAvatar">
+        <div class="student-avatar">
             AS
         </div>
 
         <div>
-            <b id="sidebarUserName">Adarsh Pratap Singh</b>
+            <b>Adarsh Pratap Singh</b>
 
-            <small id="sidebarUserSub">
+            <small>
                 CSIT · Batch 2025–29
             </small>
         </div>
@@ -114,36 +102,22 @@
 
         </div>
 
-        <div class="profile" id="topbarProfileSection">
+        <div class="profile">
 
             <button onclick="showNotifications()" class="notification">
                 Alerts
             </button>
 
-            <!-- AUTH HEADER SECTION -->
-            <div id="authHeaderLoggedOut" class="auth-header-state">
-                <a href="login.html" class="auth-btn-link">
-                    <span>⚡</span> Sign In / Register
-                </a>
+            <div class="avatar">
+                AS
             </div>
 
-            <div id="authHeaderLoggedIn" class="auth-header-state hidden">
-                <div class="avatar" id="topbarUserAvatar">
-                    AS
-                </div>
+            <div>
+                <b>Adarsh Pratap Singh</b>
 
-                <div class="profile-info">
-                    <b id="topbarUserName">Adarsh Pratap Singh</b>
-
-                    <div class="profile-sub">
-                        <small id="topbarUserSub">CSIT · 2025–29</small>
-                        <span id="topbarUserRoleBadge" class="user-role-badge">STUDENT</span>
-                    </div>
-                </div>
-
-                <button id="logoutNavBtn" onclick="logoutUser()" class="btn-logout" title="Sign Out">
-                    Logout
-                </button>
+                <small>
+                    CSIT · 2025–29
+                </small>
             </div>
 
         </div>
