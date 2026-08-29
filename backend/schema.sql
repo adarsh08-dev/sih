@@ -105,6 +105,19 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 11. HELPDESK TICKETS
+CREATE TABLE IF NOT EXISTS helpdesk_tickets (
+    id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES students(id) ON DELETE CASCADE,
+    category VARCHAR(100),
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    priority VARCHAR(50) DEFAULT 'medium',
+    status VARCHAR(50) DEFAULT 'open',
+    ai_summary TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- SEED DATA FOR DEMO / INITIALIZATION
 INSERT INTO students (id, name, course, batch, target_role, career_readiness, experience_score)
 VALUES (1, 'Adarsh Pratap Singh', 'CSIT', '2025-29', 'Full Stack Software Engineer', 81, 64)
