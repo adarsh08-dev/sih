@@ -144,3 +144,12 @@ VALUES
 (2, 2, 'Build an Authenticated REST API', 'Develop JWT secured API with Node.js & PostgreSQL', 'Backend', 5, 3500.00, 'open'),
 (3, 3, 'SQL Business Analytics Challenge', 'Write analytical queries for financial reports', 'SQL', 3, 1800.00, 'open')
 ON CONFLICT (id) DO NOTHING;
+
+-- SYNC SEQUENCES WITH SEEDED IDS
+SELECT setval('students_id_seq', (SELECT COALESCE(MAX(id), 1) FROM students));
+SELECT setval('companies_id_seq', (SELECT COALESCE(MAX(id), 1) FROM companies));
+SELECT setval('mentors_id_seq', (SELECT COALESCE(MAX(id), 1) FROM mentors));
+SELECT setval('gigs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM gigs));
+SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users));
+SELECT setval('helpdesk_tickets_id_seq', (SELECT COALESCE(MAX(id), 1) FROM helpdesk_tickets));
+
