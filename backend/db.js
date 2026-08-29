@@ -19,7 +19,35 @@ function ensureDataDir() {
   }
   if (!fs.existsSync(DB_FILE_PATH)) {
     const defaultData = {
-      users: [],
+      users: [
+        {
+          id: 1,
+          email: "student@skillbridge.ai",
+          password_hash: "$2a$10$7v33v1J8G5vL7C7mZg4mkuYjU4B8xV5Z3Vq4d7qZpB5wYJ2tV4cK.", // hashed demo
+          name: "Adarsh Pratap Singh",
+          role: "student",
+          student_id: 1,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          email: "mentor@skillbridge.ai",
+          password_hash: "$2a$10$7v33v1J8G5vL7C7mZg4mkuYjU4B8xV5Z3Vq4d7qZpB5wYJ2tV4cK.",
+          name: "Rohan Mehta",
+          role: "mentor",
+          mentor_id: 1,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 3,
+          email: "company@skillbridge.ai",
+          password_hash: "$2a$10$7v33v1J8G5vL7C7mZg4mkuYjU4B8xV5Z3Vq4d7qZpB5wYJ2tV4cK.",
+          name: "TechNova Labs",
+          role: "company",
+          company_id: 1,
+          created_at: new Date().toISOString()
+        }
+      ],
       students: [
         {
           id: 1,
@@ -79,6 +107,19 @@ function ensureDataDir() {
       ],
       gig_applications: [],
       mentor_bookings: [],
+      helpdesk_tickets: [
+        {
+          id: 1,
+          student_id: 1,
+          category: "micro-gig",
+          title: "Troubleshooting PostgreSQL connection pool in API Gig",
+          description: "Getting ECONNREFUSED when deploying the micro-internship REST API endpoint. How to configure SSL and pool size properly?",
+          priority: "high",
+          status: "resolved",
+          ai_summary: "Resolved by adjusting connection pool limit to 10 and enabling ssl: { rejectUnauthorized: false } for cloud environments.",
+          created_at: new Date().toISOString()
+        }
+      ],
       experience_records: [
         {
           id: 1,
@@ -100,7 +141,9 @@ function readLocalDb() {
   ensureDataDir();
   try {
     const raw = fs.readFileSync(DB_FILE_PATH, "utf8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!parsed.helpdesk_tickets) parsed.helpdesk_tickets = [];
+    return parsed;
   } catch (err) {
     console.error("Error reading local db file:", err.message);
     return {
@@ -111,6 +154,7 @@ function readLocalDb() {
       gigs: [],
       gig_applications: [],
       mentor_bookings: [],
+      helpdesk_tickets: [],
       experience_records: []
     };
   }

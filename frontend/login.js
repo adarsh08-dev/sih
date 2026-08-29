@@ -60,6 +60,15 @@ function hideAlert() {
   authAlert.classList.add("hidden");
 }
 
+async function parseJsonResponse(res) {
+  const contentType = res.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await res.json();
+  }
+  const text = await res.text();
+  throw new Error(`Server returned non-JSON response (${res.status}): ${text.slice(0, 80)}`);
+}
+
 // Handle Form Submit
 authForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -78,15 +87,15 @@ authForm.addEventListener("submit", async (e) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
       });
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok) throw new Error(data.error || "Login failed");
 
       // Save token and user
-      localStorage.setItem("skillbridge_token", data.token);
+      localStorage.setItem("skillbridge_token", data.token || "demo-token");
       localStorage.setItem("skillbridge_user", JSON.stringify(data.user));
 
       showAlert("Login successful! Redirecting...", false);
-      setTimeout(() => { window.location.href = "index.html"; }, 800);
+      setTimeout(() => { window.location.href = "index.html"; }, 500);
     } else {
       const name = document.getElementById("authName").value.trim();
       const role = authRole.value;
@@ -101,15 +110,15 @@ authForm.addEventListener("submit", async (e) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role, extraInfo })
       });
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
       // Save session
-      localStorage.setItem("skillbridge_token", data.token);
+      localStorage.setItem("skillbridge_token", data.token || "demo-token");
       localStorage.setItem("skillbridge_user", JSON.stringify(data.user));
 
       showAlert("Account created successfully! Redirecting...", false);
-      setTimeout(() => { window.location.href = "index.html"; }, 800);
+      setTimeout(() => { window.location.href = "index.html"; }, 500);
     }
   } catch (err) {
     showAlert(err.message, true);
@@ -118,3 +127,44 @@ authForm.addEventListener("submit", async (e) => {
     authSubmitBtn.textContent = currentMode === "login" ? "Sign In" : "Create Account";
   }
 });
+
+// Demo Logins
+function demoLogin(role) {
+  hideAlert();
+  let user = {
+    id: 1,
+    name: "Adarsh Pratap Singh",
+    email: "student@skillbridge.ai",
+    role: "student",
+    studentId: 1
+  };
+
+  if (role === "mentor") {
+    user = {
+      id: 2,
+      name: "Rohan Mehta",
+      email: "mentor@skillbridge.ai",
+      role: "mentor",
+      mentorId: 1
+    };
+  } else if (role === "company") {
+    user = {
+      id: 3,
+      name: "TechNova Labs",
+      email: "company@skillbridge.ai",
+      role: "company",
+      companyId: 1
+    };
+  }
+
+  localStorage.setItem("skillbridge_token", "demo-jwt-token-active");
+  localStorage.setItem("skillbridge_user", JSON.stringify(user));
+  showAlert(`Signed in as ${user.name} (${role.toUpperCase()})! Redirecting...`, false);
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 400);
+}
+
+function continueAsGuest() {
+  demoLogin("student");
+}

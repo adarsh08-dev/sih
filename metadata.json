@@ -1,6 +1,6 @@
 {
   "name": "SkillBridge AI",
-  "description": "Industry Career OS connecting students with industry mentors, skill intelligence, micro-internships, and placement opportunities.",
+  "description": "SIH26044 Academia-Industry Portal connecting students with industry mentors, blockchain-verified skill passports, vetted micro-internships, and placement opportunities.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
