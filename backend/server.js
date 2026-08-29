@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "skillbridge-secret-key-2026";
 
 /* ================= MIDDLEWARE ================= */
@@ -892,7 +892,7 @@ app.get("/api/ai/helpdesk/tickets", async (req, res) => {
 });
 
 /* ================= API 404 HANDLER (MUST BE BEFORE STATIC FALLBACK) ================= */
-app.all("/api/*", (req, res) => {
+app.use("/api", (req, res) => {
   res.status(404).json({ error: `API route ${req.method} ${req.originalUrl} not found` });
 });
 

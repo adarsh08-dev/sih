@@ -1474,25 +1474,87 @@ function openTrustModal(type) {
                 </div>
 
                 <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Featured Hiring Alliance
+                    Featured Enterprise Hiring Alliance
                 </div>
                 
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px;">
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 800; color: #003366; font-size: 14px;">TCS</span>
-                        <div style="font-size: 10.5px; color: #64748b;">Tata Consultancy · Prime Hiring</div>
+                    <!-- Google -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 13px;">Google</div>
+                            <div style="font-size: 10px; color: #64748b;">Cloud & AI Engineering</div>
+                        </div>
                     </div>
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 800; color: #007cc3; font-size: 14px;">Infosys</span>
-                        <div style="font-size: 10.5px; color: #64748b;">Navigate Your Next · Specialist</div>
+
+                    <!-- Microsoft -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#f25022" d="M1 1h10v10H1z"/>
+                            <path fill="#7fba00" d="M13 1h10v10H13z"/>
+                            <path fill="#00a4ef" d="M1 13h10v10H1z"/>
+                            <path fill="#ffb900" d="M13 13h10v10H13z"/>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 13px;">Microsoft</div>
+                            <div style="font-size: 10px; color: #64748b;">Azure & Systems Engineering</div>
+                        </div>
                     </div>
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 800; color: #3b3a98; font-size: 14px;">Wipro</span>
-                        <div style="font-size: 10.5px; color: #64748b;">Elite Talent · Digital Core</div>
+
+                    <!-- Amazon -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M12.58 4.2c-4.14 0-6.28 2.59-6.28 5.6 0 2.24 1.34 3.73 3.32 3.73 1.39 0 2.37-.82 2.87-1.63h.08v1.39h2.38V4.54c0-2.3-1.39-3.48-3.99-3.48-2.33 0-4.05 1.05-4.3 2.52-.03.18.11.3.29.33l1.83.22c.16.02.27-.08.31-.23.18-.72.93-1.15 1.95-1.15 1.3 0 1.98.57 1.98 1.63v.81c-.56-.09-1.3-.14-2.14-.14zm.37 5.09c0 1.67-.78 2.66-2.03 2.66-.92 0-1.51-.62-1.51-1.61 0-1.28.84-2.09 2.45-2.09.43 0 .81.04 1.09.1v1.04z" fill="#232F3E"/>
+                            <path d="M19.34 16.54c-2.31 1.7-5.59 2.61-8.49 2.61-4.08 0-7.77-1.53-10.55-4.08-.22-.2-.02-.48.24-.32 3 1.74 6.7 2.78 10.55 2.78 2.58 0 5.41-.65 7.94-2.01.39-.21.7.24.31.52v.5z" fill="#FF9900"/>
+                            <path d="M20.25 15.3c-.29-.37-1.9-.17-2.63-.09-.22.02-.26-.17-.06-.31 1.3-.92 3.43-.65 3.68-.34.25.31-.07 2.45-1.3 3.46-.19.16-.36.07-.27-.14.3-.68.87-2.21.58-2.58z" fill="#FF9900"/>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 13px;">Amazon</div>
+                            <div style="font-size: 10px; color: #64748b;">AWS & Distributed Systems</div>
+                        </div>
                     </div>
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 800; color: #1e293b; font-size: 14px;">Cognizant</span>
-                        <div style="font-size: 10.5px; color: #64748b;">GenC Next · Full Stack Roles</div>
+
+                    <!-- TCS -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="22" height="17" viewBox="0 0 32 24" fill="none">
+                            <rect width="32" height="24" rx="4" fill="#003366"/>
+                            <text x="16" y="16.5" font-family="'Inter', sans-serif" font-weight="900" font-size="11" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">TCS</text>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #003366; font-size: 13px;">TCS</div>
+                            <div style="font-size: 10px; color: #64748b;">Tata Consultancy · Prime Track</div>
+                        </div>
+                    </div>
+
+                    <!-- Infosys -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="22" height="17" viewBox="0 0 32 24" fill="none">
+                            <rect width="32" height="24" rx="4" fill="#007CC3"/>
+                            <text x="16" y="16.5" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="9.5" fill="#FFFFFF" text-anchor="middle">infy</text>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #007cc3; font-size: 13px;">Infosys</div>
+                            <div style="font-size: 10px; color: #64748b;">Specialist Programmer (SP)</div>
+                        </div>
+                    </div>
+
+                    <!-- Wipro -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="6" cy="12" r="3.5" fill="#E81E73"/>
+                            <circle cx="12" cy="6" r="3" fill="#F8A51D"/>
+                            <circle cx="12" cy="18" r="3" fill="#00AEEF"/>
+                            <circle cx="18" cy="12" r="3.5" fill="#8DC63F"/>
+                        </svg>
+                        <div>
+                            <div style="font-weight: 700; color: #3b3a98; font-size: 13px;">Wipro</div>
+                            <div style="font-size: 10px; color: #64748b;">Turbo & Elite Talent Hunt</div>
+                        </div>
                     </div>
                 </div>
 

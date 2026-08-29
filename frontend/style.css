@@ -2371,7 +2371,7 @@ th{
 .trust-logos-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     margin: 12px 0 16px;
     flex-wrap: wrap;
 }
@@ -2379,47 +2379,82 @@ th{
 .trust-logo-badge {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    border-radius: 7px;
     padding: 4px 8px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 11px;
     font-weight: 700;
     color: #1e293b;
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    user-select: none;
 }
 
 .trust-logo-badge:hover {
-    border-color: #6366f1;
+    border-color: #7c3aed;
+    background: #faf5ff;
     transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(124, 58, 237, 0.12);
 }
 
-.trust-logo-tcs {
+.trust-logo-badge svg {
+    flex-shrink: 0;
+    display: block;
+}
+
+.trust-brand-text {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    line-height: 1;
+}
+
+.trust-brand-text.brand-tcs {
     color: #003366;
-    font-family: Arial, sans-serif;
-    letter-spacing: -0.5px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.2px;
 }
 
-.trust-logo-infosys {
+.trust-brand-text.brand-infosys {
     color: #007cc3;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
 }
 
-.trust-logo-wipro {
+.trust-brand-text.brand-wipro {
     color: #3b3a98;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+.trust-brand-text.brand-google {
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.trust-brand-text.brand-msft {
+    color: #334155;
+    font-weight: 700;
+}
+
+.trust-brand-text.brand-amazon {
+    color: #0f172a;
+    font-weight: 800;
 }
 
 .trust-logo-more {
     font-size: 10px;
-    color: #6366f1;
-    background: #eef2ff;
-    border: 1px dashed #c7d2fe;
-    padding: 4px 6px;
-    border-radius: 6px;
-    font-weight: 600;
+    color: #7c3aed;
+    background: #f5f3ff;
+    border: 1px dashed #ddd6fe;
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
 }
 
 /* QR & Blockchain Snippet inside Card */
