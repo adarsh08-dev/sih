@@ -3,25 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkillBridge AI — Authentication</title>
+  <title>SkillBridge AI — Sign In</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
 </head>
 <body class="auth-body">
   <div class="auth-card-container">
     <div class="auth-card">
       <div class="auth-header">
-        <a href="index.html" class="auth-logo">
+        <a href="/login" class="auth-logo">
           <span class="logo-badge">⚡</span>
           <span>SkillBridge AI</span>
         </a>
-        <p class="auth-subtitle">Industry Career OS for Students, Mentors & Companies</p>
+        <p class="auth-subtitle">Role-Based Industry & Academia Career OS</p>
       </div>
 
       <!-- Tab Switcher -->
       <div class="auth-tabs">
-        <button id="tabLogin" class="auth-tab-btn active">Sign In</button>
-        <button id="tabRegister" class="auth-tab-btn">Register</button>
+        <button id="tabLogin" class="auth-tab-btn active" type="button">Sign In</button>
+        <button id="tabRegister" class="auth-tab-btn" type="button">Register</button>
       </div>
 
       <!-- Error / Success Alert -->
@@ -29,42 +31,75 @@
 
       <!-- Form -->
       <form id="authForm">
+        <!-- Step 1: University / Institute Selection -->
+        <div class="form-group" style="position: relative; margin-bottom: 20px;">
+          <label style="font-size: 13.5px; font-weight: 600; color: #FFFFFF; display: block; margin-bottom: 4px;">Choose Your Institute</label>
+          <p style="font-size: 11.5px; color: #94A3B8; margin: 0 0 8px 0;">We support 50+ institutes across UP (Bareilly & Lucknow zones)</p>
+          
+          <div style="position: relative;">
+            <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94A3B8; pointer-events: none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <input type="text" id="collegeSearchInput" placeholder="Search university... e.g. Rohilkhand" autocomplete="off" style="width: 100%; padding: 10px 12px 10px 38px; background: #12162C; border: 1px solid #2A2F4A; border-radius: 10px; color: #FFF; font-size: 13.5px;">
+          </div>
+
+          <!-- Dropdown Results Container -->
+          <div id="collegeDropdownList" style="display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 99; background: #12162C; border: 1px solid #2A2F4A; border-radius: 12px; max-height: 240px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 4px;">
+          </div>
+
+          <!-- Selected College Card -->
+          <div id="selectedCollegeCard" style="margin-top: 10px; background: rgba(124, 92, 252, 0.1); border: 1px solid rgba(124, 92, 252, 0.3); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div id="selCollegeLogo" style="width: 30px; height: 30px; border-radius: 50%; background: #7C5CFC; color: #FFF; font-weight: 700; font-size: 10px; display: flex; align-items: center; justify-content: center;">MJPRU</div>
+              <div>
+                <div id="selCollegeName" style="font-size: 12.5px; font-weight: 600; color: #FFF;">Mahatma Jyotiba Phule Rohilkhand University, Bareilly</div>
+                <div id="selCollegeCity" style="font-size: 11px; color: #94A3B8;">Bareilly</div>
+              </div>
+            </div>
+            <span style="color: #10B981; font-weight: 700; font-size: 15px;">✓</span>
+          </div>
+
+          <div style="font-size: 11px; color: #94A3B8; margin-top: 6px;">
+            Your institute not listed? Select Other and enter manually.
+          </div>
+        </div>
+
         <!-- Register-only: Name -->
         <div id="groupName" class="form-group hidden">
           <label for="authName">Full Name</label>
           <input type="text" id="authName" placeholder="e.g. Adarsh Pratap Singh">
         </div>
 
-        <!-- Register-only: Role Selector -->
-        <div id="groupRole" class="form-group hidden">
-          <label for="authRole">I am a</label>
-          <select id="authRole">
-            <option value="student">🎓 Student / Candidate</option>
+        <!-- Role Selector (ALWAYS VISIBLE IN BOTH LOGIN & REGISTER) -->
+        <div id="groupRole" class="form-group">
+          <label for="authRole">Select Role / Portal</label>
+          <select id="authRole" required>
+            <option value="student">🎓 Student</option>
+            <option value="hod">🏛️ HOD / Faculty</option>
             <option value="mentor">💼 Industry Mentor</option>
-            <option value="company">🏢 Hiring Partner / Company</option>
           </select>
         </div>
 
         <!-- Register-only: Dynamic Role Details -->
         <div id="groupExtraStudent" class="form-group hidden">
-          <label for="studentTargetRole">Target Career Role</label>
+          <label for="studentTargetRole">Target Career Role / Major</label>
           <input type="text" id="studentTargetRole" placeholder="e.g. Full Stack Software Engineer">
         </div>
 
-        <div id="groupExtraMentor" class="form-group hidden">
-          <label for="mentorCompany">Current Company & Job Title</label>
-          <input type="text" id="mentorCompany" placeholder="e.g. TechNova Labs — Senior Architect">
+        <div id="groupExtraHod" class="form-group hidden">
+          <label for="hodDepartment">Department / Institution</label>
+          <input type="text" id="hodDepartment" placeholder="e.g. Department of CS & IT — Dean / HOD">
         </div>
 
-        <div id="groupExtraCompany" class="form-group hidden">
-          <label for="companyName">Company / Organization Name</label>
-          <input type="text" id="companyName" placeholder="e.g. CloudSphere Systems">
+        <div id="groupExtraMentor" class="form-group hidden">
+          <label for="mentorCompany">Company & Job Title</label>
+          <input type="text" id="mentorCompany" placeholder="e.g. TechNova Labs — Senior Architect">
         </div>
 
         <!-- Common: Email -->
         <div class="form-group">
           <label for="authEmail">Email Address</label>
-          <input type="email" id="authEmail" required placeholder="you@university.edu">
+          <input type="email" id="authEmail" required placeholder="name@skillbridge.ai">
         </div>
 
         <!-- Common: Password -->
@@ -76,33 +111,30 @@
         <button type="submit" id="authSubmitBtn" class="btn btn-primary btn-block">Sign In</button>
       </form>
 
-      <!-- Quick Demo Sign In -->
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
-        <p style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-bottom: 10px;">
-          ⚡ Instant Demo Access (1-Click)
+      <!-- Quick Demo 1-Click Access -->
+      <div class="auth-demo-section">
+        <p class="auth-demo-title">
+          ⚡ 1-Click Instant Demo Login
         </p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+        <div class="auth-demo-grid">
           <button type="button" class="demo-btn" onclick="demoLogin('student')">
             🎓 Student
+          </button>
+          <button type="button" class="demo-btn" onclick="demoLogin('hod')">
+            🏛️ HOD / Faculty
           </button>
           <button type="button" class="demo-btn" onclick="demoLogin('mentor')">
             💼 Mentor
           </button>
-          <button type="button" class="demo-btn" onclick="demoLogin('company')">
-            🏢 Company
-          </button>
         </div>
-        <button type="button" class="guest-btn" onclick="continueAsGuest()">
-          Explore Dashboard as Guest →
-        </button>
       </div>
 
       <div class="auth-footer">
-        <span class="auth-footer-text">🔒 Protected by 256-bit encryption & PostgreSQL Auth</span>
+        <span class="auth-footer-text">🔒 Role-Secured Architecture · Powered by SkillBridge AI</span>
       </div>
     </div>
   </div>
 
-  <script src="login.js"></script>
+  <script type="module" src="login.js"></script>
 </body>
 </html>

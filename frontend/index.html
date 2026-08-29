@@ -9,6 +9,21 @@
     <meta name="description" content="SkillBridge AI - SIH26044 Academia-Industry Portal with Blockchain Verified Skill Passports, Industry Trusted Recruiters, and College Admin Verification.">
 
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const role = localStorage.getItem("role");
+            if (role === "hod") {
+                window.location.replace("/faculty-dashboard");
+            } else if (role === "mentor") {
+                window.location.replace("/mentor-dashboard");
+            } else if (role === "student") {
+                window.location.replace("/student-dashboard");
+            } else {
+                localStorage.setItem("role", "student");
+                window.location.replace("/student-dashboard");
+            }
+        })();
+    </script>
 </head>
 
 <body>

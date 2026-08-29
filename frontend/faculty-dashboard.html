@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge AI — Faculty & HOD Institutional Governance</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+</head>
+<body style="background: #0B0F2A; color: #F1F5F9; font-family: 'Inter', sans-serif;">
+
+    <!-- ROUTE GUARD SCRIPT (RUNS IMMEDIATELY) -->
+    <script>
+        (function() {
+            const role = localStorage.getItem("role");
+            if (role !== "hod") {
+                localStorage.setItem("auth_flash_error", "Unauthorized Access - Please login with correct role");
+                window.location.replace("/login?error=unauthorized");
+            }
+        })();
+    </script>
+
+    <!-- SIDEBAR (FACULTY / HOD PORTAL - NO SKILL DNA) -->
+    <aside class="sidebar" style="background: #080D24; border-right: 1px solid #1E2656;">
+        <div class="brand">
+            <div class="brand-logo" style="background: linear-gradient(135deg, #F59E0B, #7C5CFC);">HOD</div>
+            <div>
+                <h2 style="color: #FFFFFF; font-weight: 800; font-size: 16px;">SkillBridge AI</h2>
+                <small style="color: #94A3B8;">Institutional Governance OS</small>
+            </div>
+        </div>
+
+        <div class="menu-title" style="color: #64748B; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;">GOVERNANCE & CURRICULUM</div>
+
+        <button class="nav active" onclick="openFacultyTab('tab-unplaced-insights', this)" id="nav-unplaced-insights">
+             Unplaced Insights (32%)
+        </button>
+
+        <button class="nav" onclick="openFacultyTab('tab-auto-mou', this)" id="nav-auto-mou">
+            ️ Auto MoU Generator
+        </button>
+
+        <button class="nav" onclick="openFacultyTab('tab-faculty-swap', this)" id="nav-faculty-swap">
+             Faculty Swap & Exchange
+        </button>
+
+        <button class="nav" onclick="openFacultyTab('tab-curriculum-ai', this)" id="nav-curriculum-ai">
+             AI Curriculum Alignment
+        </button>
+
+        <button class="nav" onclick="openFacultyTab('tab-naac-reports', this)" id="nav-naac-reports">
+             NAAC / NBA Compliance
+        </button>
+
+        <!-- HOD PROFILE CARD & LOGOUT IN SIDEBAR -->
+        <div class="student-card" style="margin-top: 25px; background: #12173D; border: 1px solid #232C64;">
+            <div class="student-avatar" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: #232C64;"><img src="https://i.pravatar.cc/150?u=arvindsharma" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar"></div>
+            <div style="flex: 1; min-width: 0;">
+                <b style="color: #FFF; font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dr. Arvind K. Sharma</b>
+                <small style="color: #94A3B8; font-size: 10px;">HOD · Dept of CS & IT</small>
+            </div>
+            <button onclick="handleLogout()" title="Sign Out" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #F87171; border-radius: 6px; padding: 5px 8px; cursor: pointer; font-size: 11px;">
+                
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main class="main" style="margin-left: 260px; min-height: 100vh; background: #0B0F2A;">
+        <!-- TOPBAR -->
+        <header class="topbar" style="height: 70px; background: #0E1436; border-bottom: 1px solid #1E2656; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 50;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <span class="role-badge role-badge-hod">️ HOD & Faculty Portal</span>
+                <span style="font-size: 13px; color: #94A3B8;">Institution: <strong>Department of Computer Science & IT (Cohort 2025–29)</strong></span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <button onclick="openLoginModal()" class="btn-secondary" style="padding: 6px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                     Switch Role
+                </button>
+                <button onclick="handleLogout()" class="btn-logout">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENT CONTAINER -->
+        <div style="padding: 28px; max-width: 1300px; margin: 0 auto;">
+
+            <!-- ================= 1. TAB: UNPLACED INSIGHTS ================= -->
+            <section id="tab-unplaced-insights" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="font-size: 20px;"></span>
+                            <h1 style="font-size: 22px; font-weight: 800; color: #FFFFFF;">Unplaced Student Insights & Gap Remediation</h1>
+                        </div>
+                        <p style="color: #94A3B8; font-size: 13.5px;">Targeted root cause telemetry for the <strong>32% unplaced cohort (148 Students)</strong> to achieve 90%+ placement readiness.</p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary" onclick="exportRemediationList()" style="font-size: 12.5px;">
+                             Export Roster
+                        </button>
+                        <button class="btn-primary" onclick="triggerBatchIntervention()" style="font-size: 12.5px;">
+                             Launch AI Interventions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KEY METRICS GRID -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+                    <div class="card-box" style="padding: 18px; border-radius: 12px;">
+                        <div style="font-size: 11.5px; color: #94A3B8; margin-bottom: 6px;">Total Cohort Size</div>
+                        <div style="font-size: 26px; font-weight: 800; color: #FFFFFF;">462 Students</div>
+                        <div style="font-size: 11px; color: #94A3B8; margin-top: 4px;">Batch 2025–29 CSIT</div>
+                    </div>
+
+                    <div class="card-box" style="padding: 18px; border-radius: 12px; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05);">
+                        <div style="font-size: 11.5px; color: #FCA5A5; margin-bottom: 6px;">Unplaced Cohort (At-Risk)</div>
+                        <div style="font-size: 26px; font-weight: 800; color: #EF4444;">32% (148)</div>
+                        <div style="font-size: 11px; color: #F87171; margin-top: 4px;">Targeted for remediation</div>
+                    </div>
+
+                    <div class="card-box" style="padding: 18px; border-radius: 12px;">
+                        <div style="font-size: 11.5px; color: #94A3B8; margin-bottom: 6px;">Placed / Pre-Offer</div>
+                        <div style="font-size: 26px; font-weight: 800; color: #10B981;">68% (314)</div>
+                        <div style="font-size: 11px; color: #6EE7B7; margin-top: 4px;">Avg Package: ₹11.2 LPA</div>
+                    </div>
+
+                    <div class="card-box" style="padding: 18px; border-radius: 12px;">
+                        <div style="font-size: 11.5px; color: #94A3B8; margin-bottom: 6px;">Industry MoUs Active</div>
+                        <div style="font-size: 26px; font-weight: 800; color: #7C5CFC;">18 Corporate MoUs</div>
+                        <div style="font-size: 11px; color: #A78BFA; margin-top: 4px;">TCS, Google Cloud, TechNova</div>
+                    </div>
+                </div>
+
+                <!-- ROOT CAUSE & INTERVENTIONS -->
+                <div style="display: grid; grid-template-columns: 3fr 2fr; gap: 20px;">
+                    <div class="card-box" style="padding: 22px; border-radius: 14px;">
+                        <h3 style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 16px;">Top Rejection Root Causes (Industry Telemetry)</h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
+                            <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 700; color: #FFFFFF; font-size: 13.5px;">1. Cloud & System Design Deficit</span>
+                                    <span style="color: #EF4444; font-weight: 700; font-size: 12.5px;">42% of rejections</span>
+                                </div>
+                                <p style="font-size: 12px; color: #94A3B8;">Candidates lack hands-on experience with Docker, Kubernetes, and distributed event architectures.</p>
+                            </div>
+
+                            <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 700; color: #FFFFFF; font-size: 13.5px;">2. Production Database Indexing & SQL Tuning</span>
+                                    <span style="color: #F59E0B; font-weight: 700; font-size: 12.5px;">31% of rejections</span>
+                                </div>
+                                <p style="font-size: 12px; color: #94A3B8;">Academic SQL syllabi miss compound indexing, query explain plans, and connection pool sizing.</p>
+                            </div>
+
+                            <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 700; color: #FFFFFF; font-size: 13.5px;">3. Architecture Behavioral & Capsule Prep</span>
+                                    <span style="color: #7C5CFC; font-weight: 700; font-size: 12.5px;">27% of rejections</span>
+                                </div>
+                                <p style="font-size: 12px; color: #94A3B8;">Students struggle to communicate code trade-offs during live technical architecture rounds.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-box" style="padding: 22px; border-radius: 14px;">
+                        <h3 style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 16px;">AI Remediation Plan</h3>
+                        <div style="background: rgba(124, 92, 252, 0.1); border: 1px solid rgba(124, 92, 252, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 14px;">
+                            <div style="font-weight: 700; color: #A78BFA; font-size: 13px; margin-bottom: 6px;"> Mandatory 2-Week Micro-Sprint</div>
+                            <p style="font-size: 12px; color: #CBD5E1; line-height: 1.5;">Auto-assign all 148 unplaced students to Google Cloud & TechNova Ghost Tasks with automated testing.</p>
+                        </div>
+
+                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 16px;">
+                            <div style="font-weight: 700; color: #6EE7B7; font-size: 13px; margin-bottom: 6px;"> Fast-Track Mentor Capsules</div>
+                            <p style="font-size: 12px; color: #CBD5E1; line-height: 1.5;">Schedule dedicated 15-min technical audit sessions with industry architects before the next placement drive.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 2. TAB: AUTO MOU ================= -->
+            <section id="tab-auto-mou" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="font-size: 20px;">️</span>
+                            <h1 style="font-size: 22px; font-weight: 800; color: #FFFFFF;">Auto MoU Generator & Industry Alliance Tracking</h1>
+                        </div>
+                        <p style="color: #94A3B8; font-size: 13.5px;">Generate, customize, and legally execute institutional MoUs with hiring partners in 1 click.</p>
+                    </div>
+
+                    <button class="btn-primary" onclick="openNewMouModal()" style="font-size: 12.5px;">
+                        + Generate New MoU ️
+                    </button>
+                </div>
+
+                <div class="card-box" style="padding: 22px; border-radius: 14px;">
+                    <h3 style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 16px;">Active Industry MoUs</h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div style="background: #FFFFFF; padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" style="height: 22px; width: auto; object-fit: contain;" alt="Google">
+                                    <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: #10B981; font-weight: 700;"><span style="width: 4px; height: 4px; background: #10B981; border-radius: 50%;"></span> Verified</span>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <b style="color: #FFF; font-size: 14px;">Google Cloud Academic Partnership</b>
+                                        <span class="role-badge role-badge-student">Active · 2025–2028</span>
+                                    </div>
+                                    <p style="color: #94A3B8; font-size: 12px; margin-top: 4px;">Quota: 50 Micro-Internships / yr · 15 SDE Placements · Cloud Sandbox Credits</p>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="alert('Viewing Google Cloud MoU Agreement PDF...')">View Agreement </button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div style="background: #FFFFFF; padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Infosys_logo.svg" style="height: 22px; width: auto; object-fit: contain;" alt="Infosys">
+                                    <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: #10B981; font-weight: 700;"><span style="width: 4px; height: 4px; background: #10B981; border-radius: 50%;"></span> Verified</span>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <b style="color: #FFF; font-size: 14px;">Infosys Talent Pipeline & Labs</b>
+                                        <span class="role-badge role-badge-mentor">Active · 2025–2027</span>
+                                    </div>
+                                    <p style="color: #94A3B8; font-size: 12px; margin-top: 4px;">Quota: 30 Full-Stack Hires · Weekly Mentor Capsule Reviews · Fast-Track Interviews</p>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="alert('Viewing Infosys MoU Agreement PDF...')">View Agreement </button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div style="background: #FFFFFF; padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-size: 12px; font-weight: 900; color: #0F4C81; letter-spacing: 0.5px;">TCS</span>
+                                        <span style="font-size: 5.5px; color: #475569; font-weight: 700;">TATA CONSULTANCY SERVICES</span>
+                                    </div>
+                                    <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: #10B981; font-weight: 700;"><span style="width: 4px; height: 4px; background: #10B981; border-radius: 50%;"></span> Verified</span>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <b style="color: #FFF; font-size: 14px;">TCS Prime Enterprise Synergy</b>
+                                        <span class="role-badge role-badge-hod">Under Review</span>
+                                    </div>
+                                    <p style="color: #94A3B8; font-size: 12px; margin-top: 4px;">Quota: 75 Digital & Prime Track Hires · Curriculum Co-Design on Distributed Systems</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary" style="font-size: 12px; padding: 6px 12px;" onclick="alert('MoU signed and dispatched to TCS Legal Portal!')">Sign & Execute ️</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 3. TAB: FACULTY SWAP ================= -->
+            <section id="tab-faculty-swap" class="tab-content" style="display: none;">
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 20px;"></span>
+                        <h1 style="font-size: 22px; font-weight: 800; color: #FFFFFF;">Faculty Swap & Industry Sabbatical Exchange</h1>
+                    </div>
+                    <p style="color: #94A3B8; font-size: 13.5px;">Exchange university professors with industry principal architects for semester-long co-teaching modules.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div class="card-box" style="padding: 20px; border-radius: 12px;">
+                        <span class="role-badge role-badge-student">Incoming Exchange</span>
+                        <h3 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 10px 0 6px;">Dr. Anand Rao (Google Cloud)</h3>
+                        <p style="font-size: 12px; color: #94A3B8; margin-bottom: 12px;">Teaching: CS402 Distributed Cloud Systems (Fall 2026)</p>
+                        <button class="btn-primary btn-block" style="font-size: 12px; padding: 8px;" onclick="alert('Exchange slot confirmed!')">Confirm Schedule </button>
+                    </div>
+
+                    <div class="card-box" style="padding: 20px; border-radius: 12px;">
+                        <span class="role-badge role-badge-hod">Faculty Sabbatical</span>
+                        <h3 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 10px 0 6px;">Prof. Sunita Reddy</h3>
+                        <p style="font-size: 12px; color: #94A3B8; margin-bottom: 12px;">Sabbatical at TechNova Labs · Microservices & DB Tuning</p>
+                        <button class="btn-secondary btn-block" style="font-size: 12px; padding: 8px;" onclick="alert('Sabbatical Progress: Week 6/12')">View Sabbatical Log</button>
+                    </div>
+
+                    <div class="card-box" style="padding: 20px; border-radius: 12px;">
+                        <span class="role-badge role-badge-mentor">Open Exchange Slot</span>
+                        <h3 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 10px 0 6px;">FinTech Architect Swap</h3>
+                        <p style="font-size: 12px; color: #94A3B8; margin-bottom: 12px;">Seeking Guest Architect for High-Throughput Ledger Systems</p>
+                        <button class="btn-primary btn-block" style="font-size: 12px; padding: 8px;" onclick="alert('Matchmaker dispatched to Industry Network!')">Match Partner </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 4. TAB: CURRICULUM AI ================= -->
+            <section id="tab-curriculum-ai" class="tab-content" style="display: none;">
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 20px;"></span>
+                        <h1 style="font-size: 22px; font-weight: 800; color: #FFFFFF;">AI Curriculum Interventions & Syllabus Modernizer</h1>
+                    </div>
+                    <p style="color: #94A3B8; font-size: 13.5px;">Automated comparison between your university syllabus and live Q1-2026 industry hiring demand.</p>
+                </div>
+
+                <div class="card-box" style="padding: 24px; border-radius: 14px;">
+                    <h3 style="font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 16px;">Recommended Syllabus Modifications</h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <b style="color: #FFF;">Module CS304: Replace Old XML Web Services with gRPC & REST</b>
+                                <span class="role-badge role-badge-hod">+18% Hiring Alignment</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin-top: 6px;">AI recommends shifting 6 lecture hours from SOAP/WSDL to Protobuf, gRPC microservices, and JWT bearer auth.</p>
+                        </div>
+
+                        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <b style="color: #FFF;">Module CS308: Introduce PostgreSQL Indexing & Query Explain Plans</b>
+                                <span class="role-badge role-badge-hod">+24% Hiring Alignment</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin-top: 6px;">Address the #2 root cause rejection metric by incorporating B-Tree index optimization and connection pooling.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 5. TAB: NAAC REPORTS ================= -->
+            <section id="tab-naac-reports" class="tab-content" style="display: none;">
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 20px;"></span>
+                        <h1 style="font-size: 22px; font-weight: 800; color: #FFFFFF;">NAAC / NBA Accreditation & Governance Dossier</h1>
+                    </div>
+                    <p style="color: #94A3B8; font-size: 13.5px;">Automated compliance generation for Criterion 2 (Teaching-Learning), Criterion 3 (Industry Linkages), and Criterion 5 (Student Support).</p>
+                </div>
+
+                <div class="card-box" style="padding: 24px; border-radius: 14px;">
+                    <p style="font-size: 13px; color: #CBD5E1; margin-bottom: 16px;">Generate verifiable PDF dossiers containing all student micro-internship certificates, industry MoUs, and faculty sabbatical telemetry.</p>
+                    <button class="btn-primary" onclick="alert('NAAC / NBA Dossier compiled successfully! Ready for download.')">
+                        Download Complete NAAC Dossier (PDF) 
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- UNIVERSAL LOGIN MODAL (SWITCH ROLE) -->
+    <div id="loginModalOverlay" class="auth-modal-overlay hidden" style="display: none;">
+        <div class="auth-modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <div class="auth-modal-title">
+                    <span></span>
+                    <span>Switch Role / Sign In</span>
+                </div>
+                <button onclick="closeLoginModal()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+            </div>
+
+            <form onsubmit="handleModalLogin(event)">
+                <div class="form-group">
+                    <label for="modalRole">Select Target Role</label>
+                    <select id="modalRole" required>
+                        <option value="hod">️ HOD / Faculty</option>
+                        <option value="student"> Student</option>
+                        <option value="mentor"> Industry Mentor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalEmail">Email Address</label>
+                    <input type="email" id="modalEmail" placeholder="hod.csit@university.edu" value="hod.csit@university.edu" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalPassword">Password</label>
+                    <input type="password" id="modalPassword" placeholder="••••••••" value="demo1234" required>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block">Sign In & Redirect</button>
+            </form>
+
+            <div class="auth-demo-section">
+                <p class="auth-demo-title"> 1-Click Role Switch</p>
+                <div class="auth-demo-grid">
+                    <button type="button" class="demo-btn" onclick="directRoleSwitch('student')"> Student</button>
+                    <button type="button" class="demo-btn" onclick="directRoleSwitch('hod')">️ HOD</button>
+                    <button type="button" class="demo-btn" onclick="directRoleSwitch('mentor')"> Mentor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIENT SCRIPT -->
+    <script>
+        function openFacultyTab(tabId, btnElem) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            const target = document.getElementById(tabId);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('.sidebar .nav').forEach(btn => btn.classList.remove('active'));
+            if (btnElem) btnElem.classList.add('active');
+        }
+
+        function exportRemediationList() {
+            alert('Exporting 148 Unplaced Students Remediation Roster (CSV/Excel)...');
+        }
+
+        function triggerBatchIntervention() {
+            alert('AI Remediation triggered: 148 students enrolled into targeted Ghost Internships and assigned to Industry Mentor Capsules.');
+        }
+
+        function openNewMouModal() {
+            const partner = prompt("Enter Corporate Partner Name (e.g. Amazon Web Services, Infosys, Microsoft):", "Amazon Web Services");
+            if (partner) {
+                alert(`Auto MoU generated for ${partner}! Legal terms, hiring quotas, and digital signing keys prepared.`);
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("role");
+            localStorage.removeItem("skillbridge_user");
+            localStorage.removeItem("skillbridge_token");
+            window.location.replace("/login");
+        }
+
+        function openLoginModal() {
+            document.getElementById("loginModalOverlay").style.display = "flex";
+        }
+
+        function closeLoginModal() {
+            document.getElementById("loginModalOverlay").style.display = "none";
+        }
+
+        function handleModalLogin(e) {
+            e.preventDefault();
+            const role = document.getElementById("modalRole").value;
+            directRoleSwitch(role);
+        }
+
+        function directRoleSwitch(role) {
+            if (role === "student") {
+                localStorage.setItem("role", "student");
+                window.location.href = "/student-dashboard";
+            } else if (role === "hod") {
+                localStorage.setItem("role", "hod");
+                window.location.href = "/faculty-dashboard";
+            } else if (role === "mentor") {
+                localStorage.setItem("role", "mentor");
+                window.location.href = "/mentor-dashboard";
+            }
+        }
+    </script>
+
+        <footer style="margin-top: 60px; padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; color: #94A3B8; font-size: 13px;">
+            <div>SkillBridge AI Enterprise Governance OS · SIH 2026</div>
+            <div style="display: flex; gap: 24px;">
+                <a href="#" onclick="alert("Opening Privacy Policy..."); return false;" style="color: #94A3B8; text-decoration: none;">Privacy</a>
+                <a href="#" onclick="alert("Opening Terms of Service..."); return false;" style="color: #94A3B8; text-decoration: none;">Terms</a>
+                <a href="mailto:skillbridge@aktu.ac.in" style="color: #94A3B8; text-decoration: none;">Contact: skillbridge@aktu.ac.in</a>
+            </div>
+        </footer>
+        </body>
+</html>

@@ -896,9 +896,26 @@ app.use("/api", (req, res) => {
   res.status(404).json({ error: `API route ${req.method} ${req.originalUrl} not found` });
 });
 
-/* ================= STATIC FILES ================= */
+/* ================= STATIC FILES & ROUTING ================= */
 const frontendPath = path.join(__dirname, "../frontend");
 app.use(express.static(frontendPath));
+
+// Explicit role-based HTML routes
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(frontendPath, "login.html"));
+});
+
+app.get("/student-dashboard", (req, res) => {
+  res.sendFile(path.join(frontendPath, "student-dashboard.html"));
+});
+
+app.get("/faculty-dashboard", (req, res) => {
+  res.sendFile(path.join(frontendPath, "faculty-dashboard.html"));
+});
+
+app.get("/mentor-dashboard", (req, res) => {
+  res.sendFile(path.join(frontendPath, "mentor-dashboard.html"));
+});
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));

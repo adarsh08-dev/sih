@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge AI — Industry Mentor Dashboard (TCS)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+</head>
+<body style="background: #0B0F2A; color: #F1F5F9; font-family: 'Inter', sans-serif; margin: 0; padding: 0;">
+
+    <!-- ROUTE GUARD SCRIPT -->
+    <script>
+        (function() {
+            const role = localStorage.getItem("role");
+            if (role !== "mentor") {
+                localStorage.setItem("auth_flash_error", "Unauthorized Access - Please login with correct role");
+                window.location.replace("/login?error=unauthorized");
+            }
+        })();
+    </script>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" style="background: #080D24; border-right: 1px solid #1E2656; width: 260px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; z-index: 100; padding: 24px 16px;">
+        <div class="brand" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+            <div style="background: #FFFFFF; padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 13px; font-weight: 900; color: #0F4C81; letter-spacing: 0.5px;">TCS</span>
+                    <span style="font-size: 5.5px; color: #475569; font-weight: 700;">TATA CONSULTANCY SERVICES</span>
+                </div>
+                <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: #10B981; font-weight: 700;"><span style="width: 4px; height: 4px; background: #10B981; border-radius: 50%;"></span> Verified</span>
+            </div>
+            <div>
+                <h2 style="color: #FFFFFF; font-weight: 800; font-size: 14px; margin: 0;">SkillBridge AI</h2>
+                <small style="color: #94A3B8; font-size: 10px;">Enterprise Mentor OS</small>
+            </div>
+        </div>
+
+        <div class="menu-title" style="color: #64748B; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 10px;">MENTOR CONSOLE</div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: 1;">
+            <button class="nav active" onclick="switchTab('tab-pipeline', this)" id="nav-pipeline" style="width: 100%; text-align: left; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                 Assigned Pipeline
+            </button>
+
+            <button class="nav" onclick="switchTab('tab-reviews', this)" id="nav-reviews" style="width: 100%; text-align: left; background: transparent; border: 1px solid transparent; color: #94A3B8; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                 Ghost Task Reviews
+            </button>
+
+            <button class="nav" onclick="switchTab('tab-capsules', this)" id="nav-capsules" style="width: 100%; text-align: left; background: transparent; border: 1px solid transparent; color: #94A3B8; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                 Capsule Mentoring Chat
+            </button>
+
+            <div style="margin-top: 20px; font-size: 10px; font-weight: 700; color: #64748B; letter-spacing: 1.5px; margin-bottom: 8px;">QUICK ACTIONS</div>
+
+            <button onclick="openCreateTaskModal()" style="width: 100%; text-align: left; background: #0E1436; border: 1px solid #232C64; color: #E2E8F0; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                 Create New Micro-Task
+            </button>
+
+            <button onclick="openMouModal()" style="width: 100%; text-align: left; background: #0E1436; border: 1px solid #232C64; color: #E2E8F0; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                 View MoU Requests (3)
+            </button>
+
+            <button onclick="openFacultyMessageModal()" style="width: 100%; text-align: left; background: #0E1436; border: 1px solid #232C64; color: #E2E8F0; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                ️ Message Faculty HOD
+            </button>
+        </div>
+
+        <!-- MENTOR PROFILE CARD -->
+        <div style="background: #12173D; border: 1px solid #232C64; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-top: auto;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: #232C64;"><img src="https://i.pravatar.cc/150?u=amitverma" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar"></div>
+            <div style="flex: 1; min-width: 0;">
+                <b style="color: #FFF; font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Amit Verma</b>
+                <small style="color: #94A3B8; font-size: 10px;">Senior Architect · TCS</small>
+            </div>
+            <button onclick="handleLogout()" title="Sign Out" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #F87171; border-radius: 6px; padding: 6px 8px; cursor: pointer; font-size: 11px;">
+                
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main style="margin-left: 260px; min-height: 100vh; background: #0B0F2A; display: flex; flex-direction: column;">
+        <!-- TOP HEADER -->
+        <header style="height: 74px; background: #0E1436; border-bottom: 1px solid #1E2656; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 18px;"></span>
+                    <h1 style="font-size: 18px; font-weight: 800; color: #FFFFFF; margin: 0;">Welcome, Amit Verma <span style="font-size: 13px; color: #A78BFA; font-weight: 600; background: rgba(124, 92, 252, 0.15); padding: 3px 10px; border-radius: 6px; border: 1px solid rgba(124, 92, 252, 0.3); margin-left: 6px;">TCS Mentor</span></h1>
+                </div>
+            </div>
+
+            <!-- STATS COUNTERS -->
+            <div style="display: flex; align-items: center; gap: 24px; background: #141A44; border: 1px solid #232C64; padding: 8px 18px; border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Assigned Students:</span>
+                    <strong style="color: #10B981; font-size: 15px; font-weight: 800;">12</strong>
+                </div>
+                <div style="width: 1px; height: 18px; background: #232C64;"></div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Tasks Reviewed:</span>
+                    <strong style="color: #7C5CFC; font-size: 15px; font-weight: 800;">34</strong>
+                </div>
+                <div style="width: 1px; height: 18px; background: #232C64;"></div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Active MoUs:</span>
+                    <strong style="color: #F59E0B; font-size: 15px; font-weight: 800;">3</strong>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button onclick="openLoginModal()" style="background: #141A44; border: 1px solid #232C64; color: #CBD5E1; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                     Switch Role
+                </button>
+                <button onclick="handleLogout()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #F87171; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <div style="padding: 32px; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; flex: 1;">
+
+            <!-- ================= 1. SECTION: ASSIGNED STUDENTS PIPELINE (KANBAN 3 COLUMNS) ================= -->
+            <section id="tab-pipeline" class="tab-content" style="display: block;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin: 0 0 6px 0;">Assigned Students Pipeline</h2>
+                        <p style="color: #94A3B8; font-size: 13px; margin: 0;">Real-time enterprise tracking board for mentored CSIT students across skill readiness stages.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="openCreateTaskModal()" style="background: linear-gradient(135deg, #7C5CFC, #6366F1); border: none; color: #FFF; padding: 8px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+                            + Assign Micro-Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KANBAN 3 COLUMNS -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    
+                    <!-- COLUMN A: NEEDS GUIDANCE -->
+                    <div style="background: #0E1436; border: 1px solid #1E2656; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E2656; padding-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #EF4444;"></span>
+                                <h3 style="font-size: 14px; font-weight: 700; color: #FCA5A5; margin: 0;">Needs Guidance</h3>
+                            </div>
+                            <span style="background: rgba(239, 68, 68, 0.15); color: #F87171; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">4 Students</span>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Rohit Sharma</b>
+                                <span style="font-size: 11px; color: #EF4444; background: rgba(239, 68, 68, 0.1); padding: 2px 6px; border-radius: 4px;">30% Cloud Readiness</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">Struggling with Terraform scripts and AWS VPC networking modules.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: Cloud Infrastructure</span>
+                                    <span style="color: #EF4444;">30%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #EF4444; width: 30%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="openReviewModal('Rohit Sharma', 'Cloud Infrastructure', '30%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                Review & Guide 
+                            </button>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Neha Gupta</b>
+                                <span style="font-size: 11px; color: #F59E0B; background: rgba(245, 158, 11, 0.1); padding: 2px 6px; border-radius: 4px;">45% SQL Tuning</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">Fails compound B-Tree index query plans under high concurrency.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: PostgreSQL Optimization</span>
+                                    <span style="color: #F59E0B;">45%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #F59E0B; width: 45%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="openReviewModal('Neha Gupta', 'PostgreSQL Optimization', '45%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                Review & Guide 
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN B: IN PROGRESS -->
+                    <div style="background: #0E1436; border: 1px solid #1E2656; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E2656; padding-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #3B82F6;"></span>
+                                <h3 style="font-size: 14px; font-weight: 700; color: #93C5FD; margin: 0;">In Progress (Ghost Internship)</h3>
+                            </div>
+                            <span style="background: rgba(59, 130, 246, 0.15); color: #60A5FA; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">5 Students</span>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Priya Patel</b>
+                                <span style="font-size: 11px; color: #3B82F6; background: rgba(59, 130, 246, 0.1); padding: 2px 6px; border-radius: 4px;">Infosys Ghost Task</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">Building multi-tenant microservices with Docker & Redis caching.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: Distributed Systems</span>
+                                    <span style="color: #3B82F6;">68%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #3B82F6; width: 68%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="openReviewModal('Priya Patel', 'Distributed Systems', '68%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                Review PR #39 
+                            </button>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Adarsh Pratap Singh</b>
+                                <span style="font-size: 11px; color: #3B82F6; background: rgba(59, 130, 246, 0.1); padding: 2px 6px; border-radius: 4px;">TCS Prime Track</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">PostgreSQL Connection Pool & JWT Middleware integration.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: Backend Security</span>
+                                    <span style="color: #3B82F6;">78%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #3B82F6; width: 78%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="openReviewModal('Adarsh Pratap Singh', 'Backend Security', '78%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                Review PR #42 
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN C: INDUSTRY READY -->
+                    <div style="background: #0E1436; border: 1px solid #1E2656; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E2656; padding-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
+                                <h3 style="font-size: 14px; font-weight: 700; color: #6EE7B7; margin: 0;">Industry Ready</h3>
+                            </div>
+                            <span style="background: rgba(16, 185, 129, 0.15); color: #34D399; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">3 Students</span>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Aman Verma</b>
+                                <span style="font-size: 11px; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px;">88% Ready</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">Completed Google Cloud Architecture & System Design sprints.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: Overall Readiness</span>
+                                    <span style="color: #10B981;">88%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #10B981; width: 88%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="signoffPassport('Aman Verma')" style="width: 100%; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                 Sign Experience Passport
+                            </button>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <b style="color: #FFF; font-size: 13.5px;">Rahul Varma</b>
+                                <span style="font-size: 11px; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px;">85% Ready</span>
+                            </div>
+                            <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">Stream ingestion in Redis and Kafka message queues.</p>
+                            
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-bottom: 4px;">
+                                    <span>Skill DNA: Overall Readiness</span>
+                                    <span style="color: #10B981;">85%</span>
+                                </div>
+                                <div style="background: #0B0F2A; border-radius: 4px; height: 6px; overflow: hidden;">
+                                    <div style="background: #10B981; width: 85%; height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <button onclick="signoffPassport('Rahul Varma')" style="width: 100%; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                                 Sign Experience Passport
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ================= 2. SECTION: GHOST TASK REVIEW (TABLE) ================= -->
+            <section id="tab-reviews" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin: 0 0 6px 0;">Ghost Task Review Console</h2>
+                        <p style="color: #94A3B8; font-size: 13px; margin: 0;">Inspect automated AI test runs, audit code repositories, and provide mentor feedback.</p>
+                    </div>
+                </div>
+
+                <div style="background: #0E1436; border: 1px solid #1E2656; border-radius: 14px; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #141A44; border-bottom: 1px solid #232C64; color: #94A3B8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <th style="padding: 16px 20px;">Student Name</th>
+                                <th style="padding: 16px 20px;">Task Submitted</th>
+                                <th style="padding: 16px 20px;">AI Score</th>
+                                <th style="padding: 16px 20px; text-align: right;">Your Action</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: #E2E8F0;">
+                            <tr style="border-bottom: 1px solid #1E2656; transition: background 0.2s;">
+                                <td style="padding: 16px 20px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 28px; height: 28px; border-radius: 50%; background: #EF4444; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;">RS</div>
+                                        <span>Rohit Sharma</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px 20px;">Cloud Infrastructure & Terraform VPC</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="color: #EF4444; font-weight: 700; background: rgba(239, 68, 68, 0.1); padding: 4px 8px; border-radius: 6px;">AI Score 60%</span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: right;">
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button onclick="approveTask('Rohit Sharma', 'Cloud Infrastructure')" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Approve</button>
+                                        <button onclick="openFeedbackChat('Rohit Sharma', 'Cloud Infrastructure & Terraform VPC')" style="background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Give Feedback </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #1E2656; transition: background 0.2s;">
+                                <td style="padding: 16px 20px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 28px; height: 28px; border-radius: 50%; background: #3B82F6; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;">PP</div>
+                                        <span>Priya Patel</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px 20px;">Infosys Multi-Tenant Microservices PR #39</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="color: #3B82F6; font-weight: 700; background: rgba(59, 130, 246, 0.1); padding: 4px 8px; border-radius: 6px;">AI Score 78%</span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: right;">
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button onclick="approveTask('Priya Patel', 'Multi-Tenant Microservices')" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Approve</button>
+                                        <button onclick="openFeedbackChat('Priya Patel', 'Infosys Multi-Tenant Microservices PR #39')" style="background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Give Feedback </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="transition: background 0.2s;">
+                                <td style="padding: 16px 20px; font-weight: 600;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 28px; height: 28px; border-radius: 50%; background: #10B981; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;">AV</div>
+                                        <span>Aman Verma</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px 20px;">Distributed Event Ledger in Go</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="color: #10B981; font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px;">AI Score 91%</span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: right;">
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button onclick="approveTask('Aman Verma', 'Distributed Event Ledger')" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Approve</button>
+                                        <button onclick="openFeedbackChat('Aman Verma', 'Distributed Event Ledger in Go')" style="background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Give Feedback </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ================= 3. SECTION: CAPSULE MENTORING CHAT ================= -->
+            <section id="tab-capsules" class="tab-content" style="display: none;">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin: 0 0 6px 0;">Capsule Mentoring & Feedback Console</h2>
+                    <p style="color: #94A3B8; font-size: 13px; margin: 0;">Interactive 1-on-1 enterprise chat with assigned mentees for architectural advice and code critique.</p>
+                </div>
+
+                <div style="background: #0E1436; border: 1px solid #1E2656; border-radius: 14px; padding: 24px; display: grid; grid-template-columns: 280px 1fr; gap: 20px;">
+                    <!-- Mentees List -->
+                    <div style="border-right: 1px solid #1E2656; padding-right: 20px;">
+                        <h3 style="font-size: 13px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin: 0 0 14px 0;">Select Mentee</h3>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div onclick="selectMentee('Rohit Sharma', '60% AI Score')" style="background: #141A44; border: 1px solid #7C5CFC; border-radius: 10px; padding: 12px; cursor: pointer;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <b style="color: #FFF; font-size: 13px;">Rohit Sharma</b>
+                                    <span style="font-size: 10px; color: #EF4444;">Needs Help</span>
+                                </div>
+                                <small style="color: #94A3B8; font-size: 11px;">Cloud Infrastructure Task</small>
+                            </div>
+
+                            <div onclick="selectMentee('Priya Patel', '78% AI Score')" style="background: #12173D; border: 1px solid #232C64; border-radius: 10px; padding: 12px; cursor: pointer;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <b style="color: #FFF; font-size: 13px;">Priya Patel</b>
+                                    <span style="font-size: 10px; color: #3B82F6;">In Progress</span>
+                                </div>
+                                <small style="color: #94A3B8; font-size: 11px;">Infosys Microservices PR</small>
+                            </div>
+
+                            <div onclick="selectMentee('Aman Verma', '91% AI Score')" style="background: #12173D; border: 1px solid #232C64; border-radius: 10px; padding: 12px; cursor: pointer;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <b style="color: #FFF; font-size: 13px;">Aman Verma</b>
+                                    <span style="font-size: 10px; color: #10B981;">Ready</span>
+                                </div>
+                                <small style="color: #94A3B8; font-size: 11px;">Distributed Ledger Go</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Box -->
+                    <div style="display: flex; flex-direction: column; height: 460px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E2656; padding-bottom: 12px; margin-bottom: 16px;">
+                            <div>
+                                <b id="chatActiveMenteeName" style="color: #FFF; font-size: 14px;">Rohit Sharma</b>
+                                <span id="chatActiveMenteeStatus" style="font-size: 11px; color: #EF4444; display: block;">Cloud Infrastructure · AI Score 60%</span>
+                            </div>
+                            <span style="background: rgba(124, 92, 252, 0.15); color: #A78BFA; font-size: 11px; padding: 4px 10px; border-radius: 6px;">TCS Capsule Session Active</span>
+                        </div>
+
+                        <div id="chatMessagesBox" style="flex: 1; overflow-y: auto; background: #0B0F2A; border: 1px solid #1E2656; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;">
+                            <div style="background: #141A44; border: 1px solid #232C64; padding: 12px 16px; border-radius: 10px; max-width: 80%; align-self: flex-start; font-size: 13px;">
+                                <b style="color: #A78BFA; display: block; font-size: 11px; margin-bottom: 4px;">Rohit Sharma · 2 hours ago</b>
+                                Hello Amit! My Terraform VPC subnet routing configuration keeps failing automated checks. Could you advise on how to set up the internet gateway routing table properly?
+                            </div>
+                            <div style="background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); padding: 12px 16px; border-radius: 10px; max-width: 80%; align-self: flex-end; font-size: 13px; color: #F1F5F9;">
+                                <b style="color: #34D399; display: block; font-size: 11px; margin-bottom: 4px;">Amit Verma (TCS Mentor) · Just now</b>
+                                Hi Rohit. Ensure your `aws_route` resource explicitly links the `gateway_id` to your `aws_internet_gateway.igw.id` and that the subnet association table matches the public subnet CIDR block.
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="chatInputMessage" placeholder="Type professional code review feedback or architectural advice..." style="flex: 1; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 12px; color: #FFF; font-size: 13px; outline: none;" onkeydown="if(event.key==='Enter') sendMentorMessage()">
+                            <button onclick="sendMentorMessage()" style="background: #7C5CFC; border: none; color: #FFF; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px;">Send Advice </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODAL: CREATE NEW MICRO-TASK -->
+    <div id="modalCreateTask" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center;">
+        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 16px; width: 480px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #FFF; font-size: 18px; font-weight: 800; margin: 0;"> Create New Micro-Task</h3>
+                <button onclick="closeModals()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+            </div>
+            <form onsubmit="handleCreateTask(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 12px; color: #94A3B8; margin-bottom: 6px; font-weight: 600;">Task Title</label>
+                    <input type="text" id="taskTitleInput" placeholder="e.g., Redis Pub/Sub Event Streaming" required style="width: 100%; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px; outline: none; box-sizing: border-box;">
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 12px; color: #94A3B8; margin-bottom: 6px; font-weight: 600;">Target Cohort / Track</label>
+                    <select id="taskTrackSelect" style="width: 100%; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px; outline: none; box-sizing: border-box;">
+                        <option value="csit">CSIT 2025–29 (All 12 Mentees)</option>
+                        <option value="needs-guidance">Needs Guidance Cohort (4 Students)</option>
+                        <option value="tcs-track">TCS Prime Track Only</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 12px; color: #94A3B8; margin-bottom: 6px; font-weight: 600;">Technical Brief & Automated Test Spec</label>
+                    <textarea id="taskDescInput" rows="3" placeholder="Describe the sprint requirements and automated test assertions..." required style="width: 100%; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px; outline: none; box-sizing: border-box;"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeModals()" style="background: #141A44; border: 1px solid #232C64; color: #CBD5E1; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="submit" style="background: #7C5CFC; border: none; color: #FFF; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Dispatch Task </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: MOU REQUESTS -->
+    <div id="modalMou" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center;">
+        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 16px; width: 600px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #FFF; font-size: 18px; font-weight: 800; margin: 0;"> Active & Pending Industry MoUs (3)</h3>
+                <button onclick="closeModals()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <b style="color: #FFF; font-size: 14px;">TCS Enterprise Digital Synergy MoU</b>
+                        <p style="color: #94A3B8; font-size: 12px; margin: 4px 0 0 0;">Quota: 75 Digital Hires · Co-designed Cloud Syllabus</p>
+                    </div>
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #34D399; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">Active (2025–2028)</span>
+                </div>
+
+                <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <b style="color: #FFF; font-size: 14px;">Google Cloud Academic Sandbox</b>
+                        <p style="color: #94A3B8; font-size: 12px; margin: 4px 0 0 0;">Quota: 50 Micro-Internships · $25k Cloud Credits</p>
+                    </div>
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #34D399; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">Active</span>
+                </div>
+
+                <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <b style="color: #FFF; font-size: 14px;">TechNova Labs Talent Pipeline</b>
+                        <p style="color: #94A3B8; font-size: 12px; margin: 4px 0 0 0;">Quota: 30 SDE Placements · Weekly Mentorship</p>
+                    </div>
+                    <button onclick="alert('MoU renewal dispatched for digital signature!')" style="background: #7C5CFC; border: none; color: #FFF; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Sign Renewal ️</button>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button onclick="closeModals()" style="background: #141A44; border: 1px solid #232C64; color: #CBD5E1; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: MESSAGE FACULTY -->
+    <div id="modalMessageFaculty" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center;">
+        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 16px; width: 480px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #FFF; font-size: 18px; font-weight: 800; margin: 0;">️ Message College HOD / Faculty</h3>
+                <button onclick="closeModals()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+            </div>
+            <form onsubmit="handleSendMessage(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 12px; color: #94A3B8; margin-bottom: 6px; font-weight: 600;">Recipient</label>
+                    <input type="text" value="Dr. Arvind K. Sharma (HOD - Dept of CS & IT)" disabled style="width: 100%; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 10px; color: #94A3B8; font-size: 13px; box-sizing: border-box;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 12px; color: #94A3B8; margin-bottom: 6px; font-weight: 600;">Dispatch Message</label>
+                    <textarea rows="4" placeholder="Discuss curriculum gaps, student remediation, or interview schedules..." required style="width: 100%; background: #141A44; border: 1px solid #232C64; border-radius: 8px; padding: 10px; color: #FFF; font-size: 13px; outline: none; box-sizing: border-box;"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeModals()" style="background: #141A44; border: 1px solid #232C64; color: #CBD5E1; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="submit" style="background: #7C5CFC; border: none; color: #FFF; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Send Dispatch </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UNIVERSAL LOGIN MODAL -->
+    <div id="loginModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: center; justify-content: center;">
+        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 16px; width: 400px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <b style="color: #FFF; font-size: 16px;"> Switch Role / Sign In</b>
+                <button onclick="closeLoginModal()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button onclick="directRoleSwitch('student')" style="background: #141A44; border: 1px solid #232C64; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;"> Switch to Student Portal</button>
+                <button onclick="directRoleSwitch('hod')" style="background: #141A44; border: 1px solid #232C64; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;">️ Switch to HOD Portal</button>
+                <button onclick="directRoleSwitch('mentor')" style="background: rgba(124, 92, 252, 0.2); border: 1px solid #7C5CFC; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;"> Industry Mentor Portal (Active)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        function switchTab(tabId, btnElem) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            const target = document.getElementById(tabId);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('aside button.nav').forEach(btn => {
+                btn.style.background = 'transparent';
+                btn.style.borderColor = 'transparent';
+                btn.style.color = '#94A3B8';
+            });
+            if (btnElem) {
+                btnElem.style.background = 'rgba(124, 92, 252, 0.15)';
+                btnElem.style.borderColor = 'rgba(124, 92, 252, 0.3)';
+                btnElem.style.color = '#A78BFA';
+            }
+        }
+
+        function openCreateTaskModal() {
+            document.getElementById("modalCreateTask").style.display = "flex";
+        }
+
+        function openMouModal() {
+            document.getElementById("modalMou").style.display = "flex";
+        }
+
+        function openFacultyMessageModal() {
+            document.getElementById("modalMessageFaculty").style.display = "flex";
+        }
+
+        function closeModals() {
+            document.getElementById("modalCreateTask").style.display = "none";
+            document.getElementById("modalMou").style.display = "none";
+            document.getElementById("modalMessageFaculty").style.display = "none";
+        }
+
+        function handleCreateTask(e) {
+            e.preventDefault();
+            const title = document.getElementById("taskTitleInput").value;
+            alert(`Micro-task "${title}" successfully dispatched to assigned students!`);
+            closeModals();
+        }
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            alert("Dispatch sent successfully to Dr. Arvind K. Sharma (HOD).");
+            closeModals();
+        }
+
+        function openReviewModal(studentName, skill, score) {
+            switchTab('tab-capsules');
+            selectMentee(studentName, score + ' AI Score');
+        }
+
+        function openFeedbackChat(studentName, taskName) {
+            switchTab('tab-capsules');
+            selectMentee(studentName, 'Active Review');
+        }
+
+        function approveTask(studentName, taskName) {
+            alert(` Approved "${taskName}" for ${studentName}!\nExperience Passport updated on SkillBridge network.`);
+        }
+
+        function signoffPassport(studentName) {
+            alert(` Cryptographic Experience Passport successfully signed for ${studentName}!\nReady for TCS & Google Cloud final interview rounds.`);
+        }
+
+        function selectMentee(name, score) {
+            document.getElementById("chatActiveMenteeName").innerText = name;
+            document.getElementById("chatActiveMenteeStatus").innerText = score;
+        }
+
+        function sendMentorMessage() {
+            const input = document.getElementById("chatInputMessage");
+            const box = document.getElementById("chatMessagesBox");
+            if (!input || !input.value.trim()) return;
+
+            const text = input.value.trim();
+            input.value = "";
+
+            const bubble = document.createElement("div");
+            bubble.style.cssText = "background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); padding: 12px 16px; border-radius: 10px; max-width: 80%; align-self: flex-end; font-size: 13px; color: #F1F5F9;";
+            bubble.innerHTML = `<b style="color: #34D399; display: block; font-size: 11px; margin-bottom: 4px;">Amit Verma (TCS Mentor) · Just now</b>${text}`;
+            box.appendChild(bubble);
+            box.scrollTop = box.scrollHeight;
+
+            setTimeout(() => {
+                const reply = document.createElement("div");
+                reply.style.cssText = "background: #141A44; border: 1px solid #232C64; padding: 12px 16px; border-radius: 10px; max-width: 80%; align-self: flex-start; font-size: 13px;";
+                reply.innerHTML = `<b style="color: #A78BFA; display: block; font-size: 11px; margin-bottom: 4px;">Mentee · Just now</b>Thank you Amit! I will implement this fix immediately.`;
+                box.appendChild(reply);
+                box.scrollTop = box.scrollHeight;
+            }, 600);
+        }
+
+        function openLoginModal() {
+            document.getElementById("loginModalOverlay").style.display = "flex";
+        }
+
+        function closeLoginModal() {
+            document.getElementById("loginModalOverlay").style.display = "none";
+        }
+
+        function directRoleSwitch(role) {
+            localStorage.setItem("role", role);
+            if (role === "student") window.location.href = "/student-dashboard";
+            else if (role === "hod") window.location.href = "/faculty-dashboard";
+            else if (role === "mentor") window.location.href = "/mentor-dashboard";
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("role");
+            localStorage.removeItem("skillbridge_user");
+            localStorage.removeItem("skillbridge_token");
+            window.location.replace("/login");
+        }
+    </script>
+
+        <footer style="margin-top: 60px; padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; color: #94A3B8; font-size: 13px;">
+            <div>SkillBridge AI Enterprise Governance OS · SIH 2026</div>
+            <div style="display: flex; gap: 24px;">
+                <a href="#" onclick="alert("Opening Privacy Policy..."); return false;" style="color: #94A3B8; text-decoration: none;">Privacy</a>
+                <a href="#" onclick="alert("Opening Terms of Service..."); return false;" style="color: #94A3B8; text-decoration: none;">Terms</a>
+                <a href="mailto:skillbridge@aktu.ac.in" style="color: #94A3B8; text-decoration: none;">Contact: skillbridge@aktu.ac.in</a>
+            </div>
+        </footer>
+        </body>
+</html>
