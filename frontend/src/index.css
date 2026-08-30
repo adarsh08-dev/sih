@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #080C24;
+    color: #F1F5F9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080C24;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E2756;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2E3B7D;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* Glass & Card Effects */
+.sb-card {
+  background-color: #0E1438;
+  border: 1px solid #1E2964;
+  border-radius: 12px;
+}
+
+.sb-card-interactive {
+  background-color: #0E1438;
+  border: 1px solid #1E2964;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sb-card-interactive:hover {
+  background-color: #121A46;
+  border-color: #384898;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+}
+
+.sb-input {
+  background-color: #090E2B;
+  border: 1px solid #1E2964;
+  color: #F8FAFC;
+  border-radius: 8px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sb-input:focus {
+  border-color: #7C5CFC;
+  box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.25);
+}

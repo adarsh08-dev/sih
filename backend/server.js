@@ -46,84 +46,39 @@ app.get("/api/database/users", async (req, res) => {
 
 /* =========== AUTHENTICATION ROUTES ========== */
 app.post("/api/auth/register", async (req, res) => {
-  const { name, email, password, role, extraInfo } = req.body;
-  if (!name || !email || !password || !role) {
-    return res.status(400).json({ error: "All fields are required" });
+  const { name, email, password, role = "student", extraInfo } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   const cleanEmail = email.toLowerCase().trim();
+  const userName = name || cleanEmail.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   try {
-    const existing = await db.query("SELECT id FROM users WHERE email = $1", [cleanEmail]);
-    if (existing && existing.rows && existing.rows.length > 0) {
-      return res.status(400).json({ error: "An account with this email already exists" });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    let studentID = null;
-    let mentorID = null;
-    let companyID = null;
-
-    if (role === "student") {
-      const sRes = await db.query(
-        `INSERT INTO students (name, course, batch, target_role, career_readiness, experience_score)
-          VALUES ($1, $2, $3, $4, 65, 45) RETURNING id`,
-        [name, extraInfo?.course || "CSIT", extraInfo?.batch || "2025-29", extraInfo?.targetRole || "Software Engineer"]
-      );
-      studentID = sRes?.rows?.[0]?.id || null;
-    } else if (role === "mentor") {
-      const mRes = await db.query(
-        `INSERT INTO mentors (name, role, company, experience_years, availability)
-        VALUES ($1, $2, $3, $4, true) RETURNING id`,
-        [name, extraInfo?.jobRole || "Industry Mentor", extraInfo?.company || "Independent", Number(extraInfo?.experience) || 5]
-      );
-      mentorID = mRes?.rows?.[0]?.id || null;
-    } else if (role === "company") {
-      const cRes = await db.query(
-        `INSERT INTO companies (company_name, industry, verified)
-        VALUES ($1, $2, true) RETURNING id`,
-        [name, extraInfo?.industry || "Technology"]
-      );
-      companyID = cRes?.rows?.[0]?.id || null;
-    }
-
-    const uRes = await db.query(
-      `INSERT INTO users (name, email, password_hash, role, student_id, mentor_id, company_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, name, email, role, student_id, mentor_id, company_id`,
-      [name, cleanEmail, passwordHash, role, studentID, mentorID, companyID]
-    );
-
-    const user = uRes.rows[0];
-    const token = jwt.sign(
-      { userId: user.id, role: user.role, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    return res.status(201).json({
-      success: true,
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        studentId: user.student_id,
-        mentorId: user.mentor_id,
-        companyId: user.company_id
-      },
-      databasePersisted: true
-    });
+    const result = await db.registerUser({ name: userName, email: cleanEmail, password, role, extraInfo });
+    return res.status(201).json(result);
   } catch (error) {
-    console.error("Register error:", error);
-    res.status(500).json({ error: "Failed to register user in database", details: error.message });
+    // If user already exists, check if password matches for seamless sign-in
+    if (error.message.includes("already exists")) {
+      try {
+        const loginRes = await db.loginUser({ email: cleanEmail, password });
+        return res.json({
+          ...loginRes,
+          message: "Welcome back! Signed in to your existing account."
+        });
+      } catch (loginErr) {
+        return res.status(400).json({
+          error: "An account with this email already exists. Please enter the correct password to sign in.",
+          code: "USER_EXISTS"
+        });
+      }
+    }
+    return res.status(400).json({ error: error.message, code: "REGISTER_ERROR" });
   }
 });
 
 app.post("/api/auth/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, autoRegister } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
@@ -131,36 +86,33 @@ app.post("/api/auth/login", async (req, res) => {
   const cleanEmail = email.toLowerCase().trim();
 
   try {
-    const result = await db.query(
-      `SELECT id, name, email, password_hash, role, student_id, mentor_id, company_id
-      FROM users WHERE email = $1`,
-      [cleanEmail]
-    );
-
-    if (result && result.rows && result.rows.length > 0) {
-      const user = result.rows[0];
-      const isMatch = await bcrypt.compare(password, user.password_hash);
-      if (isMatch) {
-        const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
-        return res.json({
-          success: true,
-          token,
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            studentId: user.student_id,
-            mentorId: user.mentor_id,
-            companyId: user.company_id
-          }
+    const result = await db.loginUser({ email: cleanEmail, password });
+    return res.json(result);
+  } catch (error) {
+    // If account not found and autoRegister is enabled (or user requested instant access), register them smoothly
+    if (error.message.includes("No account found") && autoRegister) {
+      try {
+        const defaultName = cleanEmail.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+        const result = await db.registerUser({
+          name: defaultName || "Student Member",
+          email: cleanEmail,
+          password,
+          role: "student"
         });
+        return res.status(201).json({
+          ...result,
+          message: "Account created and logged in successfully."
+        });
+      } catch (regErr) {
+        return res.status(400).json({ error: regErr.message, code: "REGISTER_ERROR" });
       }
     }
-    return res.status(401).json({ error: "Invalid email or password" });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Login failed", details: error.message });
+
+    const statusCode = error.message.includes("No account found") || error.message.includes("Invalid email") ? 401 : 400;
+    return res.status(statusCode).json({
+      error: error.message,
+      code: error.message.includes("No account found") ? "USER_NOT_FOUND" : "INVALID_CREDENTIALS"
+    });
   }
 });
 
@@ -169,18 +121,14 @@ app.get("/api/auth/me", (req, res) => {
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) return res.status(401).json({ error: "No token provided" });
   jwt.verify(token, JWT_SECRET, async (error, decoded) => {
-    if (error)
+    if (error) {
       return res.status(403).json({ error: "Token invalid or expired" });
+    }
     
     try {
-      const result = await db.query(
-        `SELECT id, name, email, role, student_id, mentor_id, company_id
-        FROM users WHERE id = $1`,
-        [decoded.userId]
-      );
-
-      if (result && result.rows && result.rows.length > 0) {
-        return res.json({ user: result.rows[0] });
+      const user = db.getUserById(decoded.userId);
+      if (user) {
+        return res.json({ user });
       }
       return res.status(404).json({ error: "User not found" });
     } catch (err) {
@@ -282,42 +230,32 @@ app.get("/api/mentors/best-match", async (req, res) => {
   });
 });
 
-/* ================= POST MENTOR ================= */
-app.post("/api/mentors", async (req, res) => {
-  const { name, role, company, experience_years, availability } = req.body;
+/* ================= MENTORS ================= */
+app.get("/api/mentors", (req, res) => {
+  try {
+    const mentors = db.getMentors();
+    return res.json(mentors);
+  } catch (err) {
+    console.error("Error in /api/mentors:", err.message);
+    res.status(500).json({ error: "Failed to fetch mentors" });
+  }
+});
+
+app.post("/api/mentors", (req, res) => {
+  const { name, role, company, experience_years, experience, availability } = req.body;
   if (!name) {
     return res.status(400).json({ error: "Mentor name is required" });
   }
 
   try {
-    const result = await db.query(
-      `INSERT INTO mentors (name, role, company, experience_years, availability)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, name, role, company, experience_years, availability`,
-      [
-        name,
-        role || "Mentor",
-        company || "Industry Partner",
-        Number(experience_years) || 5,
-        availability !== undefined ? Boolean(availability) : true
-      ]
-    );
-
-    if (result && result.rows && result.rows.length > 0) {
-      const m = result.rows[0];
-      return res.status(201).json({
-        success: true,
-        mentor: {
-          id: m.id,
-          name: m.name,
-          role: m.role,
-          company: m.company,
-          experience: m.experience_years,
-          match: 92,
-          availability: m.availability
-        }
-      });
-    }
+    const mentor = db.createMentor({
+      name,
+      role,
+      company,
+      experience: experience || experience_years,
+      availability
+    });
+    return res.status(201).json({ success: true, mentor });
   } catch (err) {
     console.error("DB insert error in /api/mentors:", err.message);
     res.status(500).json({ error: "Failed to create mentor", details: err.message });
@@ -325,69 +263,38 @@ app.post("/api/mentors", async (req, res) => {
 });
 
 /* ================= GIGS ================= */
-app.get("/api/gigs", async (req, res) => {
+app.get("/api/gigs", (req, res) => {
   try {
-    const result = await db.query(
-      `SELECT g.id, g.title, g.description, g.required_skill, g.duration_hours, g.payment, g.status,
-              COALESCE(c.company_name, 'TechNova Labs') AS company
-       FROM gigs g
-       LEFT JOIN companies c ON g.company_id = c.id
-       ORDER BY g.id ASC`
-    );
-    if (result && result.rows && result.rows.length > 0) {
-      const mapped = result.rows.map((g) => ({
-        id: g.id,
-        title: g.title,
-        company: g.company,
-        skill: g.required_skill,
-        hours: g.duration_hours,
-        payment: Number(g.payment),
-        status: g.status
-      }));
-      return res.json(mapped);
-    }
+    const gigs = db.getGigs();
+    return res.json(gigs);
   } catch (err) {
-    console.warn("DB query notice in /api/gigs:", err.message);
+    console.error("Error in /api/gigs:", err.message);
+    res.status(500).json({ error: "Failed to fetch gigs" });
   }
-
-  res.json([
-    { id: 1, title: "Build a Responsive Product Landing Page", company: "TechNova Labs", skill: "Web Development", hours: 3, payment: 1500, status: "open" },
-    { id: 2, title: "Build an Authenticated REST API", company: "CloudSphere Systems", skill: "Backend", hours: 5, payment: 3500, status: "open" },
-    { id: 3, title: "SQL Business Analytics Challenge", company: "FinEdge Solutions", skill: "SQL", hours: 3, payment: 1800, status: "open" }
-  ]);
 });
 
 /* ================= POST NEW GIG ================= */
-app.post("/api/gigs", async (req, res) => {
-  const { title, requiredSkill, hours, payment, description, companyId } = req.body;
+app.post("/api/gigs", (req, res) => {
+  const { title, requiredSkill, skill, hours, payment, description, companyId, company } = req.body;
 
   if (!title) {
     return res.status(400).json({ error: "Gig title is required" });
   }
 
   try {
-    const result = await db.query(
-      `INSERT INTO gigs (company_id, title, description, required_skill, duration_hours, payment, status)
-       VALUES ($1, $2, $3, $4, $5, $6, 'open')
-       RETURNING id, company_id, title, description, required_skill, duration_hours, payment, status, created_at`,
-      [companyId || 1, title, description || "Industry micro-internship task", requiredSkill || "General", Number(hours) || 3, Number(payment) || 1500]
-    );
-
-    if (result && result.rows && result.rows.length > 0) {
-      const g = result.rows[0];
-      return res.status(201).json({
-        success: true,
-        gig: {
-          id: g.id,
-          title: g.title,
-          company: "TechNova Labs",
-          skill: g.required_skill,
-          hours: g.duration_hours,
-          payment: Number(g.payment),
-          status: g.status
-        }
-      });
-    }
+    const newGig = db.createGig({
+      title,
+      requiredSkill: requiredSkill || skill,
+      hours,
+      payment,
+      description,
+      company,
+      companyId
+    });
+    return res.status(201).json({
+      success: true,
+      gig: newGig
+    });
   } catch (err) {
     console.error("DB insert error in /api/gigs:", err.message);
     res.status(500).json({ error: "Failed to add gig", details: err.message });
@@ -395,34 +302,27 @@ app.post("/api/gigs", async (req, res) => {
 });
 
 /* ================= APPLY GIG ================= */
-app.post("/api/gigs/apply", async (req, res) => {
-  const { studentId, gigId, message } = req.body;
+app.post("/api/gigs/apply", (req, res) => {
+  const { studentId, gigId, message, githubRepo } = req.body;
 
-  if (!studentId || !gigId) {
+  if (!gigId) {
     return res.status(400).json({
-      error: "studentId and gigId are required"
+      error: "gigId is required"
     });
   }
 
   try {
-    const result = await db.query(
-      `INSERT INTO gig_applications (gig_id, student_id, message, status)
-       VALUES ($1, $2, $3, 'submitted')
-       RETURNING id, gig_id, student_id, message, status, created_at`,
-      [gigId, studentId, message || ""]
-    );
-    if (result && result.rows && result.rows.length > 0) {
-      const appRecord = result.rows[0];
-      return res.status(201).json({
-        success: true,
-        applicationId: "APP-" + appRecord.id,
-        dbId: appRecord.id,
-        message: "Application submitted and stored in PostgreSQL",
-        studentId: appRecord.student_id,
-        gigId: appRecord.gig_id,
-        applicantMessage: appRecord.message
-      });
-    }
+    const application = db.applyForGig({
+      studentId: studentId || 1,
+      gigId,
+      message,
+      githubRepo
+    });
+    return res.status(201).json({
+      success: true,
+      application,
+      message: "Application submitted and recorded in database"
+    });
   } catch (err) {
     console.error("DB insert error in /api/gigs/apply:", err.message);
     res.status(500).json({ error: "Failed to apply for gig", details: err.message });
@@ -430,36 +330,28 @@ app.post("/api/gigs/apply", async (req, res) => {
 });
 
 /* ================= MENTOR BOOKING ================= */
-app.post("/api/mentors/book", async (req, res) => {
-  const { studentId, mentorId, date, time } = req.body;
+app.post("/api/mentors/book", (req, res) => {
+  const { studentId, mentorId, date, time, topic } = req.body;
 
-  if (!studentId || !mentorId || !date || !time) {
+  if (!mentorId || !time) {
     return res.status(400).json({
       error: "Complete booking information is required"
     });
   }
 
   try {
-    const result = await db.query(
-      `INSERT INTO mentor_bookings (student_id, mentor_id, session_date, session_time, duration_minutes, status)
-       VALUES ($1, $2, $3, $4, 15, 'pending')
-       RETURNING id, student_id, mentor_id, session_date, session_time, status`,
-      [studentId, mentorId, date, time]
-    );
-    if (result && result.rows && result.rows.length > 0) {
-      const b = result.rows[0];
-      return res.status(201).json({
-        success: true,
-        bookingId: "MENTOR-" + b.id,
-        dbId: b.id,
-        status: b.status,
-        durationMinutes: 15,
-        studentId: b.student_id,
-        mentorId: b.mentor_id,
-        date: b.session_date,
-        time: b.session_time
-      });
-    }
+    const booking = db.bookMentorSession({
+      studentId: studentId || 1,
+      mentorId,
+      date,
+      time,
+      topic
+    });
+    return res.status(201).json({
+      success: true,
+      booking,
+      message: "15-Minute Capsule booked successfully"
+    });
   } catch (err) {
     console.error("DB insert error in /api/mentors/book:", err.message);
     res.status(500).json({ error: "Failed to book mentor session", details: err.message });
@@ -467,18 +359,27 @@ app.post("/api/mentors/book", async (req, res) => {
 });
 
 /* ================= EXPERIENCE PASSPORT ================= */
-app.get("/api/passport", async (req, res) => {
+app.get("/api/passport", (req, res) => {
   try {
-    const result = await db.query(
-      `SELECT er.id, er.title, er.experience_type, er.verified, er.score, er.created_at,
-              COALESCE(c.company_name, 'SkillBridge Partner') AS company
-       FROM experience_records er
-       LEFT JOIN companies c ON er.company_id = c.id
-       ORDER BY er.id DESC`
-    );
-    if (result && result.rows && result.rows.length > 0) {
-      return res.json(result.rows);
-    }
+    const studentId = req.query.studentId;
+    const records = db.getPassportRecords(studentId);
+    return res.json(records);
+  } catch (err) {
+    console.error("Error in /api/passport:", err.message);
+    res.status(500).json({ error: "Failed to fetch passport records" });
+  }
+});
+
+app.post("/api/passport/mint", (req, res) => {
+  try {
+    const { studentId, title, company, score, skillsVerified } = req.body;
+    const record = db.mintPassportRecord({ studentId, title, company, score, skillsVerified });
+    return res.status(201).json({ success: true, record });
+  } catch (err) {
+    console.error("Error in /api/passport/mint:", err.message);
+    res.status(500).json({ error: "Failed to mint passport record" });
+  }
+});
   } catch (err) {
     console.warn("DB query notice in /api/passport:", err.message);
   }
@@ -493,6 +394,68 @@ app.get("/api/passport", async (req, res) => {
       score: 85
     }
   ]);
+});
+
+/* ================= GHOST INTERNSHIP TASKS ================= */
+app.get("/api/ghost-tasks", (req, res) => {
+  try {
+    const tasks = db.getGhostTasks();
+    return res.json(tasks);
+  } catch (err) {
+    console.error("Error in /api/ghost-tasks:", err.message);
+    res.status(500).json({ error: "Failed to fetch ghost tasks" });
+  }
+});
+
+/* ================= FACULTY MOUS & SWAPS ================= */
+app.get("/api/faculty/mous", (req, res) => {
+  try {
+    const mous = db.getMouRequests();
+    return res.json(mous);
+  } catch (err) {
+    console.error("Error in /api/faculty/mous:", err.message);
+    res.status(500).json({ error: "Failed to fetch MOUs" });
+  }
+});
+
+app.post("/api/faculty/mous", (req, res) => {
+  try {
+    const mou = db.createMouRequest(req.body);
+    return res.status(201).json({ success: true, mou });
+  } catch (err) {
+    console.error("Error in /api/faculty/mous POST:", err.message);
+    res.status(500).json({ error: "Failed to create MOU" });
+  }
+});
+
+app.get("/api/faculty/swaps", (req, res) => {
+  try {
+    const swaps = db.getFacultySwaps();
+    return res.json(swaps);
+  } catch (err) {
+    console.error("Error in /api/faculty/swaps:", err.message);
+    res.status(500).json({ error: "Failed to fetch faculty swaps" });
+  }
+});
+
+app.post("/api/faculty/swaps", (req, res) => {
+  try {
+    const swap = db.createFacultySwap(req.body);
+    return res.status(201).json({ success: true, swap });
+  } catch (err) {
+    console.error("Error in /api/faculty/swaps POST:", err.message);
+    res.status(500).json({ error: "Failed to create faculty swap" });
+  }
+});
+
+app.get("/api/faqs", (req, res) => {
+  try {
+    const faqs = db.getFaqs();
+    return res.json(faqs);
+  } catch (err) {
+    console.error("Error in /api/faqs:", err.message);
+    res.status(500).json({ error: "Failed to fetch faqs" });
+  }
 });
 
 /* ================= CAREER ANALYSIS ================= */
@@ -945,28 +908,19 @@ app.use("/api", (req, res) => {
 });
 
 /* ================= STATIC FILES & ROUTING ================= */
+const fs = require("fs");
+const frontendDist = path.join(__dirname, "../frontend/dist");
 const frontendPath = path.join(__dirname, "../frontend");
-app.use(express.static(frontendPath));
+const staticPath = fs.existsSync(frontendDist) ? frontendDist : frontendPath;
 
-// Explicit role-based HTML routes
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(frontendPath, "login.html"));
-});
-
-app.get("/student-dashboard", (req, res) => {
-  res.sendFile(path.join(frontendPath, "student-dashboard.html"));
-});
-
-app.get("/faculty-dashboard", (req, res) => {
-  res.sendFile(path.join(frontendPath, "faculty-dashboard.html"));
-});
-
-app.get("/mentor-dashboard", (req, res) => {
-  res.sendFile(path.join(frontendPath, "mentor-dashboard.html"));
-});
+app.use(express.static(staticPath));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+  if (fs.existsSync(path.join(staticPath, "index.html"))) {
+    res.sendFile(path.join(staticPath, "index.html"));
+  } else {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  }
 });
 
 /* ================= START SERVER ================= */
