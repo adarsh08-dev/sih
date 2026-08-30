@@ -1,4 +1,13 @@
-export const COLLEGES_LIST = [
+export interface College {
+  id: string;
+  name: string;
+  short: string;
+  city: string;
+  logo: string;
+  domain: string;
+}
+
+export const COLLEGES_LIST: College[] = [
   // BAREILLY ZONE
   { id: 'mjpru', name: 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly', short: 'MJPRU', city: 'Bareilly', logo: 'MJPRU', domain: 'mjpru.ac.in' },
   { id: 'invertis', name: 'Invertis University, Bareilly', short: 'INVERTIS', city: 'Bareilly', logo: 'IU', domain: 'invertisuniversity.ac.in' },
