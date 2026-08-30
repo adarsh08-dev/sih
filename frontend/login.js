@@ -187,20 +187,31 @@ function routeToDashboard(role) {
 
 // Helper to save student profile in localStorage
 function saveStudentProfileAndUser(name, email, role) {
+  const rollNo = document.getElementById('rollNo')?.value?.trim() || "2201460100012";
+  const year = document.getElementById('year')?.value || "3rd Year";
+  const course = document.getElementById('course')?.value || "B.Tech Computer Science & IT";
+  const emailVal = email || document.getElementById('authEmail')?.value?.trim() || "student@skillbridge.ai";
+
+  const inputName = document.getElementById('authName')?.value?.trim() || document.getElementById('fullName')?.value?.trim();
+  const rawName = name || inputName || (emailVal && emailVal.includes('@') ? emailVal.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).trim() : '') || "Student User";
+  const firstName = rawName.split(' ')[0] || rawName;
+
   const profileData = {
-    fullName: name || "Adarsh Pratap Singh",
+    fullName: rawName,
+    firstName: firstName,
     collegeId: selectedCollege.id,
     collegeName: selectedCollege.name,
     collegeShort: selectedCollege.short,
-    email: email || "student@skillbridge.ai",
-    rollNo: "2201460100012",
-    course: "B.Tech Computer Science & IT",
-    year: "3rd Year",
-    role: role,
-    isVerified: email.includes('.ac.in') || email.includes('.edu') || true
+    email: emailVal,
+    rollNo: rollNo,
+    course: course,
+    year: year,
+    role: role || "student",
+    isVerified: (emailVal && (emailVal.includes('.ac.in') || emailVal.includes('.edu'))) || true
   };
   localStorage.setItem('student_profile', JSON.stringify(profileData));
   localStorage.setItem('skillbridge_user', JSON.stringify(profileData));
+  localStorage.setItem('userName', rawName);
   localStorage.setItem('selected_college_id', selectedCollege.id);
   localStorage.setItem('selected_college_name', selectedCollege.name);
   localStorage.setItem('selected_college_short', selectedCollege.short);
@@ -213,19 +224,17 @@ authForm.addEventListener("submit", async (e) => {
 
   const role = authRole.value;
   const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
 
   authSubmitBtn.disabled = true;
   authSubmitBtn.textContent = "Processing...";
 
   try {
-    let fullName = "Adarsh Pratap Singh";
-    if (currentMode === "register") {
-      fullName = document.getElementById("authName").value.trim() || "Adarsh Pratap Singh";
-    } else {
+    const inputName = document.getElementById("authName")?.value.trim() || document.getElementById("fullName")?.value.trim();
+    let fullName = inputName;
+    if (!fullName) {
       if (email.includes("hod")) fullName = "Dr. Arvind K. Sharma";
       else if (email.includes("mentor")) fullName = "Rohan Mehta";
-      else fullName = email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || "Adarsh Pratap Singh";
+      else fullName = email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()).trim() || "Student User";
     }
 
     saveStudentProfileAndUser(fullName, email, role);
@@ -247,7 +256,7 @@ authForm.addEventListener("submit", async (e) => {
 // Demo Logins
 function demoLogin(role) {
   hideAlert();
-  let name = "Adarsh Pratap Singh";
+  let name = "";
   let email = "student@skillbridge.ai";
 
   if (role === "hod") {
@@ -256,6 +265,8 @@ function demoLogin(role) {
   } else if (role === "mentor") {
     name = "Rohan Mehta";
     email = "mentor@skillbridge.ai";
+  } else {
+    name = document.getElementById("authName")?.value.trim() || document.getElementById("fullName")?.value.trim() || "Rahul Verma";
   }
 
   saveStudentProfileAndUser(name, email, role);

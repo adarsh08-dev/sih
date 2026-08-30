@@ -60,27 +60,86 @@ body{
     align-items:center;
     gap:12px;
 
-    margin-bottom:30px;
+    margin-bottom:24px;
+}
+
+.skillbridge-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #FFFFFF;
+}
+
+.skillbridge-title-dark {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #111111;
+}
+
+.bridge-logo-box {
+    width: 40px;
+    height: 40px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bridge-logo-box:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 92, 252, 0.25);
+}
+
+.bridge-logo-box-sm {
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+@keyframes crossBridge {
+    0% {
+        cx: 8px;
+    }
+    50% {
+        cx: 32px;
+    }
+    100% {
+        cx: 8px;
+    }
+}
+
+.bridge-logo-box:hover svg circle,
+.bridge-logo-box-sm:hover svg circle,
+.bridge-logo-svg:hover circle {
+    animation: crossBridge 2s ease infinite;
 }
 
 .brand-logo{
-    width:43px;
-    height:43px;
+    width:40px;
+    height:40px;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    border-radius:13px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #5b4df6,
-        #8b5cf6
-    );
-
-    font-weight:900;
+    border-radius:12px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
 }
 
 .brand h2{

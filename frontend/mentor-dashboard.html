@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillBridge AI — Industry Mentor Dashboard (TCS)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.svg">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,15 +28,11 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" style="background: #080D24; border-right: 1px solid #1E2656; width: 260px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; z-index: 100; padding: 24px 16px;">
         <div class="brand" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-            <div style="background: #FFFFFF; padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                <div style="display: flex; flex-direction: column;">
-                    <span style="font-size: 13px; font-weight: 900; color: #0F4C81; letter-spacing: 0.5px;">TCS</span>
-                    <span style="font-size: 5.5px; color: #475569; font-weight: 700;">TATA CONSULTANCY SERVICES</span>
-                </div>
-                <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: #10B981; font-weight: 700;"><span style="width: 4px; height: 4px; background: #10B981; border-radius: 50%;"></span> Verified</span>
+            <div class="bridge-logo-box" title="SkillBridge AI - Bridging College & Industry">
+                <svg width="28" height="28" viewBox="0 0 40 40"><rect x="2" y="14" width="8" height="24" rx="1.5" fill="#111111"/><rect x="30" y="14" width="8" height="24" rx="1.5" fill="#111111"/><rect x="6" y="14" width="28" height="8" rx="1.5" fill="#7C5CFC"/><circle cx="20" cy="6" r="5" fill="#7C5CFC"/></svg>
             </div>
             <div>
-                <h2 style="color: #FFFFFF; font-weight: 800; font-size: 14px; margin: 0;">SkillBridge AI</h2>
+                <h2 class="skillbridge-title" style="font-weight: 700; font-size: 15px; margin: 0; color: #FFFFFF; letter-spacing: -0.5px;">SkillBridge <span style="color:#7C5CFC">AI</span></h2>
                 <small style="color: #94A3B8; font-size: 10px;">Enterprise Mentor OS</small>
             </div>
         </div>
@@ -233,7 +232,7 @@
                         <!-- Card 2 -->
                         <div style="background: #141A44; border: 1px solid #232C64; border-radius: 10px; padding: 16px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <b style="color: #FFF; font-size: 13.5px;">Adarsh Pratap Singh</b>
+                                <b style="color: #FFF; font-size: 13.5px;">Rahul Verma</b>
                                 <span style="font-size: 11px; color: #3B82F6; background: rgba(59, 130, 246, 0.1); padding: 2px 6px; border-radius: 4px;">TCS Prime Track</span>
                             </div>
                             <p style="font-size: 12px; color: #94A3B8; margin: 0 0 12px 0;">PostgreSQL Connection Pool & JWT Middleware integration.</p>
@@ -248,7 +247,7 @@
                                 </div>
                             </div>
 
-                            <button onclick="openReviewModal('Adarsh Pratap Singh', 'Backend Security', '78%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                            <button onclick="openReviewModal('Rahul Verma', 'Backend Security', '78%')" style="width: 100%; background: rgba(124, 92, 252, 0.15); border: 1px solid rgba(124, 92, 252, 0.3); color: #A78BFA; padding: 7px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
                                 Review PR #42 
                             </button>
                         </div>
@@ -559,19 +558,47 @@
         </div>
     </div>
 
-    <!-- UNIVERSAL LOGIN MODAL -->
-    <div id="loginModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: center; justify-content: center;">
-        <div style="background: #0E1436; border: 1px solid #232C64; border-radius: 16px; width: 400px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                <b style="color: #FFF; font-size: 16px;"> Switch Role / Sign In</b>
-                <button onclick="closeLoginModal()" style="background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer;"></button>
+    <!-- FLOATING HELP DESK SUPPORT WIDGET (HUMAN SUPPORT AVATAR) -->
+    <div id="floatingSupportTrigger" onclick="toggleFloatingSupportChat()" style="position: fixed; bottom: 24px; right: 24px; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: #FFFFFF; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.4); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; justify-content: center;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" title="Open Help Desk Support">
+        <img src="/support-avatar.png" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #FFFFFF; box-shadow: 0 4px 12px rgba(0,0,0,0.25);" alt="Support Agent">
+        <span style="position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background-color: #10B981; border-radius: 50%; border: 2px solid #FFFFFF; box-shadow: 0 0 6px rgba(16,185,129,0.6);"></span>
+    </div>
+
+    <!-- FLOATING CHAT PANEL -->
+    <div id="floatingSupportPanel" style="display: none; position: fixed; bottom: 100px; right: 24px; width: 380px; max-width: calc(100vw - 32px); height: 500px; max-height: calc(100vh - 120px); background: #12162C; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 50; flex-direction: column; overflow: hidden;">
+        <!-- Chat Header -->
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.04);">
+            <img src="/support-avatar.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.2);" alt="Support Team">
+            <div style="flex: 1;">
+                <p style="margin: 0; color: #FFFFFF; font-size: 14px; font-weight: 600; line-height: 1.2;">Help Desk</p>
+                <p style="margin: 3px 0 0 0; font-size: 11px; color: #10B981; display: flex; align-items: center; gap: 5px; font-weight: 500;">
+                    <span style="width: 7px; height: 7px; background-color: #10B981; border-radius: 50%; display: inline-block;"></span> Support Team · Online
+                </p>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button onclick="directRoleSwitch('student')" style="background: #141A44; border: 1px solid #232C64; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;"> Switch to Student Portal</button>
-                <button onclick="directRoleSwitch('hod')" style="background: #141A44; border: 1px solid #232C64; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;">️ Switch to HOD Portal</button>
-                <button onclick="directRoleSwitch('mentor')" style="background: rgba(124, 92, 252, 0.2); border: 1px solid #7C5CFC; color: #FFF; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: left;"> Industry Mentor Portal (Active)</button>
+            <button onclick="toggleFloatingSupportChat()" style="background: transparent; border: none; color: #9CA3AF; cursor: pointer; padding: 4px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: color 0.15s;" onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='#9CA3AF'" title="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="floatingChatMessages" style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #0E132A;">
+            <!-- Welcome Message -->
+            <div style="display: flex; gap: 10px; align-items: flex-start; max-width: 85%; align-self: flex-start;">
+                <img src="/support-avatar.png" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-top: 2px; flex-shrink: 0;" alt="Support">
+                <div style="background: #1A1F3A; color: #F1F5F9; padding: 10px 14px; border-radius: 12px; border-top-left-radius: 2px; font-size: 13px; line-height: 1.45; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                    Hello! 👋 I'm from SkillBridge support. How can I help you today? You can ask about internships, projects, or career guidance.
+                </div>
             </div>
         </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="handleFloatingChatSend(event)" style="padding: 12px 14px; background: #12162C; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="floatingChatInput" placeholder="Ask for help..." style="flex: 1; background: #1A1F3A; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 9px 12px; color: #FFFFFF; font-size: 13px; outline: none; transition: border-color 0.15s;" onfocus="this.style.borderColor='#7C5CFC'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" autocomplete="off">
+            <button type="submit" style="background: #7C5CFC; color: #FFFFFF; border: none; border-radius: 8px; padding: 9px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; box-shadow: 0 2px 8px rgba(124,92,252,0.4);" onmouseover="this.style.background='#6D4BE8'" onmouseout="this.style.background='#7C5CFC'">
+                <span>Send</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </form>
     </div>
 
     <!-- SCRIPTS -->
@@ -670,19 +697,71 @@
             }, 600);
         }
 
-        function openLoginModal() {
-            document.getElementById("loginModalOverlay").style.display = "flex";
+        function toggleFloatingSupportChat() {
+            const panel = document.getElementById("floatingSupportPanel");
+            if (!panel) return;
+            if (panel.style.display === "none" || panel.style.display === "") {
+                panel.style.display = "flex";
+                const input = document.getElementById("floatingChatInput");
+                if (input) setTimeout(() => input.focus(), 100);
+            } else {
+                panel.style.display = "none";
+            }
         }
 
-        function closeLoginModal() {
-            document.getElementById("loginModalOverlay").style.display = "none";
-        }
+        async function handleFloatingChatSend(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById("floatingChatInput");
+            const container = document.getElementById("floatingChatMessages");
+            if (!input || !container) return;
+            const text = input.value.trim();
+            if (!text) return;
 
-        function directRoleSwitch(role) {
-            localStorage.setItem("role", role);
-            if (role === "student") window.location.href = "/student-dashboard";
-            else if (role === "hod") window.location.href = "/faculty-dashboard";
-            else if (role === "mentor") window.location.href = "/mentor-dashboard";
+            const userDiv = document.createElement("div");
+            userDiv.style.cssText = "max-width: 85%; align-self: flex-end; background: #7C5CFC; color: #FFFFFF; padding: 10px 14px; border-radius: 12px; border-top-right-radius: 2px; font-size: 13px; line-height: 1.45; word-break: break-word; box-shadow: 0 2px 6px rgba(124,92,252,0.3);";
+            userDiv.innerText = text;
+            container.appendChild(userDiv);
+
+            input.value = "";
+            container.scrollTop = container.scrollHeight;
+
+            const typingDiv = document.createElement("div");
+            typingDiv.style.cssText = "display: flex; gap: 10px; align-items: flex-start; max-width: 85%; align-self: flex-start;";
+            typingDiv.innerHTML = `
+                <img src="/support-avatar.png" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-top: 2px; flex-shrink: 0;" alt="Support">
+                <div style="background: #1A1F3A; color: #94A3B8; padding: 10px 14px; border-radius: 12px; border-top-left-radius: 2px; font-size: 13px; line-height: 1.45; border: 1px solid rgba(255,255,255,0.06);">
+                    Our team is reviewing your message...
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const response = await fetch("/api/ai/helpdesk/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text, category: "mentor-support" })
+                });
+                const data = await response.json();
+                let reply = data?.reply || data?.answer || data?.message;
+                if (!reply) {
+                    reply = "Our support team is here to assist with industry mentorship sessions, cryptographic passport signoffs, and micro-internship task evaluations.";
+                }
+                typingDiv.innerHTML = `
+                    <img src="/support-avatar.png" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-top: 2px; flex-shrink: 0;" alt="Support">
+                    <div style="background: #1A1F3A; color: #F1F5F9; padding: 10px 14px; border-radius: 12px; border-top-left-radius: 2px; font-size: 13px; line-height: 1.45; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                        ${reply}
+                    </div>
+                `;
+            } catch {
+                typingDiv.innerHTML = `
+                    <img src="/support-avatar.png" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-top: 2px; flex-shrink: 0;" alt="Support">
+                    <div style="background: #1A1F3A; color: #F1F5F9; padding: 10px 14px; border-radius: 12px; border-top-left-radius: 2px; font-size: 13px; line-height: 1.45; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                        Our team is available 24/7. Feel free to ask about mentee review workflows, industry micro-task setup, or calendar scheduling.
+                    </div>
+                `;
+            }
+            container.scrollTop = container.scrollHeight;
         }
 
         function handleLogout() {
@@ -691,14 +770,80 @@
             localStorage.removeItem("skillbridge_token");
             window.location.replace("/login");
         }
+
+        function showToast(msg) {
+            let toast = document.getElementById("globalToast");
+            if (!toast) {
+                toast = document.createElement("div");
+                toast.id = "globalToast";
+                toast.style.cssText = "position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1A1F3A; color: #FFF; border: 1px solid #7C5CFC; padding: 12px 24px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 999999; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: opacity 0.3s, transform 0.3s; pointer-events: none; opacity: 0;";
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = `<span style="color: #10B981; font-size: 16px;">✓</span> ${msg}`;
+            toast.style.opacity = "1";
+            toast.style.transform = "translateX(-50%) translateY(0)";
+            clearTimeout(window.__globalToastTimeout);
+            window.__globalToastTimeout = setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateX(-50%) translateY(10px)";
+            }, 3000);
+        }
+
+        function handlePhoneClick(e) {
+            if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText("9919313621");
+                }
+                showToast("Copied 9919313621 to clipboard");
+            }
+        }
+
+        window.toggleFloatingSupportChat = toggleFloatingSupportChat;
+        window.handleFloatingChatSend = handleFloatingChatSend;
+        window.showToast = showToast;
+        window.handlePhoneClick = handlePhoneClick;
     </script>
 
-        <footer style="margin-top: 60px; padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; color: #94A3B8; font-size: 13px;">
+        <footer style="margin-top: 60px; padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; color: #94A3B8; font-size: 13px; flex-wrap: wrap; gap: 16px; position: relative; z-index: 10;">
             <div>SkillBridge AI Enterprise Governance OS · SIH 2026</div>
-            <div style="display: flex; gap: 24px;">
-                <a href="#" onclick="alert("Opening Privacy Policy..."); return false;" style="color: #94A3B8; text-decoration: none;">Privacy</a>
-                <a href="#" onclick="alert("Opening Terms of Service..."); return false;" style="color: #94A3B8; text-decoration: none;">Terms</a>
-                <a href="mailto:skillbridge@aktu.ac.in" style="color: #94A3B8; text-decoration: none;">Contact: skillbridge@aktu.ac.in</a>
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <a href="#" onclick="alert('Opening Privacy Policy...'); return false;" style="color: #94A3B8; text-decoration: none;" onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='#94A3B8'">Privacy</a>
+                <a href="#" onclick="alert('Opening Terms of Service...'); return false;" style="color: #94A3B8; text-decoration: none;" onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='#94A3B8'">Terms</a>
+                
+                <div style="display: flex; flex-direction: row; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <!-- Working Call -->
+                    <a
+                        href="tel:+919919313621"
+                        style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #1A1F3A; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-decoration: none; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='rgba(124, 92, 252, 0.2)'; this.style.borderColor='rgba(124, 92, 252, 0.5)';"
+                        onmouseout="this.style.background='#1A1F3A'; this.style.borderColor='rgba(255, 255, 255, 0.1)';"
+                        onclick="handlePhoneClick(event)"
+                    >
+                        <div style="width: 32px; height: 32px; background: rgba(124, 92, 252, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div style="display: flex; flex-direction: column; text-align: left;">
+                            <span style="font-size: 10px; color: #9CA3AF; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Call Us</span>
+                            <span style="font-size: 13px; font-weight: 600; color: #FFFFFF;">9919313621</span>
+                        </div>
+                    </a>
+
+                    <!-- Working Email -->
+                    <a
+                        href="mailto:tradewithadarsh07@gmail.com?subject=SkillBridge%20Query&body=Hello%20Team%2C%0A%0A"
+                        style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #1A1F3A; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-decoration: none; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='rgba(124, 92, 252, 0.2)'; this.style.borderColor='rgba(124, 92, 252, 0.5)';"
+                        onmouseout="this.style.background='#1A1F3A'; this.style.borderColor='rgba(255, 255, 255, 0.1)';"
+                    >
+                        <div style="width: 32px; height: 32px; background: rgba(124, 92, 252, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div style="display: flex; flex-direction: column; text-align: left;">
+                            <span style="font-size: 10px; color: #9CA3AF; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Email Us</span>
+                            <span style="font-size: 13px; font-weight: 600; color: #FFFFFF;">tradewithadarsh07@gmail.com</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </footer>
         </body>

@@ -11,6 +11,14 @@ let mentorsList = [];
 let gigsList = [];
 let passportList = [];
 
+function getStoredUserName() {
+    try {
+        const p = JSON.parse(localStorage.getItem('student_profile') || localStorage.getItem('skillbridge_user'));
+        if (p && p.fullName) return p.fullName;
+    } catch (e) {}
+    return localStorage.getItem('userName') || "Student Candidate";
+}
+
 /* ================= NETWORK HELPER ================= */
 async function safeFetchJson(url, options = {}) {
     try {
@@ -109,7 +117,7 @@ async function fetchStudent() {
     } else {
         currentStudent = {
             id: 1,
-            name: "Adarsh Pratap Singh",
+            name: getStoredUserName(),
             course: "CSIT",
             batch: "2025-29",
             targetRole: "Full Stack Software Engineer",
@@ -591,7 +599,7 @@ async function exportPassport() {
     }
 
     const profile = {
-        name: currentStudent?.name || "Adarsh Pratap Singh",
+        name: currentStudent?.name || getStoredUserName(),
         course: currentStudent?.course || "CSIT",
         batch: currentStudent?.batch || "2025-29",
         targetRole: currentStudent?.targetRole || "Full Stack Software Engineer",
@@ -746,7 +754,7 @@ function initAuthUI() {
     if (!token || !user) {
         user = {
             id: 1,
-            name: "Adarsh Pratap Singh",
+            name: getStoredUserName(),
             email: "student@skillbridge.ai",
             role: "student",
             studentId: 1
@@ -982,7 +990,7 @@ async function handleHelpdeskSubmit(e) {
             message: userText,
             category: helpdeskCategory,
             history: helpdeskMessages.slice(-6),
-            studentProfile: currentStudent || { name: "Adarsh Pratap Singh", targetRole: "Full Stack Software Engineer", careerReadiness: 81 }
+            studentProfile: currentStudent || { name: getStoredUserName(), targetRole: "Full Stack Software Engineer", careerReadiness: 81 }
         })
     });
 
@@ -1442,7 +1450,7 @@ function openTrustModal(type) {
                 </div>
 
                 <div style="text-align: left; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 11.5px; line-height: 1.6; color: #334155;">
-                    <div><strong>Candidate:</strong> ${currentStudent ? escapeHtml(currentStudent.name) : 'Adarsh Pratap Singh'} (CSIT)</div>
+                    <div><strong>Candidate:</strong> ${currentStudent ? escapeHtml(currentStudent.name) : getStoredUserName()} (CSIT)</div>
                     <div><strong>Credential ID:</strong> <span style="font-family: monospace; color: #2563eb;">SB-SIH26044-7749-V</span></div>
                     <div><strong>Smart Contract:</strong> <span style="font-family: monospace; color: #475569; word-break: break-all;">0x7a250d5630b4cf539739df2c5dacb4c659f2488d</span></div>
                     <div><strong>Verified Milestones:</strong> 3 Industry Gigs, 1 Mentor Capsule, 89% Compatibility</div>
@@ -1689,7 +1697,7 @@ function runCertificateVerification(certId) {
     if (!container) return;
 
     const id = certId || "SB-SIH26044-7749-V";
-    const studentName = currentStudent ? escapeHtml(currentStudent.name) : "Adarsh Pratap Singh";
+    const studentName = currentStudent ? escapeHtml(currentStudent.name) : getStoredUserName();
     const rollNo = currentStudent ? escapeHtml(currentStudent.roll_number || "CSIT-2025-084") : "CSIT-2025-084";
 
     container.innerHTML = `

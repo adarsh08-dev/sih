@@ -812,6 +812,54 @@ app.get("/api/ai/helpdesk/faq", (req, res) => {
   });
 });
 
+/* ================= AI HELPDESK REAL-TIME CHAT ================= */
+app.post("/api/ai/helpdesk/chat", async (req, res) => {
+  const { message, category = "support" } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  let reply = "";
+  try {
+    const ai = getGenAiClient();
+    if (ai) {
+      const prompt = `You are a helpful, professional human support specialist at SkillBridge (a real-time career and micro-internship platform for university students, faculty, and industry mentors).
+User category: ${category}
+User inquiry: "${message}"
+Respond in a friendly, conversational tone (1-3 sentences max). Offer helpful guidance on micro-internships, skills development, GitHub project verification, mentorship capsules, or dashboard navigation. Avoid robotic buzzwords.`;
+      
+      const aiPromise = ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt
+      });
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI timeout")), 3500));
+      const response = await Promise.race([aiPromise, timeoutPromise]);
+      if (response && response.text) {
+        reply = response.text.trim();
+      }
+    }
+  } catch (err) {
+    console.warn("Support chat AI notice:", err.message);
+  }
+
+  if (!reply) {
+    const lower = message.toLowerCase();
+    if (lower.includes("internship") || lower.includes("gig")) {
+      reply = "We have active micro-internships available from Infosys, TCS, and Wipro on your Gigs tab. You can apply directly and start a zero-NDA simulation anytime!";
+    } else if (lower.includes("project") || lower.includes("github") || lower.includes("code")) {
+      reply = "You can link your GitHub account or launch a Ghost Sandbox project to get verified proofs for your experience passport.";
+    } else if (lower.includes("mentor") || lower.includes("guidance") || lower.includes("session")) {
+      reply = "Our industry mentors from TCS and Google Cloud host weekly architecture review sessions. Check the Mentorship capsules tab to book a 1:1 slot.";
+    } else if (lower.includes("resume") || lower.includes("score") || lower.includes("dna")) {
+      reply = "Your Skill DNA score is benchmarked against real industry job profiles. Keep completing micro-tasks to raise your readiness percentile!";
+    } else {
+      reply = "Hello! Our support team is here to help with your internships, verified projects, and career roadmap. Let us know what you need!";
+    }
+  }
+
+  res.json({ success: true, reply, timestamp: new Date().toISOString() });
+});
+
 /* ================= POST CREATE HELPDESK TICKET ================= */
 app.post("/api/ai/helpdesk/ticket", async (req, res) => {
   const { title, category, description, priority = "medium", studentId = 1 } = req.body;
