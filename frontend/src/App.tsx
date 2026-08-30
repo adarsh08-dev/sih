@@ -3,10 +3,12 @@ import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
 import { ProfileDrawer } from './components/ProfileDrawer';
 import { NotificationModal, NotificationItem } from './components/NotificationModal';
-import { AuthModal } from './components/AuthModal';
+import { AuthPortal, AuthSuccessPayload } from './components/AuthPortal';
+import { DashboardSplash } from './components/DashboardSplash';
 import { ApplyGigModal } from './components/ApplyGigModal';
 import { BookMentorModal } from './components/BookMentorModal';
 import { Toast } from './components/Toast';
+import { BridgeBuddy } from './components/BridgeBuddy';
 
 import { StudentDashboard } from './pages/StudentDashboard';
 import { SkillIntelligenceView } from './pages/SkillIntelligenceView';
@@ -20,6 +22,8 @@ import { FacultyDashboard } from './pages/FacultyDashboard';
 import { MentorDashboard } from './pages/MentorDashboard';
 
 import { UserRole, StudentProfile, Mentor, Gig, PassportRecord } from './types';
+import { getStoredUserProfile } from './components/ProfessionalProfile';
+import { CollegeItem, COLLEGES_DATA } from './data/colleges';
 import { 
   fetchStudentProfile,
   fetchGigs, 
@@ -35,43 +39,61 @@ export const App: React.FC = () => {
   });
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [student, setStudent] = useState<StudentProfile>({
-    id: 1,
-    name: localStorage.getItem('userName') || 'Adarsh Pratap Singh',
-    course: 'Computer Science & Information Technology',
-    batch: '2025-29',
-    college: 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
-    targetRole: 'Full Stack Software Engineer',
-    careerReadiness: 81,
-    experienceScore: 64,
-    dnaScores: {
-      algorithmicThinking: 88,
-      systemDesign: 72,
-      codeQuality: 85,
-      communication: 79,
-      problemSolving: 90,
-      adaptability: 84
-    },
-    timeMachinePredictions: {
-      currentQuarter: 'Q3 2026',
-      targetDate: 'July 2027',
-      expectedPlacementPackage: '₹14.5 – ₹22 LPA',
-      milestones: [
-        { month: 'Sep 2026', target: 'Complete 3 Verified Micro-Internships', completed: true },
-        { month: 'Nov 2026', target: 'Attend 5 Mentor Capsules with Senior Architects', completed: true },
-        { month: 'Jan 2027', target: 'Deploy Cloud-Native Distributed Microservice', completed: false },
-        { month: 'Apr 2027', target: 'Participate in Pre-Placement Partner Hackathons', completed: false }
-      ]
-    }
+  const [student, setStudent] = useState<StudentProfile>(() => {
+    const p = getStoredUserProfile();
+    return {
+      id: 1,
+      name: p.name || 'Adarsh Pratap Singh',
+      course: p.department || 'Computer Science & IT (CSIT)',
+      batch: p.year || '2025-29',
+      college: p.college || 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
+      rollNo: p.rollNo || '22001015001',
+      email: p.email || 'adarsh.pratap@mjpru.ac.in',
+      targetRole: 'Full Stack Software Engineer',
+      careerReadiness: 81,
+      experienceScore: 64,
+      dnaScores: {
+        algorithmicThinking: 88,
+        systemDesign: 72,
+        codeQuality: 85,
+        communication: 79,
+        problemSolving: 90,
+        adaptability: 84
+      },
+      timeMachinePredictions: {
+        currentQuarter: 'Q3 2026',
+        targetDate: 'July 2027',
+        expectedPlacementPackage: '₹14.5 – ₹22 LPA',
+        milestones: [
+          { month: 'Sep 2026', target: 'Complete 3 Verified Micro-Internships', completed: true },
+          { month: 'Nov 2026', target: 'Attend 5 Mentor Capsules with Senior Architects', completed: true },
+          { month: 'Jan 2027', target: 'Deploy Cloud-Native Distributed Microservice', completed: false },
+          { month: 'Apr 2027', target: 'Participate in Pre-Placement Partner Hackathons', completed: false }
+        ]
+      }
+    };
   });
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [gigs, setGigs] = useState<Gig[]>([]);
   const [passport, setPassport] = useState<PassportRecord[]>([]);
 
-  // Modals
+  // Modals & Splash state
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authInitialMode, setAuthInitialMode] = useState<'login' | 'register'>('login');
+  const [authInitialRole, setAuthInitialRole] = useState<UserRole>('student');
+
+  const [splashData, setSplashData] = useState<{
+    isOpen: boolean;
+    role: UserRole;
+    college?: CollegeItem | null;
+  }>({
+    isOpen: false,
+    role: 'student',
+    college: null
+  });
+
   const [applyingGig, setApplyingGig] = useState<Gig | null>(null);
   const [bookingMentor, setBookingMentor] = useState<Mentor | null>(null);
 
@@ -153,23 +175,30 @@ export const App: React.FC = () => {
     reloadDatabaseData();
   }, [student.id, activeTab]);
 
+  // Role Based Route Guard Enforcement
+  useEffect(() => {
+    const storedRole = localStorage.getItem('role') as UserRole;
+    if (storedRole && storedRole !== currentRole) {
+      setCurrentRole(storedRole);
+    }
+  }, []);
+
   const handleRoleChange = (newRole: UserRole) => {
     setCurrentRole(newRole);
     localStorage.setItem('role', newRole);
+    localStorage.setItem('userRole', newRole === 'mentor' ? 'Mentor' : newRole === 'hod' ? 'HOD' : newRole === 'company' ? 'company' : 'student');
     setActiveTab('dashboard');
-    showToast(`Switched view to ${newRole === 'hod' ? 'HOD / Faculty' : newRole === 'mentor' ? 'Industry Mentor' : 'Student Candidate'} Mode`, 'info');
+    showToast(`Switched view to ${newRole === 'hod' ? 'HOD / Faculty' : newRole === 'mentor' ? 'Industry Mentor' : newRole === 'company' ? 'Recruiter' : 'Student Candidate'} Mode`, 'info');
   };
 
   const handleApplyGigSuccess = async (gigTitle: string) => {
     showToast(`Application successfully submitted for ${gigTitle}! Saved to database.`, 'success');
-    // Refresh gigs from database to reflect updated applicant count
     const freshGigs = await fetchGigs();
     setGigs(freshGigs);
   };
 
   const handleBookMentorSuccess = async (mentorName: string, slot: string) => {
     showToast(`15-Min Capsule booked with ${mentorName} for ${slot}! Saved to database ledger.`, 'success');
-    // Refresh mentors from database to reflect booked slots
     const freshMentors = await fetchMentors();
     setMentors(freshMentors);
   };
@@ -197,7 +226,7 @@ export const App: React.FC = () => {
 
   const handleMintPassport = async (title: string, company: string, score: number) => {
     try {
-      const res = await mintPassportRecord({
+      await mintPassportRecord({
         studentId: student.id,
         title,
         company,
@@ -229,10 +258,52 @@ export const App: React.FC = () => {
     showToast('All notifications marked as read', 'info');
   };
 
+  // Trigger registration / login splash and pathway redirect
+  const handleAuthPortalSuccess = (payload: AuthSuccessPayload) => {
+    setIsAuthOpen(false);
+
+    // Update state
+    setCurrentRole(payload.role);
+    localStorage.setItem('role', payload.role);
+    localStorage.setItem('userRole', payload.role === 'mentor' ? 'Mentor' : payload.role === 'hod' ? 'HOD' : payload.role === 'company' ? 'company' : 'student');
+
+    if (payload.role === 'student') {
+      setStudent(prev => ({
+        ...prev,
+        name: payload.name,
+        course: payload.department || prev.course,
+        college: payload.college?.name || prev.college,
+        batch: payload.batch || prev.batch,
+        rollNo: payload.rollNo || prev.rollNo,
+        email: payload.email || prev.email
+      }));
+    }
+
+    // Launch SkillBridge AI Logo Opening Animation Splash
+    setSplashData({
+      isOpen: true,
+      role: payload.role,
+      college: payload.college || (payload.role === 'student' ? COLLEGES_DATA[0] : null)
+    });
+  };
+
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <div className="flex h-screen bg-[#070B1E] text-slate-100 overflow-hidden font-sans antialiased selection:bg-[#7C5CFC]/30">
+      {/* Splash Screen on Registration / Login Launch */}
+      {splashData.isOpen && (
+        <DashboardSplash
+          role={splashData.role}
+          college={splashData.college}
+          onFinished={() => {
+            setSplashData(prev => ({ ...prev, isOpen: false }));
+            setActiveTab('dashboard');
+            showToast(`Launched ${splashData.role === 'hod' ? 'HOD Panel' : splashData.role === 'mentor' ? 'Mentor Capsule' : splashData.role === 'company' ? 'Recruiter Portal' : 'Student OS'}!`, 'success');
+          }}
+        />
+      )}
+
       {/* 1. Left Sidebar Navigation */}
       <Sidebar
         currentRole={currentRole}
@@ -242,8 +313,10 @@ export const App: React.FC = () => {
         onRoleChange={handleRoleChange}
         onOpenProfile={() => setIsProfileOpen(true)}
         onLogout={() => {
+          setAuthInitialMode('login');
+          setAuthInitialRole(currentRole);
           setIsAuthOpen(true);
-          showToast('Signed out of session. Please choose your demo persona.', 'info');
+          showToast('Signed out of session. Choose your login or register a new pathway.', 'info');
         }}
         isMobileOpen={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
@@ -260,10 +333,16 @@ export const App: React.FC = () => {
           onOpenNotifications={() => setIsNotificationsOpen(true)}
           onOpenTrust={() => setActiveTab('trust')}
           onOpenProfile={() => setIsProfileOpen(true)}
-          onOpenAuth={() => setIsAuthOpen(true)}
-          onLogout={() => {
+          onOpenAuth={() => {
+            setAuthInitialMode('register');
+            setAuthInitialRole(currentRole);
             setIsAuthOpen(true);
-            showToast('Signed out of session. Please choose your demo persona.', 'info');
+          }}
+          onLogout={() => {
+            setAuthInitialMode('login');
+            setAuthInitialRole(currentRole);
+            setIsAuthOpen(true);
+            showToast('Signed out of session. Choose your login or register a new pathway.', 'info');
           }}
           onRoleChange={handleRoleChange}
           searchQuery={searchQuery}
@@ -273,15 +352,40 @@ export const App: React.FC = () => {
           onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
         />
 
-        {/* Dynamic Page Routing */}
+        {/* Dynamic Page Routing with Strict Role Guard:
+            - Student Board is ONLY for Student role
+            - Mentor Board is ONLY for Mentor role
+            - HOD Board is ONLY for HOD role
+        */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-5 lg:p-7 min-w-0">
           <div className="w-full max-w-7xl mx-auto pb-12 min-w-0">
-            {currentRole === 'hod' ? (
+            {/* ROUTE GUARD: If role === 'hod', render ONLY HOD dashboard */}
+            {currentRole === 'hod' && (
               <FacultyDashboard onShowToast={showToast} />
-            ) : currentRole === 'mentor' ? (
+            )}
+
+            {/* ROUTE GUARD: If role === 'mentor', render ONLY Mentor dashboard */}
+            {currentRole === 'mentor' && (
               <MentorDashboard onShowToast={showToast} />
-            ) : (
-              // Student Role Views
+            )}
+
+            {/* ROUTE GUARD: If role === 'company' / Recruiter */}
+            {currentRole === 'company' && (
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-[#0B0F2A] border border-white/[0.08] shadow-xl">
+                  <h1 className="text-xl font-extrabold text-white">Recruiter & Enterprise Hiring Portal</h1>
+                  <p className="text-xs text-white/50 mt-1">Verified Candidate Pipeline & Micro-Internship Sponsorships</p>
+                </div>
+                <MicroGigsView
+                  gigs={gigs}
+                  onApplyGig={(g) => setApplyingGig(g)}
+                  onCreateGig={handleCreateGig}
+                />
+              </div>
+            )}
+
+            {/* ROUTE GUARD: Student Candidate Portal */}
+            {currentRole === 'student' && (
               <>
                 {activeTab === 'dashboard' && (
                   <StudentDashboard
@@ -336,7 +440,7 @@ export const App: React.FC = () => {
         </main>
       </div>
 
-      {/* 3. Global Drawers & Modals */}
+      {/* Profile Drawer */}
       <ProfileDrawer
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
@@ -349,6 +453,7 @@ export const App: React.FC = () => {
         }}
       />
 
+      {/* Notifications Drawer */}
       <NotificationModal
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
@@ -362,18 +467,16 @@ export const App: React.FC = () => {
         }}
       />
 
-      <AuthModal
+      {/* Comprehensive 3-Pathway AuthPortal (Register + Login in Linear Style) */}
+      <AuthPortal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onLoginSuccess={(user) => {
-          setCurrentRole(user.role);
-          if (user.name) {
-            setStudent(prev => ({ ...prev, name: user.name }));
-          }
-          showToast(`Welcome back, ${user.name}!`, 'success');
-        }}
+        initialMode={authInitialMode}
+        initialRole={authInitialRole}
+        onAuthSuccess={handleAuthPortalSuccess}
       />
 
+      {/* Gig Application Modal */}
       <ApplyGigModal
         gig={applyingGig}
         isOpen={!!applyingGig}
@@ -382,6 +485,7 @@ export const App: React.FC = () => {
         studentId={student.id}
       />
 
+      {/* Mentor Booking Modal */}
       <BookMentorModal
         mentor={bookingMentor}
         isOpen={!!bookingMentor}
@@ -390,11 +494,15 @@ export const App: React.FC = () => {
         studentId={student.id}
       />
 
+      {/* Global Toast */}
       <Toast
         message={toastMessage}
         type={toastType}
         onClose={() => setToastMessage(null)}
       />
+
+      {/* Floating AI Assistant - Bridge Buddy */}
+      <BridgeBuddy student={student} currentRole={currentRole} />
     </div>
   );
 };

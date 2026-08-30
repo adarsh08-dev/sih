@@ -49,13 +49,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7C5CFC]/20 border border-[#7C5CFC]/40 text-[#C4B5FD] text-[11px] font-bold tracking-wide uppercase mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#A78BFA]" />
-              <span>SIH26044 · Career Intelligence</span>
+            <div className="text-[11px] tracking-[1.4px] text-white/35 font-medium uppercase mb-3">
+              CAREER INTELLIGENCE
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-              Welcome back, {student?.name?.split(' ')[0] || 'Adarsh'}
+              Welcome back, {student?.name?.split(' ')[0] || 'there'}
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
               Targeting <strong className="text-white">{student?.targetRole || 'Full Stack Software Engineer'}</strong> at tier-1 enterprise partners. You are on track for top-percentile placement readiness.

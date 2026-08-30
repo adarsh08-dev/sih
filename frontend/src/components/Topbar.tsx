@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Search, 
-  Shield, 
   Bell, 
   Menu, 
   LogOut, 
   User as UserIcon,
-  ChevronDown,
-  Sparkles,
   PanelLeftClose,
-  PanelLeft,
-  BriefcaseBusiness,
-  GraduationCap,
-  Building
+  PanelLeft
 } from 'lucide-react';
 import { UserRole, StudentProfile } from '../types';
 
@@ -52,7 +46,6 @@ export const Topbar: React.FC<TopbarProps> = ({
   const [profilePhoto, setProfilePhoto] = useState<string | null>(() => {
     return localStorage.getItem('profilePhoto');
   });
-  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
   // Synchronize photo across storage events
   useEffect(() => {
@@ -126,83 +119,7 @@ export const Topbar: React.FC<TopbarProps> = ({
       </div>
 
       {/* Right action controls */}
-      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 ml-2">
-        {/* Switch Role Button */}
-        {onRoleChange && (
-          <div className="relative">
-            <button
-              onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] text-slate-200 text-xs font-bold transition-all cursor-pointer"
-              title="Switch Platform Role"
-            >
-              {currentRole === 'hod' ? (
-                <Building className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              ) : currentRole === 'mentor' ? (
-                <BriefcaseBusiness className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-              ) : (
-                <GraduationCap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              )}
-              <span className="hidden sm:inline capitalize">
-                {currentRole === 'hod' ? 'HOD' : currentRole === 'mentor' ? 'Mentor' : 'Student'}
-              </span>
-              <ChevronDown className="w-3 h-3 text-slate-400 ml-0.5" />
-            </button>
-
-            {showRoleDropdown && (
-              <div className="absolute right-0 top-11 w-48 bg-[#0B1033] border border-[#232F6E] rounded-xl shadow-2xl z-50 p-1.5 space-y-1">
-                <button
-                  onClick={() => {
-                    onRoleChange('student');
-                    setShowRoleDropdown(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-semibold text-left transition-colors cursor-pointer ${
-                    currentRole === 'student' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48]'
-                  }`}
-                >
-                  <GraduationCap className="w-4 h-4 text-cyan-300" />
-                  <span>Student Candidate</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onRoleChange('mentor');
-                    setShowRoleDropdown(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-semibold text-left transition-colors cursor-pointer ${
-                    currentRole === 'mentor' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48]'
-                  }`}
-                >
-                  <BriefcaseBusiness className="w-4 h-4 text-pink-300" />
-                  <span>Industry Mentor</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onRoleChange('hod');
-                    setShowRoleDropdown(false);
-                  }}
-                  className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-semibold text-left transition-colors cursor-pointer ${
-                    currentRole === 'hod' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48]'
-                  }`}
-                >
-                  <Building className="w-4 h-4 text-amber-300" />
-                  <span>HOD / Faculty</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Trust & Verify Shortcut */}
-        <button
-          onClick={onOpenTrust}
-          className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 text-xs font-semibold shadow-sm transition-all hover:bg-emerald-900/30 cursor-pointer"
-          title="Open Blockchain Trust & Verification Explorer"
-        >
-          <Shield className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          <span className="hidden md:inline">Trust & Verify</span>
-        </button>
-
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-2">
         {/* Notifications */}
         <button
           onClick={onOpenNotifications}

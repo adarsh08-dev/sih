@@ -402,24 +402,116 @@ export async function fetchTickets(): Promise<HelpdeskTicket[]> {
 }
 
 function generateLocalHelpdeskResponse(message: string, category: string, profile: any): string {
-  const lower = message.toLowerCase();
-  const name = profile?.name ? profile.name.split(' ')[0] : 'Candidate';
+  const lower = message.trim().toLowerCase();
+  const name = profile?.name || localStorage.getItem('userName') || 'there';
 
-  if (lower.includes('jwt') || lower.includes('token') || lower.includes('auth')) {
-    return `Great question regarding **JWT & Authentication Architecture**, ${name}!\n\nTo build a zero-leak token blacklist:\n1. Maintain a fast in-memory \`Set\` or Redis key with TTL matching the JWT expiry.\n2. In your Express middleware, verify the signature first, then check \`blacklistSet.has(token)\`.\n3. Return a \`401 Unauthorized\` with code \`TOKEN_REVOKED\` immediately if found.\n\nYou can test this in the **Ghost Internship** sandbox right now!`;
+  const greetings = ['hi', 'hii', 'hiiii', 'hello', 'hey', 'heyy', 'hlw', 'hola', 'yo'];
+  if (greetings.includes(lower.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ""))) {
+    return `Hey ${name}! 👋 How's your career sprint going? Ask me any questions about micro-gigs, technical implementations (like JWT blacklisting), or resume tips and I will help you solve them immediately!`;
   }
 
-  if (lower.includes('postgres') || lower.includes('sql') || lower.includes('index') || lower.includes('database')) {
-    return `Here is the database diagnostic for ${name}:\n\nWhen optimizing queries on large cohort tables:\n- Always run \`EXPLAIN (ANALYZE, BUFFERS)\` to check execution plans.\n- For queries filtering on \`(batch, career_readiness >= 80)\`, create a composite index: \`CREATE INDEX idx_batch_readiness ON students(batch, career_readiness DESC);\``;
+  if (lower.includes('jwt') || lower.includes('token') || lower.includes('auth') || lower.includes('blacklist') || lower.includes('redis')) {
+    return `Hey ${name}! Blacklisting = logout pe token invalid.
+
+**Redis (Production for 462 users):**
+\`\`\`javascript
+// On logout - blacklist token
+await redis.set(\`bl_\${token}\`, 'true', 'EX', 3600);
+
+// Auth Middleware check
+const isBlack = await redis.get(\`bl_\${token}\`);
+if (isBlack) return res.status(401).json({ msg: 'Logged out / Token Revoked' });
+
+jwt.verify(token, process.env.JWT_SECRET);
+next();
+\`\`\`
+
+**In-Memory Set (Local Debugging):**
+\`\`\`javascript
+const blacklist = new Set();
+// On logout
+blacklist.add(token);
+// Middleware check
+if (blacklist.has(token)) return res.status(401).json({ msg: 'Token Revoked' });
+\`\`\`
+
+**PostgreSQL Refresh Token Ledger:**
+Store active refresh tokens in a \`user_sessions\` table and revoke them upon logout.`;
   }
 
-  if (lower.includes('gig') || lower.includes('stipend') || lower.includes('internship') || lower.includes('money')) {
-    return `Regarding **Micro-Internships & Bounties**:\n\n1. Browse open tasks under the **Micro-Gigs** tab.\n2. Submit your approach and PR link.\n3. Once accepted, stipends (₹1,500–₹5,000) are disbursed directly, and a cryptographic proof badge is minted to your **Experience Passport**!`;
+  if (lower.includes('postgres') || lower.includes('sql') || lower.includes('db') || lower.includes('index') || lower.includes('database')) {
+    return `Hey ${name}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
+
+**Why needed:** Large cohorts of students running parallel queries can lead to ECONNREFUSED and connection pool timeouts.
+
+**Best practices with direct solution:**
+\`\`\`javascript
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 15, // Limit connections
+  idleTimeoutMillis: 30000,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+\`\`\`
+
+**Composite Indexing for Skill DNA:**
+\`\`\`sql
+CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
+\`\`\`
+This boosts filtering speeds across the active cohort records.`;
   }
 
-  if (lower.includes('mentor') || lower.includes('capsule') || lower.includes('interview')) {
-    return `You can book 1-on-1 **15-Minute Mentor Capsules** directly from the Mentors tab. TCS, Infosys, and CloudSphere senior architects have open slots available this week!`;
+  if (lower.includes('gig') || lower.includes('stipend') || lower.includes('internship') || lower.includes('money') || lower.includes('task')) {
+    return `Hey ${name}! I'll guide you through our **Micro-Internships and Gigs** on SkillBridge.
+
+**Task Deliverables & Expectations:**
+- Complete verified tasks with production-grade modular structures.
+- Stipends (₹1,500 - ₹5,000) are disbursed directly to your university account within 48 hours of recruiter review.
+- Every submission goes through our automated simulation sandbox and must sign a virtual zero-NDA.
+
+**Deliverables Checklist:**
+1. Clean commit structure on linked GitHub repositories.
+2. Verified unit tests passing locally.
+3. Proof-of-work cryptographic SHA-256 logged to your Experience Passport.`;
   }
 
-  return `I have analyzed your query, ${name}. As your SkillBridge AI Counselor, I recommend checking the **Skill Intelligence Matrix** to track your current readiness and booking a 15-minute capsule with a senior architect to fast-track your PPO readiness.`;
+  if (lower.includes('mentor') || lower.includes('capsule') || lower.includes('interview') || lower.includes('session')) {
+    return `Hey ${name}! Ready for your 15-Minute Mentor Capsule?
+
+**Our Mentorship Network:**
+- Learn directly from elite leaders like **Amit Verma (Senior Architect at TCS)**.
+- Capsules are 15-minute ultra-focused sessions designed for deep architecture reviews, PR reviews, and placement referrals.
+
+**Prep Checklist:**
+1. Open your repository in a browser tab.
+2. Formulate 3 distinct technical or career questions.
+3. Link your Experience Passport so the mentor can review your verified credentials.`;
+  }
+
+  if (lower.includes('readiness') || lower.includes('score') || lower.includes('career') || lower.includes('resume') || lower.includes('gap') || lower.includes('roadmap') || lower.includes('dna') || lower.includes('portfolio') || lower.includes('placement')) {
+    return `Hey ${name}! Let's optimize your SkillBridge Profile and Career Roadmap.
+
+**Your Career Stats & Metrics:**
+- **Skill DNA Score**: 84/100
+- **Career Readiness Index**: 81%
+- **Experience Gained**: 64 Units
+- **Cohort Performance**: Top 8% of the Batch
+- **Time Machine Referral Prediction**: 14.5 LPA target base package
+
+**Action Plan to reach 95%+ Placement Readiness:**
+1. Connect your Github and LinkedIn accounts on the profile page.
+2. Complete 2 verified Micro-Gigs on our board.
+3. Request 1-on-1 feedback on your ATS Resume from our industry panel.`;
+  }
+
+  return `Hey ${name}! I'm your Bridge Buddy AI Help Desk & Technical Advisor.
+
+Ask me about:
+- **Platform Features**: Skill DNA, Career Readiness, Experience Passport, Gigs.
+- **Micro-Gigs**: Deliverables, stipends, timeline, NDA.
+- **Technical Questions**: Node.js, Express, React, PostgreSQL, JWT blacklisting, Redis.
+- **Career Roadmaps**: ATS resume, portfolio tips, and placements.
+
+I am ready to solve any roadblock instantly. No logging, no delays. Ask away!`;
 }

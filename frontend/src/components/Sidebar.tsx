@@ -21,9 +21,11 @@ import {
   GraduationCap,
   BriefcaseBusiness,
   Building,
-  Menu
+  Menu,
+  Lock
 } from 'lucide-react';
 import { UserRole, StudentProfile } from '../types';
+import { Logo } from './Logo';
 
 interface SidebarProps {
   currentRole: UserRole;
@@ -78,29 +80,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Render Inner Sidebar Content (parameterized by whether it's collapsed or in drawer)
   const renderContent = (collapsed: boolean, isDrawer = false) => {
     return (
-      <div className="flex flex-col h-full bg-[#070B20] border-r border-[#19224D] select-none">
+      <div className="flex flex-col h-full bg-[#0B0F2A] border-r border-white/5 select-none text-slate-300">
         {/* Brand Header */}
-        <div className={`p-4 border-b border-[#151D42] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 shrink-0 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-black text-sm tracking-wider">
-              SB
-            </div>
-            {!collapsed && (
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-white text-[15px] tracking-tight truncate">SkillBridge</span>
-                  <span className="text-[#8B5CF6] font-black text-[15px] shrink-0">AI</span>
-                </div>
-                <p className="text-[10px] font-medium text-slate-400 truncate">SIH26044 · Career OS</p>
-              </div>
-            )}
-          </div>
+        <div className={`px-4 py-4 border-b border-white/6 bg-[#0B0F2A] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
+          <Logo showText={!collapsed} subtitle={!collapsed} iconSize={36} />
 
           {/* Close button for mobile drawer */}
           {isDrawer && onCloseMobile && (
             <button
               onClick={onCloseMobile}
-              className="p-1.5 rounded-lg bg-[#0E1538] text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-colors"
               title="Close Navigation"
             >
               <X className="w-5 h-5" />
@@ -111,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isDrawer && onToggleCollapse && !collapsed && (
             <button
               onClick={onToggleCollapse}
-              className="hidden lg:flex p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#0E1538] transition-colors"
+              className="hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
               title="Collapse Sidebar"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -119,85 +108,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {/* Role Switcher */}
+        {/* ACTIVE ROLE (Locked) */}
         {!collapsed ? (
-          <div className="px-3 pt-3 pb-1 relative">
-            <button
-              onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] transition-colors group text-left shadow-sm"
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="w-2 h-2 shrink-0 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div className="px-3.5 pt-3.5 pb-2.5">
+            <div className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#1A1F3D] border border-white/5 shadow-md">
+              <div className="flex items-center gap-2.5 min-w-0">
+                {/* Green dot pulse */}
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
                 <div className="min-w-0">
-                  <p className="text-[9.5px] text-slate-400 uppercase tracking-wider font-semibold">Active Role</p>
-                  <p className="text-xs font-bold text-white capitalize truncate">
-                    {currentRole === 'hod' ? 'HOD / Faculty' : currentRole === 'mentor' ? 'Industry Mentor' : 'Student Candidate'}
+                  <p className="text-[10px] text-white/30 font-bold uppercase tracking-[1.5px]">Active Role</p>
+                  <p className="text-xs font-semibold text-white capitalize truncate">
+                    {currentRole === 'hod' ? 'HOD / Faculty' : currentRole === 'mentor' ? 'Industry Mentor' : currentRole === 'company' ? 'Recruiter' : 'Student Candidate'}
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] text-[#A78BFA] group-hover:text-white font-medium bg-[#1D1E4E] px-1.5 py-0.5 rounded shrink-0">
-                Switch
-              </span>
-            </button>
-
-            {showRoleMenu && (
-              <div className="absolute top-14 left-3 right-3 bg-[#0B1033] border border-[#232F6E] rounded-xl shadow-2xl z-50 p-1.5 space-y-1">
-                <button
-                  onClick={() => handleRoleSelect('student')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-left transition-colors ${
-                    currentRole === 'student' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48] hover:text-white'
-                  }`}
-                >
-                  <GraduationCap className="w-4 h-4 text-cyan-300 shrink-0" />
-                  <div>
-                    <p className="font-bold">Student Candidate</p>
-                    <p className="text-[10px] opacity-80">Skill Passport & Micro-Gigs</p>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => handleRoleSelect('mentor')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-left transition-colors ${
-                    currentRole === 'mentor' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48] hover:text-white'
-                  }`}
-                >
-                  <BriefcaseBusiness className="w-4 h-4 text-pink-300 shrink-0" />
-                  <div>
-                    <p className="font-bold">Industry Mentor</p>
-                    <p className="text-[10px] opacity-80">Capsules & Reviews</p>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => handleRoleSelect('hod')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-left transition-colors ${
-                    currentRole === 'hod' ? 'bg-[#7C5CFC] text-white' : 'text-slate-300 hover:bg-[#141B48] hover:text-white'
-                  }`}
-                >
-                  <Building className="w-4 h-4 text-amber-300 shrink-0" />
-                  <div>
-                    <p className="font-bold">HOD / College Admin</p>
-                    <p className="text-[10px] opacity-80">Cohort & Auto-MoU</p>
-                  </div>
-                </button>
+              {/* Lock icon in circle bg white/5 */}
+              <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/5" title="Role is locked">
+                <Lock className="w-3.5 h-3.5 text-white/40" />
               </div>
-            )}
+            </div>
           </div>
         ) : (
-          <div className="py-2 flex justify-center">
-            <button
-              onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className="p-2 rounded-lg bg-[#0E1538] border border-[#1E2964] text-[#A78BFA] hover:text-white"
-              title={`Switch Role (Current: ${currentRole})`}
-            >
-              {currentRole === 'hod' ? (
-                <Building className="w-4 h-4 text-amber-400" />
-              ) : currentRole === 'mentor' ? (
-                <BriefcaseBusiness className="w-4 h-4 text-pink-400" />
-              ) : (
-                <GraduationCap className="w-4 h-4 text-cyan-400" />
-              )}
-            </button>
+          <div className="py-3 flex justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#1A1F3D] border border-white/5 flex items-center justify-center text-white/40" title="Role is locked">
+              <Lock className="w-4 h-4" />
+            </div>
           </div>
         )}
 
@@ -208,7 +146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <>
               <div>
                 {!collapsed && (
-                  <div className="px-2.5 mb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
                     Career Hub
                   </div>
                 )}
@@ -221,8 +159,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'dashboard'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <Compass className="w-4 h-4 text-[#8B5CF6] shrink-0" />
@@ -237,35 +175,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'skills'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <Cpu className="w-4 h-4 text-cyan-400 shrink-0" />
                     {!collapsed && <span className="truncate">Skill Intelligence</span>}
-                  </button>
-
-                  <button
-                    id="nav-ghost"
-                    onClick={() => handleTabClick('ghost')}
-                    title="Ghost Internships (Zero NDA)"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
-                      activeTab === 'ghost'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
-                    }`}
-                  >
-                    <Terminal className="w-4 h-4 text-emerald-400 shrink-0" />
-                    {!collapsed && (
-                      <>
-                        <span className="truncate">Ghost Internships</span>
-                        <span className="ml-auto text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded shrink-0">
-                          Zero NDA
-                        </span>
-                      </>
-                    )}
                   </button>
 
                   <button
@@ -276,8 +191,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'gigs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <Briefcase className="w-4 h-4 text-amber-400 shrink-0" />
@@ -292,8 +207,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'mentors'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <Users className="w-4 h-4 text-pink-400 shrink-0" />
@@ -311,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               <div>
                 {!collapsed && (
-                  <div className="px-2.5 mb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
                     Ledger & Intelligence
                   </div>
                 )}
@@ -324,28 +239,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'passport'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0" />
                     {!collapsed && <span className="truncate">Experience Passport</span>}
-                  </button>
-
-                  <button
-                    id="nav-trust"
-                    onClick={() => handleTabClick('trust')}
-                    title="Trust & Verification"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
-                      activeTab === 'trust'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
-                    }`}
-                  >
-                    <Award className="w-4 h-4 text-teal-400 shrink-0" />
-                    {!collapsed && <span className="truncate">Trust & Verification</span>}
                   </button>
 
                   <button
@@ -356,8 +255,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       collapsed ? 'justify-center' : ''
                     } ${
                       activeTab === 'helpdesk'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                        : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <HelpCircle className="w-4 h-4 text-violet-400 shrink-0" />
@@ -372,7 +271,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {currentRole === 'hod' && (
             <div>
               {!collapsed && (
-                <div className="px-2.5 mb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
                   Governance
                 </div>
               )}
@@ -384,8 +283,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'faculty-unplaced' || activeTab === 'dashboard'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Layers className="w-4 h-4 text-amber-400 shrink-0" />
@@ -399,8 +298,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'faculty-mou'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
@@ -414,8 +313,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'faculty-swap'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Repeat className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -429,8 +328,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'faculty-curriculum'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Sparkles className="w-4 h-4 text-pink-400 shrink-0" />
@@ -444,7 +343,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {currentRole === 'mentor' && (
             <div>
               {!collapsed && (
-                <div className="px-2.5 mb-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
                   Mentorship
                 </div>
               )}
@@ -456,8 +355,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'mentor-pipeline' || activeTab === 'dashboard'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -471,8 +370,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'mentor-reviews'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Terminal className="w-4 h-4 text-indigo-400 shrink-0" />
@@ -486,8 +385,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     collapsed ? 'justify-center' : ''
                   } ${
                     activeTab === 'mentor-capsules'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/40 shadow-sm'
-                      : 'text-slate-300 hover:bg-[#0E1438] hover:text-white'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Users className="w-4 h-4 text-pink-400 shrink-0" />
@@ -499,90 +398,103 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Profile Card & Sign Out */}
-        <div className="p-3 border-t border-[#151D42] bg-[#0A0F2B]">
+        <div className="p-3.5 border-t border-white/5 bg-[#090D25]">
           {!collapsed ? (
-            <>
+            <div className="space-y-3">
               <div
                 onClick={() => {
                   onOpenProfile();
                   if (onCloseMobile) onCloseMobile();
                 }}
-                className="flex items-center gap-2.5 p-2 rounded-xl bg-[#0E1438] border border-[#1E2964] hover:border-[#7C5CFC] cursor-pointer transition-all group"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/30 cursor-pointer transition-all group shadow-sm"
               >
-                {localStorage.getItem('profilePhoto') ? (
-                  <img
-                    src={localStorage.getItem('profilePhoto')!}
-                    alt="Avatar"
-                    className="w-8 h-8 shrink-0 rounded-lg object-cover border border-[#7C5CFC]/50 shadow-md"
-                  />
-                ) : (
-                  <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-[#7C5CFC] to-[#4F46E5] flex items-center justify-center font-bold text-white text-xs shadow-md">
-                    {getInitials(
-                      currentRole === 'hod'
-                        ? 'Dr. Arvind Sharma'
-                        : currentRole === 'mentor'
-                        ? 'Amit Verma'
-                        : student?.name || 'Adarsh Pratap'
-                    )}
-                  </div>
-                )}
+                <div className="relative shrink-0">
+                  {localStorage.getItem('profilePhoto') ? (
+                    <img
+                      src={localStorage.getItem('profilePhoto')!}
+                      alt="Avatar"
+                      className="w-9 h-9 rounded-lg object-cover border border-[#7C5CFC]/30 shadow"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-lg bg-[#7C5CFC]/20 border border-[#7C5CFC]/30 flex items-center justify-center font-bold text-[#A78BFA] text-xs shadow">
+                      {getInitials(
+                        currentRole === 'hod'
+                          ? 'Dr. Arvind Sharma'
+                          : currentRole === 'mentor'
+                          ? 'Amit Verma'
+                          : currentRole === 'company'
+                          ? (localStorage.getItem('userName') || 'Corporate Recruiter')
+                          : student?.name || localStorage.getItem('userName') || 'Adarsh Pratap'
+                      )}
+                    </div>
+                  )}
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1A1F3D] rounded-full" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate group-hover:text-[#C4B5FD] transition-colors">
+                  <p className="text-xs font-semibold text-white truncate group-hover:text-[#C4B5FD] transition-colors">
                     {currentRole === 'hod'
                       ? 'Dr. Arvind Sharma'
                       : currentRole === 'mentor'
                       ? 'Amit Verma'
-                      : student?.name || 'Adarsh Pratap'}
+                      : currentRole === 'company'
+                      ? (localStorage.getItem('userName') || 'Corporate Recruiter')
+                      : student?.name || localStorage.getItem('userName') || 'Adarsh Pratap'}
                   </p>
-                  <p className="text-[10px] text-slate-400 truncate">
+                  <p className="text-[10px] text-white/30 truncate font-sans">
                     {currentRole === 'hod'
-                      ? 'HOD · Dept of CSIT'
+                      ? 'HOD • Dept of CSIT'
                       : currentRole === 'mentor'
                       ? 'TCS Senior Architect'
-                      : 'CSIT · Batch 2025-29'}
+                      : currentRole === 'company'
+                      ? 'Talent Acquisition Partner'
+                      : student?.batch ? `CSIT - Batch ${student.batch}` : 'CSIT - Batch 2025-29'}
                   </p>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
               </div>
 
-              <div className="mt-2 flex items-center justify-between px-1">
+              <div className="flex items-center justify-between px-1.5 text-xs">
                 <button
                   onClick={() => {
                     onOpenProfile();
                     if (onCloseMobile) onCloseMobile();
                   }}
-                  className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors"
+                  className="text-white/40 hover:text-white flex items-center gap-1.5 transition-colors font-medium"
                 >
-                  <UserIcon className="w-3.5 h-3.5" />
+                  <UserIcon className="w-3.5 h-3.5 text-white/30" />
                   <span>Profile</span>
                 </button>
+                <span className="text-white/10">|</span>
                 <button
                   onClick={() => {
                     onLogout();
                     if (onCloseMobile) onCloseMobile();
                   }}
-                  className="text-[11px] text-rose-400/80 hover:text-rose-300 flex items-center gap-1 transition-colors"
+                  className="text-rose-400/70 hover:text-rose-400 flex items-center gap-1 transition-colors font-medium"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
+                  <LogOut className="w-3.5 h-3.5 text-rose-400/50" />
                   <span>Sign Out</span>
                 </button>
               </div>
-            </>
+            </div>
           ) : (
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3 py-1">
               <button
-                onClick={() => {
-                  onOpenProfile();
-                }}
-                className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C5CFC] to-[#4F46E5] flex items-center justify-center font-bold text-white text-xs shadow-md"
-                title="View Profile & DNA"
+                onClick={onOpenProfile}
+                className="w-9 h-9 rounded-lg bg-[#7C5CFC]/20 border border-[#7C5CFC]/30 flex items-center justify-center font-bold text-[#A78BFA] text-xs shadow-md"
+                title="View Profile"
               >
-                {getInitials(student?.name || 'Adarsh')}
+                {getInitials(
+                  currentRole === 'hod'
+                    ? 'Dr. Arvind'
+                    : currentRole === 'mentor'
+                    ? 'Amit'
+                    : student?.name || localStorage.getItem('userName') || 'Adarsh'
+                )}
               </button>
               {onToggleCollapse && (
                 <button
                   onClick={onToggleCollapse}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#0E1438] transition-colors"
+                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#1A1F3D] transition-colors"
                   title="Expand Sidebar"
                 >
                   <ChevronRight className="w-4 h-4" />

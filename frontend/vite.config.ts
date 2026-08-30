@@ -189,7 +189,146 @@ function devApiPlugin(): Plugin {
           }
         }
 
-        // 9. Helpdesk FAQ & Tickets
+        // 9. Helpdesk FAQ & Tickets & Live AI Chat
+        if (url.startsWith('/api/ai/helpdesk/chat')) {
+          if (req.method === 'POST') {
+            const body = await readBody();
+            const message = body.message || '';
+            const history = body.history || [];
+            const studentProfile = body.studentProfile || {};
+            const studentName = studentProfile.name || 'there';
+
+            let reply = '';
+            const apiKey = process.env.GEMINI_API_KEY;
+
+            if (apiKey && apiKey.trim().length > 5) {
+              try {
+                const { GoogleGenAI } = await import('@google/genai');
+                const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
+                const systemInstruction = `You are Bridge Buddy, the official live AI Assistant and Tech Specialist for SkillBridge AI (SIH26044 • Career OS).
+You are a senior developer, human-coded, friendly, with a natural Hinglish mix, concise tone with structured code blocks. 24/7 Support Team Online.
+User details: Name = ${studentName}.
+Stats: Skill DNA 84/100, Career Readiness 81%, Top 8% of Batch, Target base package 14.5 LPA, Mentor Amit Verma (Senior Architect at TCS).
+
+RULES:
+1. Always address the user directly as "${studentName}" (Say Adarsh ONLY if name is Adarsh. If hi/hello -> "Hey ${studentName}! 👋").
+2. FORBIDDEN PHRASES: Never say "I've analyzed your question and logged it", "Check recommendations below", or "Ticket logged". Never say anything about logging questions in the background.
+3. Direct Code Answers: Always answer directly with complete, working code blocks (Node.js, Express, React, PostgreSQL, Redis, JWT token blacklisting with full middleware, etc.).
+4. Cover: Technical questions, Micro-Gigs/Internships (deliverables, checklist, timeline, zero-NDA, ₹1,500-₹5,000 stipend), Experience Passport (SHA-256 cryptographic verification), Mentorship Capsules.`;
+
+                const contents: any[] = [];
+                if (Array.isArray(history) && history.length > 0) {
+                  const recent = history.slice(-6);
+                  for (const msg of recent) {
+                    if (msg.sender === 'user') {
+                      contents.push({ role: 'user', parts: [{ text: msg.text }] });
+                    } else if (msg.sender === 'ai' || msg.sender === 'assistant') {
+                      contents.push({ role: 'model', parts: [{ text: msg.text }] });
+                    }
+                  }
+                }
+                contents.push({ role: 'user', parts: [{ text: message }] });
+
+                const candidateModels = ['gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-2.0-flash'];
+                for (const modelName of candidateModels) {
+                  try {
+                    const response = await ai.models.generateContent({
+                      model: modelName,
+                      contents,
+                      config: {
+                        systemInstruction,
+                        temperature: 0.6,
+                        maxOutputTokens: 1000
+                      }
+                    });
+
+                    if (response && response.text) {
+                      reply = response.text.trim();
+                      break;
+                    }
+                  } catch (modelErr: any) {
+                    console.warn(`Model ${modelName} unavailable (${modelErr?.status || modelErr?.message}), trying fallback model...`);
+                  }
+                }
+              } catch (e: any) {
+                console.warn('Gemini chat error in dev middleware:', e.message);
+              }
+            }
+
+            if (!reply) {
+              const lower = message.trim().toLowerCase();
+              const greetings = ['hi', 'hii', 'hiiii', 'hello', 'hey', 'heyy', 'hlw', 'hola', 'yo'];
+              if (greetings.includes(lower.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ''))) {
+                reply = `Hey ${studentName}! 👋 How's your career sprint going? Ask me any questions about micro-gigs, technical implementations (like JWT blacklisting), or resume tips and I will help you solve them immediately!`;
+              } else if (lower.includes('jwt') || lower.includes('token') || lower.includes('auth') || lower.includes('blacklist') || lower.includes('redis')) {
+                reply = `Hey ${studentName}! Blacklisting = logout pe token invalid.
+
+**Redis (Production for 462 users):**
+\`\`\`javascript
+// On logout - blacklist token
+await redis.set(\`bl_\${token}\`, 'true', 'EX', 3600);
+
+// Auth Middleware check
+const isBlack = await redis.get(\`bl_\${token}\`);
+if (isBlack) return res.status(401).json({ msg: 'Logged out / Token Revoked' });
+
+jwt.verify(token, process.env.JWT_SECRET);
+next();
+\`\`\`
+
+**In-Memory Set (Local Debugging):**
+\`\`\`javascript
+const blacklist = new Set();
+// On logout
+blacklist.add(token);
+// In middleware
+if (blacklist.has(token)) return res.status(401).json({ msg: 'Token Revoked' });
+\`\`\`
+
+**PostgreSQL Refresh Token Ledger:**
+Store active refresh tokens in a \`user_sessions\` table and revoke them upon logout.`;
+              } else if (lower.includes('postgres') || lower.includes('sql') || lower.includes('db') || lower.includes('index') || lower.includes('database')) {
+                reply = `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
+
+\`\`\`javascript
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 15,
+  idleTimeoutMillis: 30000,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+\`\`\`
+
+**Composite Indexing for Skill DNA:**
+\`\`\`sql
+CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
+\`\`\``;
+              } else if (lower.includes('gig') || lower.includes('stipend') || lower.includes('internship') || lower.includes('money') || lower.includes('task')) {
+                reply = `Hey ${studentName}! Here is the Micro-Internship & Gigs breakdown on SkillBridge:
+
+- **Deliverables**: Modular components, tested endpoints, clean PR documentation.
+- **Stipends**: ₹1,500 - ₹5,000 disbursed directly to your university account within 48h.
+- **Timeline**: 3-7 day sprints with instant automated sandbox validation.
+- **NDA & Verification**: Virtual zero-NDA policy + SHA-256 cryptographic proof minted to your Experience Passport.`;
+              } else if (lower.includes('dna') || lower.includes('score') || lower.includes('readiness') || lower.includes('profile') || lower.includes('website')) {
+                reply = `Hey ${studentName}! Here are your live SkillBridge Career OS metrics:
+
+- **Skill DNA Score**: 84/100
+- **Career Readiness Index**: 81%
+- **Cohort Performance**: Top 8% of Batch
+- **Time Machine Prediction**: 14.5 LPA target base package
+- **Mentorship Network**: 15-Minute Capsules with leaders like Amit Verma (Senior Architect at TCS).`;
+              } else {
+                reply = `Hey ${studentName}! I'm your Bridge Buddy AI Assistant. Ask me anything on technical architectures (JWT, Redis, PostgreSQL, React), micro-gigs, or platform tools. I will provide direct code solutions immediately!`;
+              }
+            }
+
+            res.statusCode = 200;
+            return res.end(JSON.stringify({ success: true, reply, timestamp: new Date().toISOString() }));
+          }
+        }
+
         if (url.startsWith('/api/ai/helpdesk/faq')) {
           res.statusCode = 200;
           return res.end(JSON.stringify({

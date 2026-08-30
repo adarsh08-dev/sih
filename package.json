@@ -18,9 +18,11 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.37.0",
+    "motion": "^13.1.1",
     "pg": "^8.23.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

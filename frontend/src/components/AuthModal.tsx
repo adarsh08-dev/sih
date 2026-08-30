@@ -5,21 +5,26 @@ import {
   GraduationCap, 
   Users, 
   Building2, 
-  ShieldCheck, 
+  Briefcase,
   ArrowRight,
-  CheckCircle2,
   Lock,
   Mail,
   User,
-  School
+  ShieldCheck
 } from 'lucide-react';
 import { UserRole } from '../types';
-import { COLLEGES_LIST } from '../data/colleges';
+import { Register } from './Register';
+import { CollegeItem, COLLEGES_DATA } from '../data/colleges';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (user: { name: string; role: UserRole; email: string }) => void;
+  onLoginSuccess: (user: { 
+    name: string; 
+    role: UserRole; 
+    email: string;
+    college?: CollegeItem | null;
+  }) => void;
   initialMode?: 'login' | 'register' | 'switchRole';
 }
 
@@ -31,22 +36,93 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const [mode, setMode] = useState<'login' | 'register' | 'switchRole'>(initialMode);
   const [role, setRole] = useState<UserRole>('student');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [college, setCollege] = useState(COLLEGES_LIST[0].name);
+  const [email, setEmail] = useState('adarsh.pratap@mjpru.ac.in');
+  const [password, setPassword] = useState('password123');
+  const [fullName, setFullName] = useState('Adarsh Pratap Singh');
+  
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleQuickRoleSwitch = (selectedRole: UserRole, demoName: string, demoEmail: string) => {
-    localStorage.setItem('role', selectedRole);
-    localStorage.setItem('userName', demoName);
+  // If in register mode, render the dedicated 3-pathway Register component
+  if (mode === 'register') {
+    return (
+      <Register
+        isOpen={isOpen}
+        onClose={onClose}
+        initialRole={role}
+        onRegisterSuccess={(userData) => {
+          onLoginSuccess({
+            name: userData.name,
+            role: userData.role,
+            email: userData.email,
+            college: userData.college
+          });
+          onClose();
+        }}
+      />
+    );
+  }
+
+  const saveProfileToStorage = (profileData: {
+    name: string;
+    rollNo?: string;
+    email: string;
+    department: string;
+    college: string;
+    year: string;
+    role: UserRole;
+  }) => {
+    const fullProfile = {
+      name: profileData.name,
+      rollNo: profileData.rollNo || (profileData.role === 'student' ? '22001015001' : 'FAC-00102'),
+      email: profileData.email,
+      department: profileData.department,
+      college: profileData.college,
+      year: profileData.year,
+      role: profileData.role,
+      location: 'Bareilly, Uttar Pradesh, India',
+      photo: localStorage.getItem('profilePhoto') || null
+    };
+
+    localStorage.setItem('userProfile', JSON.stringify(fullProfile));
+    localStorage.setItem('userName', profileData.name);
+    localStorage.setItem('role', profileData.role);
+    localStorage.setItem('userRole', profileData.role === 'mentor' ? 'Mentor' : profileData.role === 'hod' ? 'HOD' : 'student');
+    localStorage.setItem('roleLocked', 'true');
+    localStorage.setItem('userEmail', profileData.email);
+    localStorage.setItem('userCourse', profileData.department);
+    localStorage.setItem('userCollege', profileData.college);
+    localStorage.setItem('userYear', profileData.year);
+  };
+
+  const handleQuickRoleSwitch = (
+    selectedRole: UserRole, 
+    demoName: string, 
+    demoEmail: string,
+    demoRollNo: string,
+    demoDept: string,
+    demoCollege: string,
+    demoYear: string
+  ) => {
+    saveProfileToStorage({
+      name: demoName,
+      rollNo: demoRollNo,
+      email: demoEmail,
+      department: demoDept,
+      college: demoCollege,
+      year: demoYear,
+      role: selectedRole
+    });
+
+    const collegeObj = COLLEGES_DATA.find(c => c.name === demoCollege) || COLLEGES_DATA[0];
+
     onLoginSuccess({
       name: demoName,
       role: selectedRole,
-      email: demoEmail
+      email: demoEmail,
+      college: collegeObj
     });
     onClose();
   };
@@ -57,131 +133,138 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
 
     try {
-      const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login';
-      const bodyPayload = mode === 'register' 
-        ? { name, email, password, role, extraInfo: { college, course: 'CSIT', batch: '2025-29' } }
-        : { email, password };
+      let defaultDept = 'Computer Science & Information Technology';
+      let defaultCollege = 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly';
+      let defaultYear = '2025-29';
 
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyPayload)
+      if (role === 'mentor') {
+        defaultDept = 'Enterprise Systems Architecture';
+        defaultCollege = 'TCS Innovation Labs';
+        defaultYear = 'Senior Architect';
+      } else if (role === 'hod') {
+        defaultDept = 'Computer Science & Information Technology';
+        defaultCollege = 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly';
+        defaultYear = 'Department Head';
+      }
+
+      saveProfileToStorage({
+        name: fullName,
+        email,
+        department: defaultDept,
+        college: defaultCollege,
+        year: defaultYear,
+        role
       });
 
-      let data: any = {};
-      const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      }
-
-      if (!res.ok) {
-        throw new Error(data.error || `Authentication failed with status ${res.status}`);
-      }
-
-      if (data.token) {
-        localStorage.setItem('skillbridge_token', data.token);
-      }
-      const loggedUser = data.user || { name: name || 'Student User', role };
-      localStorage.setItem('role', loggedUser.role);
-      localStorage.setItem('userName', loggedUser.name);
+      const collegeObj = COLLEGES_DATA.find(c => c.name === defaultCollege) || COLLEGES_DATA[0];
 
       onLoginSuccess({
-        name: loggedUser.name,
-        role: loggedUser.role as UserRole,
-        email: loggedUser.email || email
+        name: fullName,
+        role: role as UserRole,
+        email,
+        college: collegeObj
       });
       onClose();
     } catch (err: any) {
-      const errMsg = err.message || 'Authentication failed. Please check your credentials.';
-      setError(errMsg);
+      setError(err.message || 'Authentication failed');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSwitchToRegisterWithEmail = () => {
-    setMode('register');
-    setError('');
-    if (!name && email) {
-      const derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
-      setName(derivedName);
-    }
-  };
-
-  const handleSwitchToLoginWithEmail = () => {
-    setMode('login');
-    setError('');
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 select-none">
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
       />
 
-      <div className="relative w-full max-w-lg bg-[#0A0F2E] border border-[#1E2964] rounded-2xl shadow-2xl overflow-hidden p-6 sm:p-8 z-10 animate-fade-in">
+      <div className="relative w-full max-w-lg bg-[#0B0F2A] border border-white/[0.08] rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.5)] overflow-hidden p-6 sm:p-7 z-10 animate-fade-in font-sans">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-lg bg-[#0E1538] hover:bg-[#18214D] text-slate-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white/40 hover:text-white transition-colors cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Brand Header */}
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white font-black text-lg mb-3">
+        <div className="text-center mb-5">
+          <div className="w-11 h-11 mx-auto rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-black text-base mb-2.5">
             SB
           </div>
-          <h2 className="text-xl font-extrabold text-white">SkillBridge AI Portal</h2>
-          <p className="text-xs text-slate-400 mt-1">SIH26044 · Academia-Industry Career OS</p>
+          <h2 className="text-lg font-extrabold text-white">SkillBridge AI Portal</h2>
+          <p className="text-xs text-white/40 mt-0.5">SIH26044 · Dynamic Authentication & Academic OS</p>
         </div>
 
         {/* 1-Click Role Switcher Presets */}
-        <div className="mb-6 p-3.5 rounded-xl bg-[#0E1538] border border-[#1E2964]">
-          <p className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+        <div className="mb-5 p-3 rounded-xl bg-[#151A32] border border-white/[0.06]">
+          <p className="text-[10.5px] font-bold text-white/50 uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#A78BFA]" />
-            <span>Instant Demo Switcher</span>
+            <span>Instant Pathway Presets</span>
           </p>
           <div className="grid grid-cols-3 gap-2">
             <button
-              onClick={() => handleQuickRoleSwitch('student', 'Adarsh Pratap Singh', 'adarsh@mjpru.ac.in')}
-              className="p-2.5 rounded-lg bg-[#141C48] hover:bg-[#1C2660] border border-[#232F6E] hover:border-[#7C5CFC] text-left transition-all group"
+              onClick={() => handleQuickRoleSwitch(
+                'student',
+                'Adarsh Pratap Singh',
+                'adarsh.pratap@mjpru.ac.in',
+                '22001015001',
+                'Computer Science & Information Technology',
+                'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
+                '2025-29'
+              )}
+              className="p-2.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-[#7C5CFC]/40 text-left transition-all group cursor-pointer"
             >
               <GraduationCap className="w-4 h-4 text-cyan-400 mb-1" />
               <p className="text-[11px] font-bold text-white leading-tight">Student</p>
-              <p className="text-[9px] text-slate-400">CSIT 2025-29</p>
+              <p className="text-[9.5px] text-white/40 truncate">CSIT · Bareilly</p>
             </button>
 
             <button
-              onClick={() => handleQuickRoleSwitch('mentor', 'Amit Verma', 'amit.verma@tcs.com')}
-              className="p-2.5 rounded-lg bg-[#141C48] hover:bg-[#1C2660] border border-[#232F6E] hover:border-[#7C5CFC] text-left transition-all group"
+              onClick={() => handleQuickRoleSwitch(
+                'mentor',
+                'Amit Verma',
+                'amit.verma@tcs.com',
+                'EMP-90412',
+                'Enterprise Systems Architecture',
+                'TCS Innovation Labs',
+                'Senior Architect'
+              )}
+              className="p-2.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-[#7C5CFC]/40 text-left transition-all group cursor-pointer"
             >
               <Users className="w-4 h-4 text-emerald-400 mb-1" />
-              <p className="text-[11px] font-bold text-white leading-tight">Industry Mentor</p>
-              <p className="text-[9px] text-slate-400">TCS Architect</p>
+              <p className="text-[11px] font-bold text-white leading-tight">Mentor</p>
+              <p className="text-[9.5px] text-white/40 truncate">TCS Architect</p>
             </button>
 
             <button
-              onClick={() => handleQuickRoleSwitch('hod', 'Dr. Arvind K. Sharma', 'hod.csit@mjpru.ac.in')}
-              className="p-2.5 rounded-lg bg-[#141C48] hover:bg-[#1C2660] border border-[#232F6E] hover:border-[#7C5CFC] text-left transition-all group"
+              onClick={() => handleQuickRoleSwitch(
+                'hod',
+                'Dr. Arvind K. Sharma',
+                'hod.csit@mjpru.ac.in',
+                'FAC-00102',
+                'Computer Science & Information Technology',
+                'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
+                'Department Head'
+              )}
+              className="p-2.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-[#7C5CFC]/40 text-left transition-all group cursor-pointer"
             >
               <Building2 className="w-4 h-4 text-amber-400 mb-1" />
               <p className="text-[11px] font-bold text-white leading-tight">HOD / Faculty</p>
-              <p className="text-[9px] text-slate-400">MJPRU CSIT</p>
+              <p className="text-[9.5px] text-white/40 truncate">MJPRU CSIT</p>
             </button>
           </div>
         </div>
 
         {/* Mode Toggle */}
-        <div className="flex border-b border-[#18214D] mb-5">
+        <div className="flex border-b border-white/[0.06] mb-4">
           <button
             onClick={() => { setMode('login'); setError(''); }}
             className={`flex-1 py-2 text-xs font-bold transition-all border-b-2 ${
               mode === 'login'
                 ? 'border-[#7C5CFC] text-[#C4B5FD]'
-                : 'border-transparent text-slate-400 hover:text-white'
+                : 'border-transparent text-white/40 hover:text-white'
             }`}
           >
             Sign In
@@ -191,22 +274,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             className={`flex-1 py-2 text-xs font-bold transition-all border-b-2 ${
               mode === 'register'
                 ? 'border-[#7C5CFC] text-[#C4B5FD]'
-                : 'border-transparent text-slate-400 hover:text-white'
+                : 'border-transparent text-white/40 hover:text-white'
             }`}
           >
-            Create Account
+            Register Pathway (3 Roles)
           </button>
-        </div>
-
-        {/* Database Status indicator */}
-        <div className="mb-4 flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#0E1538] border border-[#1E2964] text-[10.5px]">
-          <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            Database Ledger Active
-          </span>
-          <span className="text-slate-400">
-            {mode === 'login' ? 'Demo pass: password123' : 'Saves directly to DB'}
-          </span>
         </div>
 
         {error && (
@@ -216,90 +288,72 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         {/* Form */}
-        <form onSubmit={handleAuthSubmit} className="space-y-3.5">
-          {mode === 'register' && (
-            <div>
-              <label className="block text-[11px] font-bold text-slate-300 mb-1">Full Name</label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Adarsh Pratap Singh"
-                  className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-9 pr-4 py-2.5 outline-none"
-                />
-              </div>
-            </div>
-          )}
-
+        <form onSubmit={handleAuthSubmit} className="space-y-3">
+          {/* Role selector tabs */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-300 mb-1">Account Role</label>
-            <div className="grid grid-cols-3 gap-2">
-              {(['student', 'mentor', 'hod'] as UserRole[]).map((r) => (
+            <label className="block text-[11px] font-semibold text-white/50 mb-1">Select Role</label>
+            <div className="grid grid-cols-4 gap-1.5">
+              {(['student', 'mentor', 'hod', 'company'] as UserRole[]).map((r) => (
                 <button
                   type="button"
                   key={r}
                   onClick={() => setRole(r)}
-                  className={`py-2 px-2 rounded-lg text-xs font-bold border transition-all ${
+                  className={`py-1.5 px-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
                     role === r
-                      ? 'bg-[#7C5CFC]/20 border-[#7C5CFC] text-white'
-                      : 'bg-[#0E1538] border-[#1E2964] text-slate-400 hover:text-white'
+                      ? 'bg-[#7C5CFC] border-[#7C5CFC] text-white'
+                      : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white'
                   }`}
                 >
-                  {r === 'student' ? 'Student' : r === 'mentor' ? 'Mentor' : 'HOD / Faculty'}
+                  {r === 'student' ? 'Student' : r === 'mentor' ? 'Mentor' : r === 'hod' ? 'HOD' : 'Recruiter'}
                 </button>
               ))}
             </div>
           </div>
 
-          {mode === 'register' && (
-            <div>
-              <label className="block text-[11px] font-bold text-slate-300 mb-1">University / College</label>
-              <div className="relative">
-                <School className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <select
-                  value={college}
-                  onChange={(e) => setCollege(e.target.value)}
-                  className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-9 pr-4 py-2.5 outline-none appearance-none"
-                >
-                  {COLLEGES_LIST.map((col) => (
-                    <option key={col.id} value={col.name} className="bg-[#090E2B]">
-                      {col.name} ({col.city})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
-
+          {/* Full Name */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-300 mb-1">Email Address</label>
+            <label className="block text-[11px] font-semibold text-white/50 mb-1">Full Name</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="e.g. Adarsh Pratap Singh"
+                className="w-full bg-[#1A1F3D] border border-white/[0.08] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-8 pr-3 py-2 outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-[11px] font-semibold text-white/50 mb-1">Official Email</label>
+            <div className="relative">
+              <Mail className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@university.ac.in"
-                className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-9 pr-4 py-2.5 outline-none"
+                placeholder="adarsh.pratap@mjpru.ac.in"
+                className="w-full bg-[#1A1F3D] border border-white/[0.08] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-8 pr-3 py-2 outline-none"
               />
             </div>
           </div>
 
+          {/* Password */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-300 mb-1">Password</label>
+            <label className="block text-[11px] font-semibold text-white/50 mb-1">Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-9 pr-4 py-2.5 outline-none"
+                className="w-full bg-[#1A1F3D] border border-white/[0.08] focus:border-[#7C5CFC] text-white text-xs rounded-xl pl-8 pr-3 py-2 outline-none"
               />
             </div>
           </div>
@@ -307,9 +361,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 py-2.5 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4AE8] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 transition-all"
+            className="w-full mt-3 py-2.5 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4AE8] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 transition-all cursor-pointer disabled:opacity-50"
           >
-            <span>{loading ? 'Authenticating...' : mode === 'register' ? 'Register & Enter Workspace' : 'Sign In'}</span>
+            <span>{loading ? 'Authenticating...' : 'Sign In & Launch Workspace'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

@@ -525,22 +525,49 @@ function getGenAiClient() {
 
 // Fallback intelligent problem-solver engine
 function generateLocalHelpdeskResponse(message, category = "general", studentProfile = {}) {
-  const lower = (message || "").toLowerCase();
-  const studentName = studentProfile.name || "Adarsh";
-  const targetRole = studentProfile.targetRole || "Full Stack Software Engineer";
+  const lower = (message || "").trim().toLowerCase();
+  const studentName = studentProfile.name || "there";
 
-  if (lower.includes("jwt") || lower.includes("token") || lower.includes("auth") || lower.includes("unauthorized") || lower.includes("login")) {
+  const greetings = ['hi', 'hii', 'hiiii', 'hello', 'hey', 'heyy', 'hlw', 'hola', 'yo'];
+  if (greetings.includes(lower.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ""))) {
     return {
-      reply: `### 🔐 Authentication & JWT Diagnostic
+      reply: `Hey ${studentName}! 👋 How's your career sprint going? Ask me any questions about micro-gigs, technical implementations (like JWT blacklisting), or resume tips and I will help you solve them immediately!`,
+      suggestions: [
+        "Optimize PostgreSQL indexing",
+        "Show me zero-trust JWT setup",
+        "What micro-gigs are open?"
+      ]
+    };
+  }
 
-Here are the exact steps to resolve JWT & authentication issues in your project:
+  if (lower.includes("jwt") || lower.includes("token") || lower.includes("auth") || lower.includes("blacklist") || lower.includes("redis") || lower.includes("unauthorized") || lower.includes("login")) {
+    return {
+      reply: `Hey ${studentName}! Blacklisting = logout pe token invalid.
 
-1. **Verify Authorization Header Format**: Ensure your client sends \`headers: { "Authorization": "Bearer <token>" }\` with the single space after \`Bearer\`.
-2. **Handle Secret Consistency**: Confirm the \`JWT_SECRET\` environment variable on the server matches the signature key used during token creation (\`jwt.sign(payload, secret, { expiresIn: '7d' })\`).
-3. **Check Token Expiration**: If you receive a \`TokenExpiredError\`, clear your client's stored token (\`localStorage.removeItem('skillbridge_token')\`) and re-authenticate.
-4. **CORS & Credentials**: If calling APIs across origins, ensure \`cors()\` middleware is applied before your route handlers.
+**Redis (Production for 462 users):**
+\`\`\`javascript
+// On logout - blacklist token
+await redis.set(\`bl_\${token}\`, 'true', 'EX', 3600);
 
-💡 **SkillBridge Pro-Tip**: Check our **Micro-Internship Gig #2: Build an Authenticated REST API** to practice hands-on token verification and earn a verified passport credential.`,
+// Auth Middleware check
+const isBlack = await redis.get(\`bl_\${token}\`);
+if (isBlack) return res.status(401).json({ msg: 'Logged out / Token Revoked' });
+
+jwt.verify(token, process.env.JWT_SECRET);
+next();
+\`\`\`
+
+**In-Memory Set (Local Debugging):**
+\`\`\`javascript
+const blacklist = new Set();
+// On logout
+blacklist.add(token);
+// Middleware check
+if (blacklist.has(token)) return res.status(401).json({ msg: 'Token Revoked' });
+\`\`\`
+
+**PostgreSQL Refresh Token Ledger:**
+Store active refresh tokens in a \`user_sessions\` table and revoke them upon logout.`,
       suggestions: [
         "How do I securely store tokens in the browser?",
         "Show me an Express JWT authentication middleware snippet",
@@ -549,18 +576,28 @@ Here are the exact steps to resolve JWT & authentication issues in your project:
     };
   }
 
-  if (lower.includes("db") || lower.includes("postgres") || lower.includes("sql") || lower.includes("database") || lower.includes("connection") || lower.includes("econnrefused")) {
+  if (lower.includes("db") || lower.includes("postgres") || lower.includes("sql") || lower.includes("database") || lower.includes("connection") || lower.includes("econnrefused") || lower.includes("index")) {
     return {
-      reply: `### 🗄️ Database & PostgreSQL Troubleshooting Guide
+      reply: `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
 
-Here is a quick diagnostic checklist for database connection and query errors:
+**Why needed:** Large cohorts of students running parallel queries can lead to ECONNREFUSED and connection pool timeouts.
 
-1. **Connection String Syntax**: Standard PostgreSQL connection string format is \`postgresql://user:password@host:port/database\`. Ensure special characters in passwords are URL-encoded.
-2. **Connection Pooling**: Use \`pg.Pool\` instead of single \`Client\` instances. Set reasonable pool limits (\`max: 10, idleTimeoutMillis: 30000\`) to avoid connection exhaustion in serverless or containerized environments.
-3. **Cloud SSL Configuration**: If connecting to a cloud-hosted Postgres instance, add \`ssl: { rejectUnauthorized: false }\` inside your \`new Pool({ ... })\` config.
-4. **Parameterized Queries**: Always use parameter placeholders (\`$1, $2\`) instead of string interpolation to prevent SQL injection vulnerabilities.
+**Best practices with direct solution:**
+\`\`\`javascript
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 15, // Limit connections
+  idleTimeoutMillis: 30000,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+\`\`\`
 
-💡 **SkillBridge Next Step**: You can run practice queries in the **Skill Intelligence** module or ask an industry architect in a 15-minute 1-on-1 session!`,
+**Composite Indexing for Skill DNA:**
+\`\`\`sql
+CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
+\`\`\`
+This boosts filtering speeds across the active cohort records.`,
       suggestions: [
         "How do I prevent database connection timeouts?",
         "Show an example pg.Pool setup with SSL",
@@ -569,18 +606,19 @@ Here is a quick diagnostic checklist for database connection and query errors:
     };
   }
 
-  if (lower.includes("gig") || lower.includes("micro-internship") || lower.includes("task") || lower.includes("stuck") || lower.includes("submission") || lower.includes("payment")) {
+  if (lower.includes("gig") || lower.includes("micro-internship") || lower.includes("task") || lower.includes("stuck") || lower.includes("submission") || lower.includes("payment") || lower.includes("stipend") || lower.includes("money")) {
     return {
-      reply: `### 💼 Micro-Internship Task Resolution Playbook
+      reply: `Hey ${studentName}! I'll guide you through our **Micro-Internships and Gigs** on SkillBridge.
 
-If you are facing obstacles with your micro-internship gig, follow this roadmap:
+**Task Deliverables & Expectations:**
+- Complete verified tasks with production-grade modular structures.
+- Stipends (₹1,500 - ₹5,000) are disbursed directly to your university account within 48 hours of recruiter review.
+- Every submission goes through our automated simulation sandbox and must sign a virtual zero-NDA.
 
-1. **Break Down the Requirement**: Re-read the task deliverable specifications on the Gig Board. Focus on getting a minimal viable prototype running first.
-2. **Review Code Architecture**: Ensure your component or API conforms to industry conventions (modular directory structure, clear naming, error-handling middleware).
-3. **Self-Verification**: Write quick test cases or test your endpoints using curl/Postman to ensure all edge cases are handled before submission.
-4. **Submit with Clear Documentation**: When applying or submitting deliverables, include a brief summary of how you solved the problem and a link to your repository/live demo.
-
-🚀 **Need a second pair of eyes?** You can book a 15-minute capsule with a Senior Mentor from TechNova Labs or CloudSphere to review your pull request!`,
+**Deliverables Checklist:**
+1. Clean commit structure on linked GitHub repositories.
+2. Verified unit tests passing locally.
+3. Proof-of-work cryptographic SHA-256 logged to your Experience Passport.`,
       suggestions: [
         "What should I include in my gig application message?",
         "How does Experience Passport verification score work?",
@@ -589,21 +627,18 @@ If you are facing obstacles with your micro-internship gig, follow this roadmap:
     };
   }
 
-  if (lower.includes("mentor") || lower.includes("capsule") || lower.includes("interview") || lower.includes("meeting") || lower.includes("prepare")) {
+  if (lower.includes("mentor") || lower.includes("capsule") || lower.includes("interview") || lower.includes("meeting") || lower.includes("prepare") || lower.includes("session")) {
     return {
-      reply: `### 🎯 15-Minute Mentor Capsule Preparation Checklist
+      reply: `Hey ${studentName}! Ready for your 15-Minute Mentor Capsule?
 
-Maximize your 15-minute rapid mentoring session with industry leaders:
+**Our Mentorship Network:**
+- Learn directly from elite leaders like **Amit Verma (Senior Architect at TCS)**.
+- Capsules are 15-minute ultra-focused sessions designed for deep architecture reviews, PR reviews, and placement referrals.
 
-1. **The 3-Minute Context**: Introduce yourself concisely: name, current focus (${targetRole}), and the exact blocker you are tackling today.
-2. **Have Code / Architecture Ready**: Have your GitHub repository, diagram, or error log open in a tab for instant screen sharing.
-3. **Ask High-Leverage Questions**:
-   - *"How would you architect this microservice for 100k daily users?"*
-   - *"What are the top 2 red flags you see in junior developer portfolios?"*
-   - *"Which specific design pattern would simplify this state logic?"*
-4. **Action Items & Follow-up**: Take notes during the call and document your key takeaways to post on your Experience Passport.
-
-💡 **Ready to schedule?** Check out **AI Mentorship Matchmaker** to find verified mentors with open slots!`,
+**Prep Checklist:**
+1. Open your repository in a browser tab.
+2. Formulate 3 distinct technical or career questions.
+3. Link your Experience Passport so the mentor can review your verified credentials.`,
       suggestions: [
         "Give me 5 great questions to ask a Senior Software Architect",
         "How to follow up with a mentor after the call?",
@@ -612,18 +647,21 @@ Maximize your 15-minute rapid mentoring session with industry leaders:
     };
   }
 
-  if (lower.includes("readiness") || lower.includes("score") || lower.includes("career") || lower.includes("resume") || lower.includes("gap") || lower.includes("roadmap")) {
+  if (lower.includes("readiness") || lower.includes("score") || lower.includes("career") || lower.includes("resume") || lower.includes("gap") || lower.includes("roadmap") || lower.includes("dna") || lower.includes("portfolio") || lower.includes("placement")) {
     return {
-      reply: `### 📈 Career Readiness & Profile Optimization Strategy
+      reply: `Hey ${studentName}! Let's optimize your SkillBridge Profile and Career Roadmap.
 
-To boost your Career Readiness index toward 90%+:
+**Your Career Stats & Metrics:**
+- **Skill DNA Score**: 84/100
+- **Career Readiness Index**: 81%
+- **Experience Gained**: 64 Units
+- **Cohort Performance**: Top 8% of the Batch
+- **Time Machine Referral Prediction**: 14.5 LPA target base package
 
-1. **Target the Priority Gap**: Your primary growth vector is currently **Backend Architecture & System Design**. Completing 1-2 verified micro-gigs in this area will yield +12 to +18 points.
-2. **Verified Artifacts on Passport**: Recruiters prioritize verified proof over self-claimed skills. Each completed gig or mentor assessment adds a cryptographically verifiable badge to your Experience Passport.
-3. **Continuous AI Assessments**: Take our interactive skill gap assessment bi-weekly to recalibrate your AI Career Twin with recent project milestones.
-4. **Target Role Alignment**: For **${targetRole}**, master REST/GraphQL design, relational schema modeling, Docker fundamentals, and CI/CD pipelines.
-
-🌟 **Action Recommendation**: Head to the **Skill Intelligence** tab to view your full benchmark analysis!`,
+**Action Plan to reach 95%+ Placement Readiness:**
+1. Connect your Github and LinkedIn accounts on the profile page.
+2. Complete 2 verified Micro-Gigs on our board.
+3. Request 1-on-1 feedback on your ATS Resume from our industry panel.`,
       suggestions: [
         "What are the top backend skills in demand right now?",
         "How do I prepare for technical coding interviews?",
@@ -633,21 +671,19 @@ To boost your Career Readiness index toward 90%+:
   }
 
   return {
-    reply: `Hello **${studentName}**! I am your **SkillBridge AI Help Desk & Career Assistant**. 
+    reply: `Hey ${studentName}! I'm your Bridge Buddy AI Help Desk & Technical Advisor.
 
-I am here 24/7 to help you resolve any obstacles, bugs, or questions coming in your way, including:
+Ask me about:
+- **Platform Features**: Skill DNA, Career Readiness, Experience Passport, Gigs.
+- **Micro-Gigs**: Deliverables, stipends, timeline, NDA.
+- **Technical Questions**: Node.js, Express, React, PostgreSQL, JWT blacklisting, Redis.
+- **Career Roadmaps**: ATS resume, portfolio tips, and placements.
 
-- 🐛 **Technical & Coding Bugs**: Debugging Node.js, Express, React, PostgreSQL, REST APIs, and JWT auth errors.
-- 💼 **Micro-Internships & Gigs**: Clarifying task deliverables, submission checklists, and company expectations.
-- 🎓 **Mentorship Guidance**: Structuring your 15-minute capsule questions and connecting with industry leaders.
-- 📊 **Career Twin & Skill Gaps**: Roadmap recommendations to reach 90%+ placement readiness.
-
-Feel free to describe the exact issue or error message you're experiencing!`,
+I am ready to solve any roadblock instantly. No logging, no delays. Ask away!`,
     suggestions: [
-      "I'm getting an error with my database connection",
-      "How can I prepare for a 15-minute mentor session?",
-      "How do I boost my career readiness score?",
-      "I'm stuck on a micro-internship task"
+      "Optimize Postgres indexing",
+      "Show me zero-trust JWT setup",
+      "What micro-gigs are open?"
     ]
   };
 }
@@ -669,16 +705,7 @@ app.post("/api/ai/helpdesk/chat", async (req, res) => {
   const ai = getGenAiClient();
   if (ai) {
     try {
-      const systemInstruction = `You are the SkillBridge AI Help Desk & Technical Career Counselor. SkillBridge AI is an Industry Career OS connecting university students with verified industry mentors, micro-internship gigs, and employer placement pipelines.
-User details: Name: ${studentName}, Target Role: ${targetRole}, Career Readiness: ${readiness}%.
-Category context: ${category}.
-
-Your goals:
-1. Act as an empathetic, razor-sharp technical and career counselor.
-2. Directly answer problems, coding errors, architecture questions, career roadblocks, resume concerns, and platform questions.
-3. Provide step-by-step troubleshooting, concise and clean code snippets where relevant, and practical next steps.
-4. Reference SkillBridge ecosystem features naturally when helpful (e.g. 15-Minute Mentorship Capsules, Micro-Internship Gig Board, Skill Intelligence assessments, Experience Passport).
-5. Format your output cleanly in Markdown with bold titles, bullet points, and code blocks.`;
+      const systemInstruction = `You are Bridge Buddy. Rules: 1) Answer in max 70 words 2) Direct code only 3) No intro 4) maxOutputTokens 350, temperature 0.2, topP 0.7, topK 15 5) Stream response with SSE 6) Show badge GEMINI 2.5 FLASH LITE LIVE ⚡ green pulse. For JWT Blacklist give Set code, for PostgreSQL indexing give CREATE INDEX CONCURRENTLY code, for SQL Pool give mysql2 pool 20 limit code. Never show 3 dots for more than 300ms. Start streaming within 400ms.`;
 
       const contents = [];
       if (Array.isArray(history) && history.length > 0) {
@@ -693,17 +720,57 @@ Your goals:
       }
       contents.push({ role: "user", parts: [{ text: userQuery }] });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
-        contents,
-        config: {
-          systemInstruction,
-          temperature: 0.6,
-          maxOutputTokens: 1000
-        }
-      });
+      let replyText = null;
+      const candidateModels = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite-preview-02-05", "gemini-1.5-flash-8b", "gemini-2.0-flash"];
+      for (const modelName of candidateModels) {
+        try {
+          if (req.query.stream === 'true') {
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            res.setHeader('Transfer-Encoding', 'chunked');
 
-      const replyText = response && response.text ? response.text : null;
+            const responseStream = await ai.models.generateContentStream({
+              model: modelName,
+              contents,
+              config: {
+                systemInstruction,
+                temperature: 0.2,
+                maxOutputTokens: 350,
+                topP: 0.7,
+                topK: 15,
+                safetySettings: []
+              }
+            });
+            for await (const chunk of responseStream) {
+              if (chunk && chunk.text) {
+                res.write(chunk.text);
+              }
+            }
+            res.end();
+            return;
+          }
+
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents,
+            config: {
+              systemInstruction,
+              temperature: 0.2,
+              maxOutputTokens: 350,
+              topP: 0.7,
+              topK: 15,
+              safetySettings: []
+            }
+          });
+
+          if (response && response.text) {
+            replyText = response.text.trim();
+            break;
+          }
+        } catch (modelErr) {
+          console.warn(`Model ${modelName} unavailable (${modelErr?.status || modelErr?.message}), trying next model...`);
+        }
+      }
+
       if (replyText) {
         return res.json({
           reply: replyText,
@@ -775,54 +842,6 @@ app.get("/api/ai/helpdesk/faq", (req, res) => {
   });
 });
 
-/* ================= AI HELPDESK REAL-TIME CHAT ================= */
-app.post("/api/ai/helpdesk/chat", async (req, res) => {
-  const { message, category = "support" } = req.body;
-  if (!message) {
-    return res.status(400).json({ error: "Message is required" });
-  }
-
-  let reply = "";
-  try {
-    const ai = getGenAiClient();
-    if (ai) {
-      const prompt = `You are a helpful, professional human support specialist at SkillBridge (a real-time career and micro-internship platform for university students, faculty, and industry mentors).
-User category: ${category}
-User inquiry: "${message}"
-Respond in a friendly, conversational tone (1-3 sentences max). Offer helpful guidance on micro-internships, skills development, GitHub project verification, mentorship capsules, or dashboard navigation. Avoid robotic buzzwords.`;
-      
-      const aiPromise = ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt
-      });
-      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI timeout")), 3500));
-      const response = await Promise.race([aiPromise, timeoutPromise]);
-      if (response && response.text) {
-        reply = response.text.trim();
-      }
-    }
-  } catch (err) {
-    console.warn("Support chat AI notice:", err.message);
-  }
-
-  if (!reply) {
-    const lower = message.toLowerCase();
-    if (lower.includes("internship") || lower.includes("gig")) {
-      reply = "We have active micro-internships available from Infosys, TCS, and Wipro on your Gigs tab. You can apply directly and start a zero-NDA simulation anytime!";
-    } else if (lower.includes("project") || lower.includes("github") || lower.includes("code")) {
-      reply = "You can link your GitHub account or launch a Ghost Sandbox project to get verified proofs for your experience passport.";
-    } else if (lower.includes("mentor") || lower.includes("guidance") || lower.includes("session")) {
-      reply = "Our industry mentors from TCS and Google Cloud host weekly architecture review sessions. Check the Mentorship capsules tab to book a 1:1 slot.";
-    } else if (lower.includes("resume") || lower.includes("score") || lower.includes("dna")) {
-      reply = "Your Skill DNA score is benchmarked against real industry job profiles. Keep completing micro-tasks to raise your readiness percentile!";
-    } else {
-      reply = "Hello! Our support team is here to help with your internships, verified projects, and career roadmap. Let us know what you need!";
-    }
-  }
-
-  res.json({ success: true, reply, timestamp: new Date().toISOString() });
-});
-
 /* ================= POST CREATE HELPDESK TICKET ================= */
 app.post("/api/ai/helpdesk/ticket", async (req, res) => {
   const { title, category, description, priority = "medium", studentId = 1 } = req.body;
@@ -832,19 +851,26 @@ app.post("/api/ai/helpdesk/ticket", async (req, res) => {
   }
 
   // Generate initial AI diagnosis
-  let aiSummary = "Our AI system has logged your issue and generated a step-by-step resolution plan. Review the recommendations below.";
+  let aiSummary = "Active diagnostic trace initiated. Complete technical solution flow is available immediately.";
   try {
     const ai = getGenAiClient();
     if (ai) {
       const prompt = `A student opened a support ticket: Title: "${title}", Category: "${category}", Description: "${description}". Provide a brief 2-sentence immediate diagnosis and recommended first step.`;
-      const aiPromise = ai.models.generateContent({
-        model: "gemini-3.7-flash",
-        contents: prompt
-      });
-      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI timeout")), 3000));
-      const response = await Promise.race([aiPromise, timeoutPromise]);
-      if (response && response.text) {
-        aiSummary = response.text.trim();
+      for (const modelName of ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.0-flash"]) {
+        try {
+          const aiPromise = ai.models.generateContent({
+            model: modelName,
+            contents: prompt
+          });
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI timeout")), 3000));
+          const response = await Promise.race([aiPromise, timeoutPromise]);
+          if (response && response.text) {
+            aiSummary = response.text.trim();
+            break;
+          }
+        } catch (err) {
+          // try next model
+        }
       }
     }
   } catch (e) {
