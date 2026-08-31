@@ -30,6 +30,25 @@ import { TrustVerificationView } from './pages/TrustVerificationView';
 import { AIHelpdeskView } from './pages/AIHelpdeskView';
 import { FacultyDashboard } from './pages/FacultyDashboard';
 import { MentorDashboard } from './pages/MentorDashboard';
+import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
+import { 
+  TalentDiscovery, 
+  ApplicationsPage, 
+  ShortlistedPage, 
+  JobPostingsPage, 
+  PostJobPage, 
+  InterviewsPage, 
+  CampusDrivesPage, 
+  InternshipProgramsPage, 
+  UniversityCollaborationPage, 
+  LiveProjectsPage, 
+  ResearchOpportunitiesPage, 
+  RecruiterAnalyticsPage, 
+  CompanyProfilePage, 
+  MessagesPage, 
+  NotificationsPage, 
+  SettingsPage 
+} from './pages/recruiter/RecruiterPages';
 
 import { UserRole, StudentProfile, Mentor, Gig, PassportRecord, JobOpportunity } from './types';
 import { getStoredUserProfile } from './components/ProfessionalProfile';
@@ -367,7 +386,7 @@ export const App: React.FC = () => {
           <div className="w-full max-w-7xl mx-auto pb-12 min-w-0">
             {/* ROUTE GUARD: If role === 'hod', render ONLY HOD dashboard */}
             {currentRole === 'hod' && (
-              <FacultyDashboard onShowToast={showToast} />
+              <FacultyDashboard onShowToast={showToast} activeTab={activeTab} />
             )}
 
             {/* ROUTE GUARD: If role === 'mentor', render ONLY Mentor dashboard */}
@@ -377,17 +396,25 @@ export const App: React.FC = () => {
 
             {/* ROUTE GUARD: If role === 'company' / Recruiter */}
             {currentRole === 'company' && (
-              <div className="space-y-6">
-                <div className="p-6 rounded-2xl bg-[#0B0F2A] border border-white/[0.08] shadow-xl">
-                  <h1 className="text-xl font-extrabold text-white">Recruiter & Enterprise Hiring Portal</h1>
-                  <p className="text-xs text-white/50 mt-1">Verified Candidate Pipeline & Micro-Internship Sponsorships</p>
-                </div>
-                <MicroGigsView
-                  gigs={gigs}
-                  onApplyGig={(g) => setApplyingGig(g)}
-                  onCreateGig={handleCreateGig}
-                />
-              </div>
+              <>
+                {activeTab === 'dashboard' && <RecruiterDashboard />}
+                {activeTab === 'discover-talent' && <TalentDiscovery />}
+                {activeTab === 'applications' && <ApplicationsPage />}
+                {activeTab === 'shortlisted' && <ShortlistedPage />}
+                {activeTab === 'job-postings' && <JobPostingsPage />}
+                {activeTab === 'post-job' && <PostJobPage />}
+                {activeTab === 'interviews' && <InterviewsPage />}
+                {activeTab === 'campus-drives' && <CampusDrivesPage />}
+                {activeTab === 'internship-programs' && <InternshipProgramsPage />}
+                {activeTab === 'university-collaboration' && <UniversityCollaborationPage />}
+                {activeTab === 'live-projects' && <LiveProjectsPage />}
+                {activeTab === 'research-opportunities' && <ResearchOpportunitiesPage />}
+                {activeTab === 'analytics' && <RecruiterAnalyticsPage />}
+                {activeTab === 'company-profile' && <CompanyProfilePage />}
+                {activeTab === 'messages' && <MessagesPage />}
+                {activeTab === 'notifications' && <NotificationsPage />}
+                {activeTab === 'settings' && <SettingsPage />}
+              </>
             )}
 
             {/* ROUTE GUARD: Student Candidate Portal */}

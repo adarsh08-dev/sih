@@ -238,9 +238,12 @@ RULES:
                       config: {
                         systemInstruction,
                         temperature: 0.6,
-                        maxOutputTokens: 1000
+                        maxOutputTokens: 1000,
+                        thinkingConfig: { thinkingBudget: 0 }
                       }
                     });
+
+                    console.log('Gemini API response:', response);
 
                     if (response && response.text) {
                       reply = response.text.trim();

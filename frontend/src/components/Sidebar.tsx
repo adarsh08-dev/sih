@@ -21,8 +21,11 @@ import {
   GraduationCap,
   BriefcaseBusiness,
   Building,
+  Building2,
   Menu,
-  Lock
+  Lock,
+  Calendar,
+  TrendingUp
 } from 'lucide-react';
 import { UserRole, StudentProfile } from '../types';
 import { Logo } from './Logo';
@@ -428,69 +431,124 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div>
               {!collapsed && (
                 <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
-                  Governance
+                  ACADEMIC & INDUSTRY
                 </div>
               )}
               <div className="space-y-0.5">
-                <button
-                  onClick={() => handleTabClick('faculty-unplaced')}
-                  title="Unplaced Cohort (32%)"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
-                    activeTab === 'faculty-unplaced' || activeTab === 'dashboard'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <Layers className="w-4 h-4 text-amber-400 shrink-0" />
-                  {!collapsed && <span className="truncate">Unplaced Cohort (32%)</span>}
-                </button>
+                {[
+                  { id: 'faculty-overview', label: 'Faculty Overview', icon: Compass },
+                  { id: 'faculty-profile', label: 'Faculty Profile', icon: UserIcon },
+                  { id: 'industry-opportunities', label: 'Industry Opportunities', icon: Briefcase },
+                  { id: 'faculty-internships', label: 'Faculty Internships', icon: GraduationCap },
+                  { id: 'industrial-training', label: 'Industrial Training', icon: Building },
+                  { id: 'fdp-programs', label: 'FDP Programs', icon: Award },
+                  { id: 'consultancy', label: 'Consultancy', icon: BriefcaseBusiness },
+                  { id: 'research-collaboration', label: 'Research Collaboration', icon: Users },
+                  { id: 'live-projects', label: 'Live Industry Projects', icon: Layers },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabClick(item.id)}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === item.id
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                ))}
+              </div>
 
-                <button
-                  onClick={() => handleTabClick('faculty-mou')}
-                  title="Auto MoU Generator"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
-                    activeTab === 'faculty-mou'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
-                  {!collapsed && <span className="truncate">Auto MoU Generator</span>}
-                </button>
+              {!collapsed && (
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  ENGAGEMENT
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                  { id: 'student-mentorship', label: 'Student Mentorship', icon: UserCheck },
+                  { id: 'workshops', label: 'Workshops & Guest Lectures', icon: Calendar },
+                  { id: 'innovation-challenges', label: 'Innovation Challenges', icon: Sparkles },
+                  { id: 'collaboration-hub', label: 'Collaboration Hub', icon: Building2 },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabClick(item.id)}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === item.id
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                ))}
+              </div>
 
-                <button
-                  onClick={() => handleTabClick('faculty-swap')}
-                  title="Faculty Swap Exchange"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
-                    activeTab === 'faculty-swap'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <Repeat className="w-4 h-4 text-emerald-400 shrink-0" />
-                  {!collapsed && <span className="truncate">Faculty Swap</span>}
-                </button>
+              {!collapsed && (
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  ACTIVITY
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                  { id: 'my-applications', label: 'My Applications', icon: FileText },
+                  { id: 'my-collaborations', label: 'My Collaborations', icon: Users },
+                  { id: 'achievements', label: 'Achievements & Certificates', icon: Award },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabClick(item.id)}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === item.id
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                ))}
+              </div>
 
-                <button
-                  onClick={() => handleTabClick('faculty-curriculum')}
-                  title="AI Curriculum Alignment"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
-                    activeTab === 'faculty-curriculum'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <Sparkles className="w-4 h-4 text-pink-400 shrink-0" />
-                  {!collapsed && <span className="truncate">Curriculum Alignment</span>}
-                </button>
+              {!collapsed && (
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  INTELLIGENCE
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                  { id: 'academic-intelligence', label: 'Academic Intelligence', icon: TrendingUp },
+                  { id: 'ai-faculty-advisor', label: 'AI Faculty Advisor', icon: Sparkles },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabClick(item.id)}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === item.id
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -551,6 +609,107 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
           )}
+
+          {/* RECRUITER PORTAL MENU */}
+          {currentRole === 'company' && (
+            <div>
+              {!collapsed && (
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  TALENT & HIRING
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                  { id: 'dashboard', label: 'Dashboard', icon: Compass },
+                  { id: 'discover-talent', label: 'Discover Talent', icon: Users },
+                  { id: 'applications', label: 'Applications', icon: FileText },
+                  { id: 'shortlisted', label: 'Shortlisted', icon: UserCheck },
+                  { id: 'job-postings', label: 'Job Postings', icon: Briefcase },
+                  { id: 'post-job', label: 'Post a Job', icon: BriefcaseBusiness },
+                  { id: 'interviews', label: 'Interviews', icon: Calendar },
+                  { id: 'campus-drives', label: 'Campus Drives', icon: Building2 },
+                  { id: 'internship-programs', label: 'Internship Programs', icon: GraduationCap },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabClick(item.id)}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === item.id
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                ))}
+              </div>
+
+              {!collapsed && (
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  COLLABORATION
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                  { id: 'university-collaboration', label: 'University Collaboration', icon: Users },
+                  { id: 'live-projects', label: 'Live Projects', icon: Layers },
+                  { id: 'research-opportunities', label: 'Research Opportunities', icon: Sparkles },
+                ].map(item => (
+                    <button
+                        key={item.id}
+                        onClick={() => handleTabClick(item.id)}
+                        title={item.label}
+                        className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                        collapsed ? 'justify-center' : ''
+                        } ${
+                        activeTab === item.id
+                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                    >
+                        <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                        {!collapsed && <span className="truncate">{item.label}</span>}
+                    </button>
+                ))}
+              </div>
+
+              {!collapsed && (
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  ACCOUNT
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {[
+                    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+                    { id: 'company-profile', label: 'Company Profile', icon: Building },
+                    { id: 'messages', label: 'Messages', icon: Users },
+                    { id: 'notifications', label: 'Notifications', icon: FileText },
+                    { id: 'settings', label: 'Settings', icon: HelpCircle },
+                ].map(item => (
+                    <button
+                        key={item.id}
+                        onClick={() => handleTabClick(item.id)}
+                        title={item.label}
+                        className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                        collapsed ? 'justify-center' : ''
+                        } ${
+                        activeTab === item.id
+                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                    >
+                        <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                        {!collapsed && <span className="truncate">{item.label}</span>}
+                    </button>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* User Profile Card & Sign Out */}

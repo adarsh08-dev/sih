@@ -507,6 +507,46 @@ app.get("/api/ai/skill-gaps", (req, res) => {
   });
 });
 
+/* ================= CHAT API (GEMINI POWERED) ================= */
+app.post("/api/chat", async (req, res) => {
+  const { messages } = req.body;
+  const ai = getGenAiClient();
+  if (!ai) return res.status(500).json({ error: "AI Client not initialized" });
+
+  const history = messages.slice(0, -1).map(m => ({
+    role: m.role === 'user' ? 'user' : 'model',
+    parts: [{ text: m.text }]
+  }));
+  const userMessage = messages[messages.length - 1].text;
+
+  const chat = ai.chats.create({
+    model: "gemini-3.7-flash",
+    config: {
+        systemInstruction: "You are an AI Faculty Advisor. Answer concisely, directly, and provide actionable advice for HODs and Faculty.",
+        thinkingConfig: { thinkingBudget: 0 }
+    },
+    history
+  });
+
+  console.log('Backend chat request:', userMessage);
+
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  try {
+    const stream = await chat.sendMessageStream({ message: userMessage });
+    for await (const chunk of stream) {
+      if (chunk.text) {
+        res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
+      }
+    }
+    res.end();
+  } catch (e) {
+    console.error("Chat error:", e);
+    res.status(500).end();
+  }
+});
+
 /* ================= AI HELP DESK & ADVISOR (GEMINI POWERED) ================= */
 const { GoogleGenAI } = require("@google/genai");
 
@@ -515,7 +555,14 @@ function getGenAiClient() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!genAiClient && apiKey && typeof apiKey === "string" && apiKey.trim().length > 5) {
     try {
-      genAiClient = new GoogleGenAI({ apiKey: apiKey.trim() });
+      genAiClient = new GoogleGenAI({ 
+        apiKey: apiKey.trim(),
+        httpOptions: {
+            headers: {
+              'User-Agent': 'aistudio-build',
+            }
+        }
+      });
     } catch (e) {
       console.warn("Failed to initialize GoogleGenAI client:", e.message);
     }

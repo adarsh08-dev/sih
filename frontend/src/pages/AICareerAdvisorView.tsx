@@ -55,6 +55,7 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
 
   const [inputPrompt, setInputPrompt] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const predefinedPrompts = [
     "What priority skills should I learn next?",
@@ -63,7 +64,7 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
     "How do I boost my AWS & Cloud Architecture score?"
   ];
 
-  const handleSendPrompt = (text: string) => {
+  const handleSendPrompt = async (text: string) => {
     if (!text.trim()) return;
 
     const userMsg: Message = {
@@ -76,40 +77,37 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
     setMessages(prev => [...prev, userMsg]);
     setInputPrompt('');
     setIsTyping(true);
+    setError(null);
 
-    setTimeout(() => {
-      let aiReply = '';
-      let action: { label: string; tab: string } | undefined = undefined;
+    try {
+        console.log('Sending request to AI advisor:', text);
+        const response = await fetch('/api/ai/helpdesk/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, history: messages })
+        });
 
-      const lower = text.toLowerCase();
-      if (lower.includes('priority skill') || lower.includes('learn next') || lower.includes('gap')) {
-        aiReply = "Your #1 Critical Gap is **AWS & Cloud Architecture** (Current L2 vs Required L4). Closing this gap will elevate your Industry Readiness score from 74% to 88% and unlock 6 tier-1 enterprise placements including CloudSphere and TCS Digital.";
-        action = { label: 'Bridge AWS in Learning Hub', tab: 'learning' };
-      } else if (lower.includes('tcs') || lower.includes('eligible') || lower.includes('infosys')) {
-        aiReply = "You are currently **92% matched for TCS Digital Systems Engineer** (₹9-11.5 LPA) and **88% matched for Infosys Full Stack Intern**. Your DSA score (94%) and PostgreSQL score (88%) fulfill all core technical thresholds. You are ready to apply!";
-        action = { label: 'Apply in Jobs & Placements', tab: 'jobs' };
-      } else if (lower.includes('roadmap') || lower.includes('30-day') || lower.includes('plan')) {
-        aiReply = "Here is your 30-Day Tier-1 Blueprint:\n• **Week 1:** Complete AWS Solutions Architecture diagnostic module.\n• **Week 2:** Build 1 hands-on Distributed Event-Driven project.\n• **Week 3:** Schedule 15-min System Design Capsule with TCS Lead Architect.\n• **Week 4:** Take mock coding simulation in Ghost Sandbox.";
-        action = { label: 'Open Learning Hub', tab: 'learning' };
-      } else if (lower.includes('aws') || lower.includes('cloud')) {
-        aiReply = "To upgrade AWS from L2 to L4: Complete the 'AWS Cloud Architecture & Microservices' module in Learning Hub, deploy a multi-container Docker cluster to ECS/EKS, and link your verification hash to your passport.";
-        action = { label: 'Start AWS Course', tab: 'learning' };
-      } else {
-        aiReply = "Your profile is exceptionally strong in Data Structures and Backend Systems. Focusing 2 hours this week on Cloud Infrastructure and System Design will place you in the top 5% of all candidates in your university batch.";
-        action = { label: 'Take Diagnostic Assessment', tab: 'assessment' };
-      }
+        const data = await response.json();
+        console.log('Received response from AI advisor:', data);
 
-      const aiMsg: Message = {
-        id: `ai_${Date.now()}`,
-        sender: 'ai',
-        text: aiReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        suggestedAction: action
-      };
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Failed to get a response');
+        }
 
-      setMessages(prev => [...prev, aiMsg]);
-      setIsTyping(false);
-    }, 450);
+        const aiMsg: Message = {
+            id: `ai_${Date.now()}`,
+            sender: 'ai',
+            text: data.reply,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, aiMsg]);
+    } catch (err: any) {
+        console.error('AICareerAdvisorView error:', err);
+        setError(err.message || 'An unexpected error occurred');
+    } finally {
+        setIsTyping(false);
+    }
   };
 
   return (
@@ -149,6 +147,11 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
       {/* Chat Messages Panel */}
       <div className="p-6 rounded-2xl bg-[#0B1033] border border-[#1C265E] space-y-4 shadow-xl min-h-[420px] flex flex-col justify-between">
         <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
+          {error && (
+            <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-xl text-red-300 text-xs text-center">
+              Error: {error}
+            </div>
+          )}
           {messages.map((msg) => {
             const isAI = msg.sender === 'ai';
             return (

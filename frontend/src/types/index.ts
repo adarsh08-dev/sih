@@ -386,3 +386,62 @@ export interface ProjectChallenge {
   isCompleted?: boolean;
 }
 
+export interface FacultyProfile {
+  id: string;
+  name: string;
+  designation: string;
+  department: string;
+  institution: string;
+  email: string;
+  avatar?: string;
+  qualifications: string[];
+  experienceYears: number;
+  expertise: string[];
+  technicalSkills: string[];
+  researchInterests: string[];
+  profileCompletion: number;
+}
+
+export interface FacultyOpportunity {
+  id: string;
+  title: string;
+  organization: string;
+  type: 'Internship' | 'Industrial Training' | 'FDP' | 'Consultancy' | 'Research' | 'Live Project';
+  domain: string;
+  duration: string;
+  mode: 'Online' | 'Offline' | 'Hybrid';
+  deadline: string;
+  requiredExpertise: string[];
+  matchPercentage: number;
+  eligibility: string;
+}
+
+export interface FacultyApplication {
+  id: string;
+  opportunityId: string;
+  opportunityTitle: string;
+  type: 'Internship' | 'Industrial Training' | 'FDP' | 'Consultancy' | 'Research' | 'Live Project';
+  status: 'Applied' | 'Under Review' | 'Shortlisted' | 'Approved' | 'In Progress' | 'Completed' | 'Rejected';
+  appliedDate: string;
+}
+
+export interface FacultyNotification {
+  id: string;
+  title: string;
+  message: string;
+  category: 'Applications' | 'Mentorship' | 'Research' | 'FDP' | 'Collaboration' | 'Events' | 'Deadlines';
+  isRead: boolean;
+  date: string;
+}
+
+export interface StudentForIntervention {
+  id: string;
+  name: string;
+  rollNo: string;
+  cgpa: number;
+  readiness: number;
+  skillGap: string;
+  risk: 'Low' | 'Medium' | 'High';
+  lastActivity: string;
+}
+
