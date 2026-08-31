@@ -135,7 +135,7 @@ export const JobsPlacementsView: React.FC<JobsPlacementsViewProps> = ({
             Jobs & Campus Placements
           </h1>
           <p className="text-white/60 text-sm leading-relaxed">
-            Verified full-time software engineering roles and high-stipend corporate internships. SkillBridge’s deterministic match engine compares your live Skill DNA against required tech stacks so you apply where your odds are highest.
+            Verified full-time software engineering roles and high-stipend corporate internships. Ladder’s deterministic match engine compares your live Skill DNA against required tech stacks so you apply where your odds are highest.
           </p>
         </div>
 

@@ -4,6 +4,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 require("dotenv").config();
 const db = require("./db");
+const auth = require("./auth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -20,7 +21,7 @@ app.get("/api/health", async (req, res) => {
   const dbStatus = await db.checkDatabaseConnection();
   res.json({
     status: "online",
-    service: "SkillBridge AI Backend",
+    service: "Ladder AI Backend",
     version: "1.0.0",
     database: {
       ...dbStatus
@@ -115,6 +116,12 @@ app.post("/api/auth/login", async (req, res) => {
     });
   }
 });
+
+/* ================= OAUTH ROUTES ================= */
+app.get("/api/auth/url", auth.handleAuthUrl);
+app.get("/api/auth/callback", auth.handleAuthCallback);
+app.get("/api/auth/status/:platform", auth.handleAuthStatus);
+app.post("/api/auth/disconnect/:platform", auth.handleDisconnect);
 
 app.get("/api/auth/me", (req, res) => {
   const authHeader = req.headers.authorization;
@@ -621,7 +628,7 @@ app.post("/api/chat", async (req, res) => {
     model: "gemini-3.7-flash",
     config: {
         systemInstruction: "You are an AI Faculty Advisor. Answer concisely, directly, and provide actionable advice for HODs and Faculty.",
-        thinkingConfig: { thinkingBudget: 0 }
+        thinkingConfig: { thinkingLevel: 'minimal' }
     },
     history
   });
@@ -723,7 +730,7 @@ Store active refresh tokens in a \`user_sessions\` table and revoke them upon lo
 
   if (lower.includes("db") || lower.includes("postgres") || lower.includes("sql") || lower.includes("database") || lower.includes("connection") || lower.includes("econnrefused") || lower.includes("index")) {
     return {
-      reply: `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
+      reply: `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on Ladder.
 
 **Why needed:** Large cohorts of students running parallel queries can lead to ECONNREFUSED and connection pool timeouts.
 
@@ -753,7 +760,7 @@ This boosts filtering speeds across the active cohort records.`,
 
   if (lower.includes("gig") || lower.includes("micro-internship") || lower.includes("task") || lower.includes("stuck") || lower.includes("submission") || lower.includes("payment") || lower.includes("stipend") || lower.includes("money")) {
     return {
-      reply: `Hey ${studentName}! I'll guide you through our **Micro-Internships and Gigs** on SkillBridge.
+      reply: `Hey ${studentName}! I'll guide you through our **Micro-Internships and Gigs** on Ladder.
 
 **Task Deliverables & Expectations:**
 - Complete verified tasks with production-grade modular structures.
@@ -794,7 +801,7 @@ This boosts filtering speeds across the active cohort records.`,
 
   if (lower.includes("readiness") || lower.includes("score") || lower.includes("career") || lower.includes("resume") || lower.includes("gap") || lower.includes("roadmap") || lower.includes("dna") || lower.includes("portfolio") || lower.includes("placement")) {
     return {
-      reply: `Hey ${studentName}! Let's optimize your SkillBridge Profile and Career Roadmap.
+      reply: `Hey ${studentName}! Let's optimize your Ladder Profile and Career Roadmap.
 
 **Your Career Stats & Metrics:**
 - **Skill DNA Score**: 84/100
@@ -1096,7 +1103,7 @@ app.get("*", (req, res) => {
 
 /* ================= START SERVER ================= */
 app.listen(PORT, "0.0.0.0", async () => {
-  console.log(`SkillBridge AI running on http://0.0.0.0:${PORT}`);
+  console.log(`Ladder AI running on http://0.0.0.0:${PORT}`);
   if (process.env.DATABASE_URL) {
     await db.initializeDatabase();
   }

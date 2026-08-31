@@ -91,7 +91,7 @@ export const EditPortfolioModal: React.FC<EditPortfolioModalProps> = ({
       deliverables: ['GitHub Repository', 'Live Deployed Demo', 'Architecture RFC'],
       status: 'Available',
       bountyReward: 1500,
-      partnerCompany: 'SkillBridge Labs'
+      partnerCompany: 'Ladder Labs'
     };
     setProjectsList([newProj, ...projectsList]);
   };

@@ -258,7 +258,7 @@ export async function fetchLiveOpportunities(): Promise<JobOpportunity[]> {
           preferredSkills: skills.slice(0, 2),
           eligibility: j.eligibility || 'B.Tech / MCA with minimum 7.0 CGPA',
           applicationDeadline: j.deadline || 'Open Until Filled',
-          description: j.description || 'Verified enterprise hiring opportunity on the SkillBridge network.',
+          description: j.description || 'Verified enterprise hiring opportunity on the Ladder network.',
           responsibilities: [
             'Design, develop and maintain scalable software modules',
             'Collaborate across product and engineering teams',
@@ -323,7 +323,7 @@ export function applyToOpportunity(
     lastUpdated: new Date().toISOString().split('T')[0],
     deadline: 'applicationDeadline' in opportunity ? (opportunity.applicationDeadline as string) : 'Open',
     matchScore: matchData.matchPercentage,
-    notes: `Application lodged with ${studentProfile.name}'s verified SkillBridge profile.`,
+    notes: `Application lodged with ${studentProfile.name}'s verified Ladder profile.`,
     timeline: [
       { status: 'Applied', date: new Date().toISOString().split('T')[0], note: 'Application and Skill DNA submitted successfully', completed: true },
       { status: 'Under Review', date: 'In 24-48 hours', note: 'Automated profile & portfolio verification', completed: false },
@@ -492,7 +492,7 @@ export function getCustomPortfolioData(): CustomPortfolioData {
         company: 'CloudSphere Systems',
         period: 'Jun 2026 – Aug 2026',
         type: 'Verified Micro-Internship',
-        description: 'Optimized PostgreSQL connection pooling and implemented Redis caching layer, reducing API P99 latency by 42%. Verified on SkillBridge Ledger.',
+        description: 'Optimized PostgreSQL connection pooling and implemented Redis caching layer, reducing API P99 latency by 42%. Verified on Ladder Ledger.',
         verified: true
       },
       {

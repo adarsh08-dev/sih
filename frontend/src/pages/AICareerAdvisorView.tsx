@@ -201,7 +201,7 @@ export const AICareerAdvisorView: React.FC<AICareerAdvisorViewProps> = ({
           {isTyping && (
             <div className="flex items-center gap-2 text-xs text-purple-400 italic">
               <Sparkles className="w-4 h-4 animate-spin" />
-              <span>Analyzing SkillBridge Career DNA...</span>
+              <span>Analyzing Ladder Career DNA...</span>
             </div>
           )}
         </div>

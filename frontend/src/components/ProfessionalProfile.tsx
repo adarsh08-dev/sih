@@ -32,7 +32,8 @@ import {
   Layers,
   Clock,
   Check,
-  Camera
+  Camera,
+  Info
 } from 'lucide-react';
 import { StudentProfile, UserRole } from '../types';
 
@@ -110,6 +111,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
   const [p, setP] = useState<UserProfileData>(getStoredUserProfile);
   const [isLocationRefreshing, setIsLocationRefreshing] = useState(false);
   const [locationSuccess, setLocationSuccess] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   // Edit Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -143,17 +145,34 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
   // GPS Location refresh function
   const refreshLocation = useCallback(async () => {
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      console.warn('Geolocation API requires a secure context (HTTPS).');
+    }
+
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
+      setLocationError('Geolocation is not supported by your browser.');
       return;
     }
 
     setIsLocationRefreshing(true);
     setLocationSuccess(false);
+    setLocationError(null);
 
     try {
       const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
+        navigator.geolocation.getCurrentPosition(resolve, (err) => {
+          // If high accuracy fails with timeout or unavailable, try low accuracy
+          if (err.code === 3 || err.code === 2) {
+            console.warn('High accuracy failed, falling back to standard accuracy...');
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: false,
+              timeout: 10000,
+              maximumAge: 60000
+            });
+          } else {
+            reject(err);
+          }
+        }, {
           enableHighAccuracy: true,
           timeout: 8000,
           maximumAge: 0
@@ -162,19 +181,22 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
       const { latitude, longitude } = pos.coords;
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+        {
+          headers: {
+            'Accept-Language': 'en'
+          }
+        }
       );
       
       if (!res.ok) throw new Error('Geocoding service unavailable');
       const data = await res.json();
       
-      const city = data.address?.city || 
-                   data.address?.town || 
-                   data.address?.village || 
-                   data.address?.suburb || 
-                   'Lucknow';
-      const state = data.address?.state || 'Uttar Pradesh';
-      const newLoc = `${city}, ${state}, India`;
+      const address = data.address || {};
+      const city = address.city || address.town || address.village || address.suburb || address.city_district || 'Bareilly';
+      const state = address.state || 'Uttar Pradesh';
+      const country = address.country || 'India';
+      const newLoc = `${city}, ${state}, ${country}`;
 
       // Update state and storage seamlessly
       const updatedProfile = {
@@ -187,13 +209,26 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
       localStorage.setItem('userLocation', newLoc);
       setP(updatedProfile);
       setLocationSuccess(true);
-      setTimeout(() => setLocationSuccess(false), 2000);
+      setTimeout(() => setLocationSuccess(false), 3000);
     } catch (err: any) {
-      console.warn('GPS lookup notice:', err);
+      console.error('Geolocation Error:', {
+        code: err?.code,
+        message: err?.message,
+        error: err
+      });
+      
+      if (err.code === 1) { // PERMISSION_DENIED
+        setLocationError('Location access blocked. Please click "Allow" on the browser prompt or check your site settings. If using the preview, try opening the app in a new tab.');
+      } else if (err.code === 2) { // POSITION_UNAVAILABLE
+        setLocationError('GPS signal unavailable. Please try again or check your device settings.');
+      } else if (err.code === 3) { // TIMEOUT
+        setLocationError('Location request timed out. Please try again with a better connection.');
+      } else {
+        setLocationError(err.message || 'Unable to fetch location. Please try again.');
+      }
+      
       const fallbackLoc = p.location || 'Lucknow, Uttar Pradesh, India';
       const updatedProfile = { ...p, location: fallbackLoc };
-      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-      localStorage.setItem('userLocation', fallbackLoc);
       setP(updatedProfile);
     } finally {
       setIsLocationRefreshing(false);
@@ -362,20 +397,51 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
               </div>
 
               {/* Location Row: [pulsing dot 6px #7C5CFC] [text 12px white/60 p.location] [Refresh Button 26x26] */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] animate-pulse" />
-                <span className="text-xs text-white/60 font-medium">
-                  {p.location || 'Lucknow, Uttar Pradesh, India'}
-                </span>
-                <button
-                  type="button"
-                  onClick={refreshLocation}
-                  disabled={isLocationRefreshing}
-                  className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
-                  title="Refresh GPS Coordinates"
-                >
-                  <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#7C5CFC]' : ''}`} />
-                </button>
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1">
+                  <span className={`w-1.5 h-1.5 rounded-full ${locationSuccess ? 'bg-emerald-400' : 'bg-[#7C5CFC]'} animate-pulse`} />
+                  <span className="text-xs text-white/60 font-medium">
+                    {p.location || 'Lucknow, Uttar Pradesh, India'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={refreshLocation}
+                    disabled={isLocationRefreshing}
+                    className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
+                    title="Refresh GPS Coordinates"
+                  >
+                    {locationSuccess ? (
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#7C5CFC]' : ''}`} />
+                    )}
+                  </button>
+                </div>
+
+                {locationError && (
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-1.5 text-[10px] text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                      <Info className="w-3 h-3" />
+                      <span>{locationError}</span>
+                      <button 
+                        onClick={refreshLocation}
+                        className="underline hover:text-white ml-1 font-bold"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                    {locationError.includes('denied') && (
+                      <a 
+                        href="https://support.google.com/chrome/answer/142065?hl=en" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-[9px] text-indigo-400 hover:text-indigo-300 underline"
+                      >
+                        How to enable location in browser
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -529,7 +595,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
           {/* Footer Ribbon */}
           <div className="p-4 border-t border-white/10 bg-[#090E2B] flex items-center justify-between text-xs text-white/50">
-            <span>SkillBridge AI · SIH26044</span>
+            <span>Ladder AI · SIH26044</span>
             <span className="text-[10px] text-[#7C5CFC]">v2.4.0 Live</span>
           </div>
         </div>

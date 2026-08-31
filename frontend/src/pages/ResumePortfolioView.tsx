@@ -318,7 +318,7 @@ export const ResumePortfolioView: React.FC<ResumePortfolioViewProps> = ({
 
                 <div className="pt-1 flex items-center gap-2 text-[10px] text-emerald-400 font-semibold">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Verified on SkillBridge Ledger • Cryptographic SHA-256 Proof</span>
+                  <span>Verified on Ladder Ledger • Cryptographic SHA-256 Proof</span>
                 </div>
               </div>
             ))}
@@ -454,7 +454,7 @@ export const ResumePortfolioView: React.FC<ResumePortfolioViewProps> = ({
         }`}>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Cryptographically Verified via SkillBridge Ledger • Ledger Block #49281 • Hash: 98a3f...d7c</span>
+            <span>Cryptographically Verified via Ladder Ledger • Ledger Block #49281 • Hash: 98a3f...d7c</span>
           </div>
           <span>Updated Snapshot: {new Date().toLocaleDateString()}</span>
         </div>

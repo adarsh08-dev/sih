@@ -1,5 +1,5 @@
 {
-  "name": "SkillBridge AI",
+  "name": "Ladder",
   "description": "SIH26044 Academia-Industry Portal connecting students with industry mentors, blockchain-verified skill passports, vetted micro-internships, and placement opportunities.",
   "requestFramePermissions": [
     "geolocation"

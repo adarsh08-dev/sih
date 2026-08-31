@@ -47,7 +47,7 @@ export async function fetchHealth() {
   return safeFetch<{ status: string; service: string; database?: any }>(
     `${API_BASE}/health`,
     undefined,
-    { status: 'online', service: 'SkillBridge AI Career OS', database: { connected: true, type: 'PostgreSQL Database' } }
+    { status: 'online', service: 'Ladder AI Career OS', database: { connected: true, type: 'PostgreSQL Database' } }
   );
 }
 
@@ -219,7 +219,7 @@ export async function fetchJobs(): Promise<Job[]> {
         requiredSkills: skills,
         skills: skills,
         eligibility: j.eligibility || 'All Qualified Students',
-        description: j.description || 'Job opening posted on SkillBridge Network.',
+        description: j.description || 'Job opening posted on Ladder Network.',
         deadline: j.deadline || 'Open Until Filled'
       };
     });
@@ -565,7 +565,7 @@ Store active refresh tokens in a \`user_sessions\` table and revoke them upon lo
   }
 
   if (lower.includes('postgres') || lower.includes('sql') || lower.includes('db') || lower.includes('index') || lower.includes('database')) {
-    return `Hey ${name}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
+    return `Hey ${name}! Let's optimize your PostgreSQL connection and query performance on Ladder.
 
 **Why needed:** Large cohorts of students running parallel queries can lead to ECONNREFUSED and connection pool timeouts.
 
@@ -588,7 +588,7 @@ This boosts filtering speeds across the active cohort records.`;
   }
 
   if (lower.includes('gig') || lower.includes('stipend') || lower.includes('internship') || lower.includes('money') || lower.includes('task')) {
-    return `Hey ${name}! I'll guide you through our **Micro-Internships and Gigs** on SkillBridge.
+    return `Hey ${name}! I'll guide you through our **Micro-Internships and Gigs** on Ladder.
 
 **Task Deliverables & Expectations:**
 - Complete verified tasks with production-grade modular structures.
@@ -615,7 +615,7 @@ This boosts filtering speeds across the active cohort records.`;
   }
 
   if (lower.includes('readiness') || lower.includes('score') || lower.includes('career') || lower.includes('resume') || lower.includes('gap') || lower.includes('roadmap') || lower.includes('dna') || lower.includes('portfolio') || lower.includes('placement')) {
-    return `Hey ${name}! Let's optimize your SkillBridge Profile and Career Roadmap.
+    return `Hey ${name}! Let's optimize your Ladder Profile and Career Roadmap.
 
 **Your Career Stats & Metrics:**
 - **Skill DNA Score**: 84/100

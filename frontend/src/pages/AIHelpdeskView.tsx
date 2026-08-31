@@ -28,7 +28,7 @@ export const AIHelpdeskView: React.FC<AIHelpdeskProps> = ({ student }) => {
   const [messages, setMessages] = useState<Array<{ sender: 'user' | 'ai'; text: string; time: string }>>([
     {
       sender: 'ai',
-      text: `Hello ${student?.name?.split(' ')[0] || 'there'}! I am your **SkillBridge AI Technical Advisor**. \n\nI can help you debug Express/Postgres code, clarify micro-internship deliverables, or prepare questions for your next 15-minute mentor capsule. How can I assist you today?`,
+      text: `Hello ${student?.name?.split(' ')[0] || 'there'}! I am your **Ladder AI Technical Advisor**. \n\nI can help you debug Express/Postgres code, clarify micro-internship deliverables, or prepare questions for your next 15-minute mentor capsule. How can I assist you today?`,
       time: 'Just now'
     }
   ]);

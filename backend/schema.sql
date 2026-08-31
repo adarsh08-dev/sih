@@ -1,4 +1,4 @@
--- SkillBridge AI PostgreSQL Schema
+-- Ladder AI PostgreSQL Schema
 
 -- 1. STUDENTS
 CREATE TABLE IF NOT EXISTS students (

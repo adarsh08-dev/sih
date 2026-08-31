@@ -92,8 +92,8 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
         <div className="relative z-10 flex flex-col items-center mb-6 splash-pulse-logo">
           {!imgError ? (
             <img 
-              src="/mnt/data/skillbridge_ai_logo.webp" 
-              alt="SkillBridge AI" 
+              src="/mnt/data/ladder_logo.webp" 
+              alt="Ladder" 
               className="w-[200px] h-[90px] object-contain"
               onError={() => setImgError(true)}
             />

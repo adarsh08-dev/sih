@@ -50,7 +50,7 @@ function devApiPlugin(): Plugin {
             res.statusCode = 200;
             return res.end(JSON.stringify({
               status: 'online',
-              service: 'SkillBridge AI Career OS',
+              service: 'Ladder AI Career OS',
               version: '2026.1',
               database: health
             }));
@@ -58,8 +58,8 @@ function devApiPlugin(): Plugin {
             res.statusCode = 200;
             return res.end(JSON.stringify({
               status: 'online',
-              service: 'SkillBridge AI Career OS',
-              database: { connected: true, type: 'SkillBridge Persistent Ledger' }
+              service: 'Ladder AI Career OS',
+              database: { connected: true, type: 'Ladder Persistent Ledger' }
             }));
           }
         }
@@ -205,7 +205,7 @@ function devApiPlugin(): Plugin {
               try {
                 const { GoogleGenAI } = await import('@google/genai');
                 const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
-                const systemInstruction = `You are Bridge Buddy, the official live AI Assistant and Tech Specialist for SkillBridge AI (SIH26044 • Career OS).
+                const systemInstruction = `You are Bridge Buddy, the official live AI Assistant and Tech Specialist for Ladder AI (SIH26044 • Career OS).
 You are a senior developer, human-coded, friendly, with a natural Hinglish mix, concise tone with structured code blocks. 24/7 Support Team Online.
 User details: Name = ${studentName}.
 Stats: Skill DNA 84/100, Career Readiness 81%, Top 8% of Batch, Target base package 14.5 LPA, Mentor Amit Verma (Senior Architect at TCS).
@@ -239,7 +239,7 @@ RULES:
                         systemInstruction,
                         temperature: 0.6,
                         maxOutputTokens: 1000,
-                        thinkingConfig: { thinkingBudget: 0 }
+                        thinkingConfig: { thinkingLevel: 'minimal' }
                       }
                     });
 
@@ -291,7 +291,7 @@ if (blacklist.has(token)) return res.status(401).json({ msg: 'Token Revoked' });
 **PostgreSQL Refresh Token Ledger:**
 Store active refresh tokens in a \`user_sessions\` table and revoke them upon logout.`;
               } else if (lower.includes('postgres') || lower.includes('sql') || lower.includes('db') || lower.includes('index') || lower.includes('database')) {
-                reply = `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on SkillBridge.
+                reply = `Hey ${studentName}! Let's optimize your PostgreSQL connection and query performance on Ladder.
 
 \`\`\`javascript
 const { Pool } = require('pg');
@@ -308,14 +308,14 @@ const pool = new Pool({
 CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
 \`\`\``;
               } else if (lower.includes('gig') || lower.includes('stipend') || lower.includes('internship') || lower.includes('money') || lower.includes('task')) {
-                reply = `Hey ${studentName}! Here is the Micro-Internship & Gigs breakdown on SkillBridge:
+                reply = `Hey ${studentName}! Here is the Micro-Internship & Gigs breakdown on Ladder:
 
 - **Deliverables**: Modular components, tested endpoints, clean PR documentation.
 - **Stipends**: ₹1,500 - ₹5,000 disbursed directly to your university account within 48h.
 - **Timeline**: 3-7 day sprints with instant automated sandbox validation.
 - **NDA & Verification**: Virtual zero-NDA policy + SHA-256 cryptographic proof minted to your Experience Passport.`;
               } else if (lower.includes('dna') || lower.includes('score') || lower.includes('readiness') || lower.includes('profile') || lower.includes('website')) {
-                reply = `Hey ${studentName}! Here are your live SkillBridge Career OS metrics:
+                reply = `Hey ${studentName}! Here are your live Ladder Career OS metrics:
 
 - **Skill DNA Score**: 84/100
 - **Career Readiness Index**: 81%
@@ -454,7 +454,7 @@ CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
 
         // Generic catch-all
         res.statusCode = 200;
-        return res.end(JSON.stringify({ success: true, message: 'SkillBridge API response OK' }));
+        return res.end(JSON.stringify({ success: true, message: 'Ladder API response OK' }));
       });
     }
   };

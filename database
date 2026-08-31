@@ -1,4 +1,4 @@
--- SkillBridge AI | Neon PostgreSQL Complete Database Schema & Seed Data
+-- Ladder | Neon PostgreSQL Complete Database Schema & Seed Data
 -- Copy and paste this directly into your Neon SQL Editor to create and populate all tables.
 
 -- 1. STUDENTS
@@ -137,6 +137,18 @@ CREATE TABLE IF NOT EXISTS jobs (
     status VARCHAR(30) DEFAULT 'Active',
     apps INT DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 13. ACCOUNT CONNECTIONS
+CREATE TABLE IF NOT EXISTS account_connections (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    platform VARCHAR(50) NOT NULL,
+    external_id VARCHAR(255) NOT NULL,
+    username VARCHAR(255),
+    access_token TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, platform)
 );
 
 -- ================= SEED DATA =================

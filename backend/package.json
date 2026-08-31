@@ -1,7 +1,7 @@
 {
   "name": "skillbridge-ai-backend",
   "version": "1.0.0",
-  "description": "Backend API for SkillBridge AI SIH26044",
+  "description": "Backend API for Ladder AI SIH26044",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

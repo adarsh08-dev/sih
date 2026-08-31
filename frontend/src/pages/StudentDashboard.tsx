@@ -76,7 +76,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     });
   }, []);
 
-  const readiness = calculateReadinessMetrics(skills);
+  const readiness = React.useMemo(() => calculateReadinessMetrics(skills), [skills]);
   const overallScore = readiness.overallSkillScore;
   const techScore = readiness.technicalScore;
   const softScore = readiness.softScore;

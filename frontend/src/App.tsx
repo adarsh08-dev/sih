@@ -307,7 +307,7 @@ export const App: React.FC = () => {
       }));
     }
 
-    // Launch SkillBridge AI Logo Opening Animation Splash
+    // Launch Ladder AI Logo Opening Animation Splash
     setSplashData({
       isOpen: true,
       role: payload.role,

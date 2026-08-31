@@ -266,7 +266,7 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
                 <div className="flex flex-wrap items-center gap-3 text-xs">
                   <span className="text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 font-semibold flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                    Verified SkillBridge DNA Passport (Attached)
+                    Verified Ladder DNA Passport (Attached)
                   </span>
                   <span className="text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20 font-semibold">
                     ATS Resume v4.2 (Score 92%)

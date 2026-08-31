@@ -52,7 +52,7 @@ export const CertificationsView: React.FC = () => {
             <h1 className="text-xl font-extrabold text-white">Verified Industry Certifications & Credentials</h1>
           </div>
           <p className="text-xs text-slate-300">
-            Immutable credentials cryptographically anchored to your SkillBridge Digital Passport ledger.
+            Immutable credentials cryptographically anchored to your Ladder Digital Passport ledger.
           </p>
         </div>
 

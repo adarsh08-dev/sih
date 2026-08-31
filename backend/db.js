@@ -342,7 +342,7 @@ function getDefaultData() {
       {
         id: 1,
         category: "general",
-        question: "How does SkillBridge verify my zero-NDA ghost internship proof?",
+        question: "How does Ladder verify my zero-NDA ghost internship proof?",
         answer: "Every deliverable passes automated unit & integration test suites. Upon passing, a cryptographic hash is signed by university faculty and mentor nodes and stored immutably in the Experience Passport ledger."
       },
       {
@@ -540,7 +540,7 @@ async function checkDatabaseConnection() {
   const db = loadDatabase();
   return {
     connected: true,
-    type: "SkillBridge Persistent Database Ledger",
+    type: "Ladder Persistent Database Ledger",
     usersCount: db.users.length,
     studentsCount: db.students.length,
     timestamp: new Date().toISOString()
@@ -1096,7 +1096,7 @@ async function getJobs() {
             skills: parsedSkills,
             requiredSkills: parsedSkills,
             eligibility: j.eligibility || 'All Qualified Candidates',
-            description: j.description || 'Job role posted on SkillBridge Talent Network.',
+            description: j.description || 'Job role posted on Ladder Talent Network.',
             deadline: j.deadline || 'Open',
             status: j.status || 'Active',
             apps: Number(j.apps || 0),
@@ -1129,7 +1129,7 @@ async function getJobs() {
     skills: Array.isArray(j.skills) ? j.skills : (Array.isArray(j.required_skills) ? j.required_skills : ["Engineering"]),
     requiredSkills: Array.isArray(j.skills) ? j.skills : (Array.isArray(j.required_skills) ? j.required_skills : ["Engineering"]),
     eligibility: j.eligibility || "All Eligible Candidates",
-    description: j.description || "Job role posted on SkillBridge Talent Network.",
+    description: j.description || "Job role posted on Ladder Talent Network.",
     deadline: j.deadline || "Open",
     status: j.status || "Active",
     apps: Number(j.apps !== undefined ? j.apps : (j.applications || 0)),
@@ -1193,7 +1193,7 @@ async function createJob(payload) {
           Number(payload.openings || 1),
           skillsList,
           payload.eligibility || "All Qualified Students",
-          payload.description || "Job role posted on SkillBridge Talent Network.",
+          payload.description || "Job role posted on Ladder Talent Network.",
           payload.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
           payload.status || "Active"
         ]
@@ -1256,7 +1256,7 @@ async function createJob(payload) {
       skills: skillsList,
       requiredSkills: skillsList,
       eligibility: payload.eligibility || "All Qualified Students",
-      description: payload.description || "Job role posted on SkillBridge Talent Network.",
+      description: payload.description || "Job role posted on Ladder Talent Network.",
       deadline: payload.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
       status: payload.status || "Active",
       apps: 0,

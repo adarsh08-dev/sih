@@ -298,7 +298,7 @@ export const CandidatePortfolioModal: React.FC<CandidatePortfolioModalProps> = (
                 </p>
                 <div className="pt-2 flex items-center gap-2 text-[10px] text-emerald-400 font-semibold border-t border-white/5">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Verified on SkillBridge Blockchain Ledger • SHA-256: 7f8a92...1c4e</span>
+                  <span>Verified on Ladder Blockchain Ledger • SHA-256: 7f8a92...1c4e</span>
                 </div>
               </div>
             </div>

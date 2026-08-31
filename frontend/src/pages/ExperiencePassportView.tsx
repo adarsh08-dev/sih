@@ -38,7 +38,7 @@ export const ExperiencePassportView: React.FC<ExperiencePassportProps> = ({ reco
             <h1 className="text-xl font-extrabold text-white">Experience Passport · Cryptographic Ledger</h1>
           </div>
           <p className="text-xs text-slate-300">
-            Immutable proof-of-work verified by university faculty and corporate partner nodes on the SkillBridge protocol.
+            Immutable proof-of-work verified by university faculty and corporate partner nodes on the Ladder protocol.
           </p>
         </div>
 

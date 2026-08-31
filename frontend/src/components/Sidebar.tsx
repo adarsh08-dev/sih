@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { UserRole, StudentProfile } from '../types';
 import { Logo } from './Logo';
+import { ConnectedAccounts } from './ConnectedAccounts';
 
 interface SidebarProps {
   currentRole: UserRole;
@@ -141,6 +142,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
         )}
+
+        {/* Connected Accounts */}
+        <div className="px-2.5 pb-4">
+          <ConnectedAccounts collapsed={collapsed} role={currentRole} />
+        </div>
 
         {/* Navigation Menus */}
         <div className="flex-1 overflow-y-auto px-2.5 py-2 space-y-4">

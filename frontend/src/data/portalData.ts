@@ -507,7 +507,7 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     gapStatus: 'Critical Gap',
     impactOnPlacement: 'High',
     recommendedCourses: [
-      { title: 'AWS Cloud Practitioner & Serverless Microservices', provider: 'SkillBridge Hub', duration: '6 hrs' },
+      { title: 'AWS Cloud Practitioner & Serverless Microservices', provider: 'Ladder Hub', duration: '6 hrs' },
       { title: 'Docker & Kubernetes for Distributed Backend', provider: 'Cloud Native Foundation', duration: '8 hrs' }
     ],
     recommendedCertifications: ['AWS Certified Solutions Architect Associate', 'CKAD (Kubernetes Developer)'],
@@ -524,7 +524,7 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     gapStatus: 'Moderate Gap',
     impactOnPlacement: 'High',
     recommendedCourses: [
-      { title: 'Advanced Graph Theory & Dynamic Programming', provider: 'SkillBridge Algorithms Lab', duration: '10 hrs' }
+      { title: 'Advanced Graph Theory & Dynamic Programming', provider: 'Ladder Algorithms Lab', duration: '10 hrs' }
     ],
     recommendedCertifications: ['HackerRank Problem Solving (Gold)', 'LeetCode 300+ Solved Badge'],
     recommendedMentorTopic: 'Mock Technical Interview: Tree Traversals & Optimal Graph Searches',
@@ -540,9 +540,9 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     gapStatus: 'Moderate Gap',
     impactOnPlacement: 'High',
     recommendedCourses: [
-      { title: 'Distributed Systems: Rate Limiting & Message Queues', provider: 'SkillBridge System Labs', duration: '7 hrs' }
+      { title: 'Distributed Systems: Rate Limiting & Message Queues', provider: 'Ladder System Labs', duration: '7 hrs' }
     ],
-    recommendedCertifications: ['SkillBridge Distributed Systems Certificate'],
+    recommendedCertifications: ['Ladder Distributed Systems Certificate'],
     recommendedMentorTopic: 'Architecting 100k RPS Rate Limiter with Redis & RabbitMQ',
     recommendedProject: 'Build an event-driven notification engine with Kafka and Node.js'
   },
@@ -614,7 +614,7 @@ export const INITIAL_JOBS: JobOpportunity[] = [
     stipendOrSalary: '₹40,000 / mo + ₹12 LPA PPO',
     requiredSkills: ['React.js & TypeScript', 'Node.js & Express', 'PostgreSQL & SQL'],
     preferredSkills: ['AWS & Cloud Architecture', 'System Design & High Availability'],
-    eligibility: 'CSIT / IT / ECE with minimum Level 3 SkillBridge Passport Verified Rating',
+    eligibility: 'CSIT / IT / ECE with minimum Level 3 Ladder Passport Verified Rating',
     applicationDeadline: 'Oct 15, 2026',
     description: 'Build modern customer-facing web applications and distributed state engines with enterprise micro-frontends.',
     responsibilities: [
@@ -659,7 +659,7 @@ export const INITIAL_JOBS: JobOpportunity[] = [
     stipendOrSalary: '₹55,000 / mo + ₹22 LPA PPO',
     requiredSkills: ['Python', 'Data Structures & Algorithms', 'PostgreSQL & SQL'],
     preferredSkills: ['System Design & High Availability', 'Docker & Microservices'],
-    eligibility: 'Top 10% in SkillBridge DSA diagnostic assessment and zero disciplinary remarks',
+    eligibility: 'Top 10% in Ladder DSA diagnostic assessment and zero disciplinary remarks',
     applicationDeadline: 'Sep 20, 2026',
     description: 'Engineering the next generation of seamless payment rails, fraud prevention engines, and settlement gateways.',
     responsibilities: [
@@ -770,7 +770,7 @@ export const INITIAL_COURSES: LearningCourse[] = [
   {
     id: 'crs_aws_arch',
     title: 'AWS Cloud Practitioner & Serverless Architecture',
-    provider: 'SkillBridge Cloud Academy',
+    provider: 'Ladder Cloud Academy',
     category: 'Cloud & DevOps',
     skillsCovered: ['AWS & Cloud Architecture', 'Docker & Microservices', 'Serverless'],
     level: 'Intermediate',
@@ -787,7 +787,7 @@ export const INITIAL_COURSES: LearningCourse[] = [
   {
     id: 'crs_dsa_graphs',
     title: 'Mastering Advanced Graphs, Trees, & Dynamic Programming',
-    provider: 'SkillBridge Algorithms Lab',
+    provider: 'Ladder Algorithms Lab',
     category: 'Problem Solving',
     skillsCovered: ['Data Structures & Algorithms', 'Analytical Problem Solving'],
     level: 'Advanced',
@@ -895,7 +895,7 @@ export const INITIAL_CERTIFICATIONS: CertificationItem[] = [
   {
     id: 'cert_1',
     name: 'PostgreSQL Query Optimization & Database Architecture',
-    issuer: 'SkillBridge Industry Ledger',
+    issuer: 'Ladder Industry Ledger',
     issueDate: 'Aug 2026',
     credentialId: 'SB-PG-98234-ADARSH',
     credentialUrl: 'https://verify.skillbridge.ai/cert/SB-PG-98234',

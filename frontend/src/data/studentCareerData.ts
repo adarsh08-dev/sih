@@ -217,7 +217,7 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     recommendedCourses: [
       {
         title: 'Mastering Dynamic Programming & Graph Algorithms',
-        provider: 'SkillBridge Elite Lab',
+        provider: 'Ladder Elite Lab',
         duration: '12 Hours'
       },
       {
@@ -242,7 +242,7 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     recommendedCourses: [
       {
         title: 'AWS Cloud Solutions Architecture Bootcamp',
-        provider: 'AWS Academy & SkillBridge',
+        provider: 'AWS Academy & Ladder',
         duration: '16 Hours'
       },
       {
@@ -287,7 +287,7 @@ export const INITIAL_SKILL_GAPS: SkillGapItem[] = [
     recommendedCourses: [
       {
         title: 'Executive Engineering Presentations & RFC Writing',
-        provider: 'SkillBridge Professional Track',
+        provider: 'Ladder Professional Track',
         duration: '4 Hours'
       }
     ],
@@ -605,7 +605,7 @@ export const INITIAL_COURSES: LearningCourse[] = [
   {
     id: 'course-1',
     title: 'AWS Cloud Foundations & Distributed Microservices',
-    provider: 'AWS Academy & SkillBridge',
+    provider: 'AWS Academy & Ladder',
     category: 'Cloud & Infrastructure',
     skillsCovered: ['AWS', 'Docker', 'Microservices', 'IAM'],
     level: 'Intermediate',
@@ -638,7 +638,7 @@ export const INITIAL_COURSES: LearningCourse[] = [
   {
     id: 'course-3',
     title: 'Zero-Trust REST API & JWT Security Middleware',
-    provider: 'SkillBridge Security Lab',
+    provider: 'Ladder Security Lab',
     category: 'Backend Security',
     skillsCovered: ['Node.js', 'Express', 'JWT', 'Redis'],
     level: 'Advanced',
@@ -718,7 +718,7 @@ export const INITIAL_PROJECTS: ProjectItem[] = [
     title: 'Autonomous University MoU & Curriculum Parser',
     type: 'Academic',
     industry: 'EdTech & AI Governance',
-    company: 'SkillBridge Academic Board',
+    company: 'Ladder Academic Board',
     description: 'Natural Language Processing pipeline that parses AICTE/UGC syllabus guidelines, extracts skill gaps, and auto-generates corporate MoUs with industry partners.',
     requiredSkills: ['Python', 'React', 'PostgreSQL', 'Git'],
     duration: '1 Month',
@@ -761,7 +761,7 @@ export const INITIAL_CERTIFICATIONS: CertificationItem[] = [
   {
     id: 'cert-1',
     name: 'Verified Python Core & Backend Architecture',
-    issuer: 'SkillBridge Industry Assessment Engine',
+    issuer: 'Ladder Industry Assessment Engine',
     issueDate: 'August 15, 2026',
     credentialId: 'SB-CERT-2026-PY-9401',
     credentialUrl: 'https://skillbridge.ai/verify/SB-CERT-2026-PY-9401',

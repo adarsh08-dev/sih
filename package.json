@@ -1,7 +1,7 @@
 {
-  "name": "skillbridge-ai",
+  "name": "ladder",
   "version": "1.0.0",
-  "description": "SkillBridge AI | Industry Career OS",
+  "description": "Ladder | Industry Career OS",
   "main": "backend/server.js",
   "scripts": {
     "dev": "vite --config frontend/vite.config.ts",

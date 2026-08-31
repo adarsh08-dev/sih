@@ -191,9 +191,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Brand Header */}
         <div className="text-center mb-5">
           <div className="w-11 h-11 mx-auto rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-black text-base mb-2.5">
-            SB
+            L
           </div>
-          <h2 className="text-lg font-extrabold text-white">SkillBridge AI Portal</h2>
+          <h2 className="text-lg font-extrabold text-white">Ladder</h2>
           <p className="text-xs text-white/40 mt-0.5">SIH26044 · Dynamic Authentication & Academic OS</p>
         </div>
 
