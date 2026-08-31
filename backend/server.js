@@ -301,6 +301,119 @@ app.post("/api/gigs", (req, res) => {
   }
 });
 
+/* ================= GET ALL JOBS ================= */
+app.get("/api/jobs", async (req, res) => {
+  try {
+    const jobs = await db.getJobs();
+    res.json(jobs);
+  } catch (err) {
+    console.error("Error in GET /api/jobs:", err.message);
+    res.status(500).json({ error: "Failed to fetch job postings" });
+  }
+});
+
+/* ================= GET SINGLE JOB ================= */
+app.get("/api/jobs/:id", async (req, res) => {
+  try {
+    const job = await db.getJobById(req.params.id);
+    if (!job) {
+      return res.status(404).json({ error: "Job posting not found" });
+    }
+    res.json(job);
+  } catch (err) {
+    console.error("Error in GET /api/jobs/:id:", err.message);
+    res.status(500).json({ error: "Failed to fetch job details" });
+  }
+});
+
+/* ================= POST NEW JOB ================= */
+app.post("/api/jobs", async (req, res) => {
+  const { 
+    title, 
+    company, 
+    companyId, 
+    location, 
+    type, 
+    jobType,
+    duration, 
+    stipend, 
+    salary,
+    openings, 
+    requiredSkills, 
+    skills,
+    eligibility, 
+    description, 
+    deadline, 
+    status 
+  } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: "Job title is required" });
+  }
+
+  try {
+    const newJob = await db.createJob({
+      title,
+      company: company || "Enterprise Partner",
+      companyId: companyId || 1,
+      location: location || "Remote",
+      type: type || jobType || "Full-Time",
+      duration: duration || "6 Months",
+      stipend: stipend || salary || "Competitive",
+      openings: openings || 1,
+      requiredSkills: requiredSkills || skills || ["Engineering"],
+      eligibility: eligibility || "All Qualified Students",
+      description: description || "Job opening posted by partner recruiter.",
+      deadline: deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      status: status || "Active"
+    });
+
+    return res.status(201).json({
+      success: true,
+      job: newJob,
+      message: "Job posting created and saved to database successfully."
+    });
+  } catch (err) {
+    console.error("DB insert error in POST /api/jobs:", err.message);
+    res.status(500).json({ error: "Failed to create job posting", details: err.message });
+  }
+});
+
+/* ================= UPDATE JOB ================= */
+app.put("/api/jobs/:id", async (req, res) => {
+  try {
+    const updated = await db.updateJob(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({ error: "Job posting not found" });
+    }
+    return res.json({
+      success: true,
+      job: updated,
+      message: "Job posting updated successfully in database."
+    });
+  } catch (err) {
+    console.error("DB update error in PUT /api/jobs/:id:", err.message);
+    res.status(500).json({ error: "Failed to update job posting", details: err.message });
+  }
+});
+
+/* ================= DELETE JOB ================= */
+app.delete("/api/jobs/:id", async (req, res) => {
+  try {
+    const deleted = await db.deleteJob(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: "Job posting not found" });
+    }
+    return res.json({
+      success: true,
+      message: "Job posting removed from database."
+    });
+  } catch (err) {
+    console.error("DB delete error in DELETE /api/jobs/:id:", err.message);
+    res.status(500).json({ error: "Failed to delete job posting", details: err.message });
+  }
+});
+
 /* ================= APPLY GIG ================= */
 app.post("/api/gigs/apply", (req, res) => {
   const { studentId, gigId, message, githubRepo } = req.body;
@@ -379,21 +492,6 @@ app.post("/api/passport/mint", (req, res) => {
     console.error("Error in /api/passport/mint:", err.message);
     res.status(500).json({ error: "Failed to mint passport record" });
   }
-});
-  } catch (err) {
-    console.warn("DB query notice in /api/passport:", err.message);
-  }
-
-  res.json([
-    {
-      id: 1,
-      title: "Backend API Micro-Internship",
-      company: "CloudSphere Systems",
-      experience_type: "Gig Completion",
-      verified: true,
-      score: 85
-    }
-  ]);
 });
 
 /* ================= GHOST INTERNSHIP TASKS ================= */
