@@ -31,6 +31,7 @@ import {
   getStudentSkills, 
   getSkillGaps, 
   getOpportunities, 
+  fetchLiveOpportunities,
   calculateReadinessMetrics, 
   calculateOpportunityMatch 
 } from '../services/studentCareerService';
@@ -60,12 +61,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 }) => {
   const [skills, setSkills] = useState(() => getStudentSkills());
   const [skillGaps, setSkillGaps] = useState(() => getSkillGaps());
-  const [jobs, setJobs] = useState(() => getOpportunities());
+  const [jobs, setJobs] = useState<JobOpportunity[]>(() => getOpportunities());
 
   useEffect(() => {
     setSkills(getStudentSkills());
     setSkillGaps(getSkillGaps());
     setJobs(getOpportunities());
+
+    // Fetch live opportunities from backend/database
+    fetchLiveOpportunities().then(live => {
+      if (live && live.length > 0) {
+        setJobs(live);
+      }
+    });
   }, []);
 
   const readiness = calculateReadinessMetrics(skills);
@@ -453,15 +461,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </div>
 
           <div 
-            onClick={() => onNavigate('ghost')}
+            onClick={() => onNavigate('projects')}
             className="p-3 rounded-lg bg-[#141C48] border border-[#232F6E] hover:border-[#7C5CFC] cursor-pointer transition-all flex items-start gap-3 group"
           >
             <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300 mt-0.5">
               <Code className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white group-hover:text-[#C4B5FD] transition-colors">Run Ghost Sandbox Simulator</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Zero-NDA live code challenge with test runner.</p>
+              <p className="text-xs font-bold text-white group-hover:text-[#C4B5FD] transition-colors">Start Live Industry Challenge</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Solve verified project statement with auto-scoring.</p>
             </div>
           </div>
         </div>

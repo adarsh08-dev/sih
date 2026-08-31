@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Briefcase, 
   Search, 
@@ -14,12 +14,14 @@ import {
   ExternalLink,
   Filter,
   X,
-  Check
+  Check,
+  RefreshCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { JobOpportunity, StudentProfile, ApplicationItem } from '../types';
 import { 
   getOpportunities, 
+  fetchLiveOpportunities,
   calculateOpportunityMatch, 
   applyToOpportunity, 
   getApplications 
@@ -36,8 +38,26 @@ export const JobsPlacementsView: React.FC<JobsPlacementsViewProps> = ({
   onNavigateTab,
   onApplicationCreated
 }) => {
-  const opportunities = getOpportunities();
-  const applications = getApplications();
+  const [opportunities, setOpportunities] = useState<JobOpportunity[]>(() => getOpportunities());
+  const [applications, setApplications] = useState<ApplicationItem[]>(() => getApplications());
+  const [loading, setLoading] = useState(false);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const live = await fetchLiveOpportunities();
+      if (live && live.length > 0) {
+        setOpportunities(live);
+      }
+      setApplications(getApplications());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'Full-Time' | 'Internship'>('all');

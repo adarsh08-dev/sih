@@ -404,6 +404,54 @@ CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
           }
         }
 
+        // 12. Recruiter Job Postings & Internships
+        if (url.startsWith('/api/jobs')) {
+          // DELETE /api/jobs/:id
+          if (req.method === 'DELETE') {
+            const id = url.split('/').pop();
+            const success = db ? await db.deleteJob(id) : true;
+            res.statusCode = 200;
+            return res.end(JSON.stringify({ success, message: 'Job deleted from database' }));
+          }
+
+          // PUT /api/jobs/:id
+          if (req.method === 'PUT') {
+            const id = url.split('/').pop();
+            const body = await readBody();
+            const updated = db ? await db.updateJob(id, body) : { id, ...body };
+            res.statusCode = 200;
+            return res.end(JSON.stringify({ success: true, job: updated, message: 'Job updated in database' }));
+          }
+
+          // POST /api/jobs
+          if (req.method === 'POST') {
+            const body = await readBody();
+            const newJob = db ? await db.createJob(body) : { id: `j${Date.now()}`, ...body, apps: 0, applications: 0 };
+            res.statusCode = 201;
+            return res.end(JSON.stringify({ success: true, job: newJob, message: 'Job created in database' }));
+          }
+
+          // GET /api/jobs/:id
+          const parts = url.split('/');
+          if (parts.length > 3 && parts[3]) {
+            const id = parts[3];
+            const job = db ? await db.getJobById(id) : null;
+            if (!job) {
+              res.statusCode = 404;
+              return res.end(JSON.stringify({ error: 'Job not found' }));
+            }
+            res.statusCode = 200;
+            return res.end(JSON.stringify(job));
+          }
+
+          // GET /api/jobs
+          if (db) {
+            const jobs = await db.getJobs();
+            res.statusCode = 200;
+            return res.end(JSON.stringify(jobs));
+          }
+        }
+
         // Generic catch-all
         res.statusCode = 200;
         return res.end(JSON.stringify({ success: true, message: 'SkillBridge API response OK' }));

@@ -9,6 +9,7 @@ import {
   MouRequest,
   FacultySwapOffer 
 } from '../types';
+import { Job } from '../types/recruiter';
 
 const API_BASE = '/api';
 
@@ -187,7 +188,131 @@ export async function createGig(payload: { title: string; requiredSkill?: string
   );
 }
 
-// 4. PASSPORT FROM DATABASE
+// 4. RECRUITER JOB POSTINGS FROM DATABASE
+export async function fetchJobs(): Promise<Job[]> {
+  const data = await safeFetch<any[]>(`${API_BASE}/jobs`, undefined, []);
+  if (Array.isArray(data) && data.length > 0) {
+    return data.map(j => {
+      const skills = Array.isArray(j.requiredSkills) && j.requiredSkills.length > 0
+        ? j.requiredSkills
+        : (Array.isArray(j.skills) && j.skills.length > 0
+          ? j.skills
+          : (Array.isArray(j.required_skills) && j.required_skills.length > 0
+            ? j.required_skills
+            : (typeof j.required_skills === 'string' && j.required_skills.length > 0
+              ? j.required_skills.replace(/[{}"']/g, '').split(',').map((s: string) => s.trim()).filter(Boolean)
+              : ['Engineering', 'Problem Solving'])));
+
+      return {
+        ...j,
+        id: String(j.id || (j.numericId ? `j${j.numericId}` : `j-${Math.random().toString(36).substr(2, 6)}`)),
+        title: j.title || 'Engineering Associate',
+        company: j.company || 'Enterprise Partner',
+        location: j.location || 'Remote',
+        type: j.type || 'Full-Time',
+        duration: j.duration || '6 Months',
+        stipend: j.stipend || 'Competitive',
+        openings: Number(j.openings || 1),
+        applications: Number(j.applications !== undefined ? j.applications : (j.apps || 0)),
+        apps: Number(j.apps !== undefined ? j.apps : (j.applications || 0)),
+        status: (j.status as any) || 'Active',
+        requiredSkills: skills,
+        skills: skills,
+        eligibility: j.eligibility || 'All Qualified Students',
+        description: j.description || 'Job opening posted on SkillBridge Network.',
+        deadline: j.deadline || 'Open Until Filled'
+      };
+    });
+  }
+  return [];
+}
+
+export async function fetchJobById(id: string | number): Promise<Job | null> {
+  return safeFetch<Job | null>(`${API_BASE}/jobs/${id}`, undefined, null);
+}
+
+export async function createJob(payload: {
+  title: string;
+  company?: string;
+  companyId?: number;
+  location?: string;
+  type?: string;
+  jobType?: string;
+  duration?: string;
+  stipend?: string;
+  salary?: string;
+  openings?: number;
+  requiredSkills?: string[];
+  skills?: string[];
+  eligibility?: string;
+  description?: string;
+  deadline?: string;
+  status?: 'Active' | 'Draft' | 'Closed';
+}) {
+  return safeFetch<{ success: boolean; job: Job; message: string }>(
+    `${API_BASE}/jobs`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    },
+    {
+      success: true,
+      job: {
+        id: `j${Date.now()}`,
+        title: payload.title,
+        company: payload.company || 'Enterprise Partner',
+        companyId: payload.companyId || 1,
+        location: payload.location || 'Remote',
+        type: payload.type || payload.jobType || 'Full-Time',
+        duration: payload.duration || '6 Months',
+        stipend: payload.stipend || payload.salary || 'Competitive',
+        openings: payload.openings || 1,
+        requiredSkills: payload.requiredSkills || payload.skills || ['Engineering'],
+        skills: payload.skills || payload.requiredSkills || ['Engineering'],
+        eligibility: payload.eligibility || 'All Qualified Students',
+        description: payload.description || 'Job opening posted by partner recruiter.',
+        deadline: payload.deadline || '2026-10-30',
+        status: payload.status || 'Active',
+        applications: 0,
+        apps: 0,
+        created_at: new Date().toISOString()
+      },
+      message: 'Job posting published and recorded in database.'
+    }
+  );
+}
+
+export async function updateJob(id: string | number, payload: Partial<Job>) {
+  return safeFetch<{ success: boolean; job: Job; message: string }>(
+    `${API_BASE}/jobs/${id}`,
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    },
+    {
+      success: true,
+      job: { id: String(id), ...payload } as Job,
+      message: 'Job updated in database.'
+    }
+  );
+}
+
+export async function deleteJob(id: string | number) {
+  return safeFetch<{ success: boolean; message: string }>(
+    `${API_BASE}/jobs/${id}`,
+    {
+      method: 'DELETE'
+    },
+    {
+      success: true,
+      message: 'Job removed from database.'
+    }
+  );
+}
+
+// 5. PASSPORT FROM DATABASE
 export async function fetchPassport(studentId: number = 1): Promise<PassportRecord[]> {
   const data = await safeFetch<PassportRecord[]>(`${API_BASE}/passport?studentId=${studentId}`, undefined, []);
   if (Array.isArray(data)) {

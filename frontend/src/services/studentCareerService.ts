@@ -29,18 +29,21 @@ import {
   INITIAL_MENTOR_SESSIONS,
   ASSESSMENT_CATEGORIES
 } from '../data/studentCareerData';
+import { fetchJobs } from './api';
 
 // Local storage key constants
 const STORAGE_KEYS = {
   SKILLS: 'sb_student_skills_v1',
   SKILL_GAPS: 'sb_student_skill_gaps_v1',
+  OPPORTUNITIES: 'sb_student_opportunities_v1',
   APPLICATIONS: 'sb_student_applications_v1',
   COURSES: 'sb_student_courses_v1',
   PROJECTS: 'sb_student_projects_v1',
   CERTIFICATIONS: 'sb_student_certifications_v1',
   ACHIEVEMENTS: 'sb_student_achievements_v1',
   ASSESSMENT_RESULTS: 'sb_student_assessment_results_v1',
-  MENTOR_SESSIONS: 'sb_student_mentor_sessions_v1'
+  MENTOR_SESSIONS: 'sb_student_mentor_sessions_v1',
+  CUSTOM_PORTFOLIO: 'sb_student_custom_portfolio_v1'
 };
 
 function getFromStorage<T>(key: string, fallback: T): T {
@@ -213,7 +216,73 @@ export function calculateOpportunityMatch(
 // 4. OPPORTUNITIES & APPLICATIONS
 // ==========================================
 export function getOpportunities(): JobOpportunity[] {
-  return INITIAL_OPPORTUNITIES;
+  return getFromStorage<JobOpportunity[]>(STORAGE_KEYS.OPPORTUNITIES, INITIAL_OPPORTUNITIES);
+}
+
+export function saveOpportunities(opportunities: JobOpportunity[]): void {
+  saveToStorage(STORAGE_KEYS.OPPORTUNITIES, opportunities);
+}
+
+export async function fetchLiveOpportunities(): Promise<JobOpportunity[]> {
+  try {
+    const rawJobs = await fetchJobs();
+    if (Array.isArray(rawJobs) && rawJobs.length > 0) {
+      // Map API/Database jobs to JobOpportunity interface
+      const dbOpportunities: JobOpportunity[] = rawJobs.map((j, idx) => {
+        const skills = Array.isArray(j.requiredSkills) && j.requiredSkills.length > 0
+          ? j.requiredSkills
+          : (Array.isArray(j.skills) && j.skills.length > 0 ? j.skills : ['Engineering', 'Problem Solving']);
+
+        const workMode: 'Remote' | 'Hybrid' | 'On-site' = 
+          j.location?.toLowerCase().includes('remote') || j.type?.toLowerCase().includes('remote') ? 'Remote' :
+          j.type?.toLowerCase().includes('hybrid') ? 'Hybrid' : 'On-site';
+
+        const isIntern = j.title.toLowerCase().includes('intern') || 
+          (j.duration && j.duration.toLowerCase().includes('month')) ||
+          (j.type && j.type.toLowerCase().includes('intern'));
+
+        const oppType: 'Full-Time' | 'Internship' | 'Contract' = 
+          isIntern ? 'Internship' : 
+          (j.type === 'Contract' ? 'Contract' : 'Full-Time');
+
+        return {
+          id: String(j.id || `opp-${idx}`),
+          company: j.company || 'Enterprise Partner',
+          title: j.title || 'Software Engineer',
+          location: j.location || 'Bengaluru / Remote',
+          workMode: workMode,
+          opportunityType: oppType,
+          duration: j.duration || (isIntern ? '6 Months' : 'Full-Time'),
+          stipendOrSalary: j.stipend || j.salary || 'Competitive Stipend',
+          requiredSkills: skills,
+          preferredSkills: skills.slice(0, 2),
+          eligibility: j.eligibility || 'B.Tech / MCA with minimum 7.0 CGPA',
+          applicationDeadline: j.deadline || 'Open Until Filled',
+          description: j.description || 'Verified enterprise hiring opportunity on the SkillBridge network.',
+          responsibilities: [
+            'Design, develop and maintain scalable software modules',
+            'Collaborate across product and engineering teams',
+            'Write clean, testable code and documentation'
+          ],
+          openingsCount: Number(j.openings || 2),
+          postedDate: j.postedDate || new Date().toISOString().split('T')[0],
+          featured: idx < 2
+        };
+      });
+
+      // Merge: DB jobs first, then any initial opportunities that aren't already represented
+      const existingIds = new Set(dbOpportunities.map(o => String(o.id)));
+      const filteredInitial = INITIAL_OPPORTUNITIES.filter(o => !existingIds.has(String(o.id)));
+      const combined = [...dbOpportunities, ...filteredInitial];
+
+      saveOpportunities(combined);
+      return combined;
+    }
+  } catch (err) {
+    console.warn('Failed to fetch live jobs in studentCareerService:', err);
+  }
+
+  return getOpportunities();
 }
 
 export function getApplications(): ApplicationItem[] {
@@ -323,6 +392,10 @@ export function getProjects(): ProjectItem[] {
   return getFromStorage<ProjectItem[]>(STORAGE_KEYS.PROJECTS, INITIAL_PROJECTS);
 }
 
+export function saveProjects(projects: ProjectItem[]): void {
+  saveToStorage(STORAGE_KEYS.PROJECTS, projects);
+}
+
 export function addProject(project: Omit<ProjectItem, 'id'>): ProjectItem {
   const current = getProjects();
   const newProj: ProjectItem = {
@@ -352,6 +425,10 @@ export function getCertifications(): CertificationItem[] {
   return getFromStorage<CertificationItem[]>(STORAGE_KEYS.CERTIFICATIONS, INITIAL_CERTIFICATIONS);
 }
 
+export function saveCertifications(certs: CertificationItem[]): void {
+  saveToStorage(STORAGE_KEYS.CERTIFICATIONS, certs);
+}
+
 export function addCertification(cert: Omit<CertificationItem, 'id'>): CertificationItem {
   const current = getCertifications();
   const newCert: CertificationItem = {
@@ -361,6 +438,82 @@ export function addCertification(cert: Omit<CertificationItem, 'id'>): Certifica
   const updated = [newCert, ...current];
   saveToStorage(STORAGE_KEYS.CERTIFICATIONS, updated);
   return newCert;
+}
+
+// ==========================================
+// PORTFOLIO CUSTOM DATA & OVERRIDES
+// ==========================================
+export interface CustomPortfolioData {
+  name?: string;
+  role?: string;
+  headline?: string;
+  bio?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  portfolioUrl?: string;
+  college?: string;
+  degree?: string;
+  batch?: string;
+  cgpa?: number | string;
+  experiences?: Array<{
+    id: string;
+    role: string;
+    company: string;
+    period: string;
+    type: string;
+    description: string;
+    verified: boolean;
+  }>;
+}
+
+export function getCustomPortfolioData(): CustomPortfolioData {
+  return getFromStorage<CustomPortfolioData>(STORAGE_KEYS.CUSTOM_PORTFOLIO, {
+    name: 'Adarsh Pratap Singh',
+    role: 'Full-Stack & Distributed Systems Engineer',
+    headline: 'Building high-throughput microservices, real-time engines, and intelligent web applications.',
+    bio: 'Passionate computer science engineer with demonstrated expertise in React, TypeScript, Node.js, and PostgreSQL. Cryptographically verified through 3+ production micro-gigs and ranked in top 5% in algorithmic problem solving.',
+    email: 'adarsh.pratap@mjpru.ac.in',
+    phone: '+91 98765 43210',
+    location: 'Bareilly / Delhi NCR, India',
+    githubUrl: 'https://github.com/adarshpratap-dev',
+    linkedinUrl: 'https://linkedin.com/in/adarsh-pratap-singh',
+    portfolioUrl: 'https://adarshpratap.dev',
+    college: 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
+    degree: 'B.Tech in Computer Science & Information Technology',
+    batch: '2025 - 2029',
+    cgpa: 8.4,
+    experiences: [
+      {
+        id: 'exp-1',
+        role: 'Distributed Backend Micro-Intern',
+        company: 'CloudSphere Systems',
+        period: 'Jun 2026 – Aug 2026',
+        type: 'Verified Micro-Internship',
+        description: 'Optimized PostgreSQL connection pooling and implemented Redis caching layer, reducing API P99 latency by 42%. Verified on SkillBridge Ledger.',
+        verified: true
+      },
+      {
+        id: 'exp-2',
+        role: 'Frontend UI/UX Contributor',
+        company: 'NexaFlow Technologies',
+        period: 'Apr 2026 – May 2026',
+        type: 'Open Bounty Gig',
+        description: 'Architected responsive React 18 dashboard views with real-time WebSocket state synchronizer. Passed rigorous automated code quality gates.',
+        verified: true
+      }
+    ]
+  });
+}
+
+export function saveCustomPortfolioData(data: CustomPortfolioData): void {
+  saveToStorage(STORAGE_KEYS.CUSTOM_PORTFOLIO, data);
+}
+
+export function updateStudentSkills(skills: SkillItem[]): void {
+  saveToStorage(STORAGE_KEYS.SKILLS, skills);
 }
 
 export function getAchievements(): AchievementItem[] {

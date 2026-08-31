@@ -1,21 +1,10 @@
-const fs = require("fs");
-const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
+const path = require("path");
+const fs = require("fs");
 
 const JWT_SECRET = process.env.JWT_SECRET || "skillbridge-secret-key-2026";
-const DATA_DIR = path.join(__dirname, "data");
-const DB_FILE = path.join(DATA_DIR, "skillbridge_database.json");
-
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  try {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  } catch (e) {
-    console.warn("Could not create data dir:", e.message);
-  }
-}
 
 let pgPool = null;
 let pgInitialized = false;
@@ -374,45 +363,145 @@ function getDefaultData() {
         question: "How do universities generate automated MoUs?",
         answer: "Faculty and HODs can select industry partners, specify candidate batch sizes, and generate signed AI-assisted MoUs compliant with AICTE & UGC guidelines."
       }
+    ],
+    jobs: [
+      {
+        id: "j1",
+        numericId: 1,
+        company: "TechNova Solutions",
+        company_id: 1,
+        title: "Software Engineer Intern",
+        location: "Bengaluru",
+        type: "Hybrid",
+        duration: "6 Months",
+        stipend: "₹25,000/month",
+        openings: 8,
+        required_skills: ["React", "Node.js", "PostgreSQL"],
+        skills: ["React", "Node.js", "PostgreSQL"],
+        eligibility: "B.Tech CSE/IT 2026/2027",
+        description: "Work on high-scale cloud-native web microservices and UI components.",
+        deadline: "2026-09-15",
+        status: "Active",
+        apps: 64,
+        applications: 64,
+        created_at: "2026-08-10T10:00:00.000Z"
+      },
+      {
+        id: "j2",
+        numericId: 2,
+        company: "PixelWorks Digital",
+        company_id: 2,
+        title: "Frontend Developer Intern",
+        location: "Remote",
+        type: "Remote",
+        duration: "3 Months",
+        stipend: "₹20,000/month",
+        openings: 5,
+        required_skills: ["React", "TypeScript", "Tailwind CSS"],
+        skills: ["React", "TypeScript", "Tailwind CSS"],
+        eligibility: "All Engineering Branches",
+        description: "Build responsive interactive dashboards and accessible user components.",
+        deadline: "2026-09-20",
+        status: "Active",
+        apps: 41,
+        applications: 41,
+        created_at: "2026-08-12T10:00:00.000Z"
+      },
+      {
+        id: "j3",
+        numericId: 3,
+        company: "DataSphere Analytics",
+        company_id: 3,
+        title: "Data Analyst Intern",
+        location: "Noida",
+        type: "In-Office",
+        duration: "6 Months",
+        stipend: "₹22,000/month",
+        openings: 3,
+        required_skills: ["Python", "SQL", "Power BI"],
+        skills: ["Python", "SQL", "Power BI"],
+        eligibility: "B.Tech / MCA / Data Science",
+        description: "Perform cohort queries, pipeline automation and KPI dashboard visualizations.",
+        deadline: "2026-09-25",
+        status: "Active",
+        apps: 28,
+        applications: 28,
+        created_at: "2026-08-14T10:00:00.000Z"
+      },
+      {
+        id: "j4",
+        numericId: 4,
+        company: "CloudMatrix Systems",
+        company_id: 1,
+        title: "Java Cloud Developer",
+        location: "Pune",
+        type: "In-Office",
+        duration: "Full-Time",
+        stipend: "₹8.5 LPA",
+        openings: 2,
+        required_skills: ["Java", "Spring Boot", "AWS"],
+        skills: ["Java", "Spring Boot", "AWS"],
+        eligibility: "B.Tech CSE / IT 2025/2026",
+        description: "Develop mission critical backend services and Kubernetes deployments.",
+        deadline: "2026-10-01",
+        status: "Active",
+        apps: 31,
+        applications: 31,
+        created_at: "2026-08-15T10:00:00.000Z"
+      },
+      {
+        id: "j5",
+        numericId: 5,
+        company: "AI Labs Global",
+        company_id: 2,
+        title: "ML Engineer Intern",
+        location: "Hyderabad",
+        type: "Hybrid",
+        duration: "6 Months",
+        stipend: "₹30,000/month",
+        openings: 4,
+        required_skills: ["Python", "PyTorch", "FastAPI"],
+        skills: ["Python", "PyTorch", "FastAPI"],
+        eligibility: "B.Tech CSE / AI Specialization",
+        description: "Train, benchmark and deploy generative models and predictive algorithms.",
+        deadline: "2026-09-30",
+        status: "Active",
+        apps: 20,
+        applications: 20,
+        created_at: "2026-08-18T10:00:00.000Z"
+      },
+      {
+        id: "j6",
+        numericId: 6,
+        company: "NexaCloud Infrastructure",
+        company_id: 3,
+        title: "Cloud Support Associate",
+        location: "Bengaluru",
+        type: "In-Office",
+        duration: "Full-Time",
+        stipend: "₹7.2 LPA",
+        openings: 10,
+        required_skills: ["Linux", "Docker", "Bash"],
+        skills: ["Linux", "Docker", "Bash"],
+        eligibility: "B.Tech / BCA 2026",
+        description: "Assist enterprise clients in cloud migrations, monitoring and SLAs.",
+        deadline: "2026-10-15",
+        status: "Draft",
+        apps: 18,
+        applications: 18,
+        created_at: "2026-08-20T10:00:00.000Z"
+      }
     ]
   };
 }
 
-// In-Memory & File-Persistent store loader
+// In-Memory store loader (strictly in memory runtime, never written to disk)
 let memoryDb = null;
 
 function loadDatabase() {
   if (memoryDb) return memoryDb;
-
-  try {
-    if (fs.existsSync(DB_FILE)) {
-      const raw = fs.readFileSync(DB_FILE, "utf8");
-      memoryDb = JSON.parse(raw);
-      // Ensure all root tables exist
-      const defaults = getDefaultData();
-      for (const key of Object.keys(defaults)) {
-        if (!Array.isArray(memoryDb[key])) {
-          memoryDb[key] = defaults[key];
-        }
-      }
-      return memoryDb;
-    }
-  } catch (err) {
-    console.warn("Could not read database file, initializing defaults:", err.message);
-  }
-
   memoryDb = getDefaultData();
-  saveDatabase();
   return memoryDb;
-}
-
-function saveDatabase() {
-  if (!memoryDb) return;
-  try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(memoryDb, null, 2), "utf8");
-  } catch (err) {
-    console.error("Error saving database to file:", err.message);
-  }
 }
 
 // Initialize PostgreSQL if available
@@ -539,7 +628,6 @@ async function registerUser({ name, email, password, role, extraInfo = {} }) {
   };
 
   db.users.push(newUser);
-  saveDatabase();
 
   // Try saving to PostgreSQL if available
   const pool = getPgPool();
@@ -705,7 +793,6 @@ function createMentor({ name, role, company, experience, match, capsuleSlots, sp
     specialization: specialization || ["Full Stack", "Distributed Systems"]
   };
   db.mentors.push(newMentor);
-  saveDatabase();
 
   const pool = getPgPool();
   if (pool) {
@@ -756,7 +843,6 @@ function createGig({ title, requiredSkill, skill, hours, payment, description, c
     created_at: new Date().toISOString()
   };
   db.gigs.unshift(newGig);
-  saveDatabase();
 
   const pool = getPgPool();
   if (pool) {
@@ -789,7 +875,6 @@ function applyForGig({ studentId, gigId, message, githubRepo }) {
     created_at: new Date().toISOString()
   };
   db.gig_applications.push(newApp);
-  saveDatabase();
 
   const pool = getPgPool();
   if (pool) {
@@ -830,7 +915,6 @@ function bookMentorSession({ studentId, mentorId, date, time, topic }) {
     created_at: new Date().toISOString()
   };
   db.mentor_bookings.push(newBooking);
-  saveDatabase();
 
   const pool = getPgPool();
   if (pool) {
@@ -881,7 +965,6 @@ function mintPassportRecord({ studentId = 1, title, company, score = 95, skillsV
     student.career_readiness = Math.min(100, (student.career_readiness || 65) + 5);
   }
 
-  saveDatabase();
   return record;
 }
 
@@ -905,7 +988,6 @@ function createHelpdeskTicket({ title, category, description, priority = "medium
     created_at: new Date().toISOString()
   };
   db.helpdesk_tickets.unshift(newTicket);
-  saveDatabase();
   return newTicket;
 }
 
@@ -933,7 +1015,6 @@ function createMouRequest(payload) {
     scopes: payload.scopes || ["Placement Pipeline", "Mentorship", "Experience Passport"]
   };
   db.mou_requests.unshift(newMou);
-  saveDatabase();
   return newMou;
 }
 
@@ -955,7 +1036,6 @@ function createFacultySwap(payload) {
     status: "Available"
   };
   db.faculty_swaps.unshift(newSwap);
-  saveDatabase();
   return newSwap;
 }
 
@@ -963,6 +1043,315 @@ function createFacultySwap(payload) {
 function getFaqs() {
   const db = loadDatabase();
   return db.faqs || [];
+}
+
+// 15. RECRUITER JOB POSTINGS
+async function getJobs() {
+  const pool = getPgPool();
+  if (pool) {
+    try {
+      // Ensure jobs table exists if not already created
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS jobs (
+          id SERIAL PRIMARY KEY,
+          company_id INT DEFAULT 1,
+          company VARCHAR(150) NOT NULL,
+          title VARCHAR(200) NOT NULL,
+          location VARCHAR(150) DEFAULT 'Remote',
+          type VARCHAR(50) DEFAULT 'Full-Time',
+          duration VARCHAR(50) DEFAULT 'Full-Time',
+          stipend VARCHAR(100) DEFAULT 'Competitive',
+          openings INT DEFAULT 1,
+          required_skills TEXT[] DEFAULT '{}',
+          eligibility VARCHAR(200),
+          description TEXT,
+          deadline VARCHAR(50),
+          status VARCHAR(30) DEFAULT 'Active',
+          apps INT DEFAULT 0,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      const res = await pool.query("SELECT * FROM jobs ORDER BY id DESC");
+      if (res.rows && res.rows.length > 0) {
+        return res.rows.map(j => {
+          let parsedSkills = ['Engineering'];
+          if (Array.isArray(j.required_skills)) {
+            parsedSkills = j.required_skills;
+          } else if (typeof j.required_skills === 'string') {
+            parsedSkills = j.required_skills.replace(/[{}"']/g, '').split(',').map(s => s.trim()).filter(Boolean);
+          }
+          return {
+            id: `j${j.id}`,
+            numericId: j.id,
+            title: j.title || 'Software Engineer',
+            company: j.company || 'Enterprise Partner',
+            company_id: j.company_id || 1,
+            location: j.location || 'Remote',
+            type: j.type || 'Full-Time',
+            duration: j.duration || '6 Months',
+            stipend: j.stipend || 'Competitive',
+            openings: Number(j.openings || 1),
+            required_skills: parsedSkills,
+            skills: parsedSkills,
+            requiredSkills: parsedSkills,
+            eligibility: j.eligibility || 'All Qualified Candidates',
+            description: j.description || 'Job role posted on SkillBridge Talent Network.',
+            deadline: j.deadline || 'Open',
+            status: j.status || 'Active',
+            apps: Number(j.apps || 0),
+            applications: Number(j.apps || 0),
+            created_at: j.created_at || new Date().toISOString()
+          };
+        });
+      }
+    } catch (pgErr) {
+      console.warn("PostgreSQL getJobs notice:", pgErr.message);
+    }
+  }
+
+  const db = loadDatabase();
+  if (!Array.isArray(db.jobs)) {
+    db.jobs = getDefaultData().jobs;
+  }
+  return db.jobs.map(j => ({
+    id: String(j.id || (j.numericId ? `j${j.numericId}` : `j${Date.now()}`)),
+    numericId: Number(j.numericId || (typeof j.id === "number" ? j.id : String(j.id).replace(/\D/g, "")) || 1),
+    title: j.title || "Software Engineer",
+    company: j.company || "Enterprise Partner",
+    company_id: j.company_id || 1,
+    location: j.location || "Remote",
+    type: j.type || "Full-Time",
+    duration: j.duration || "6 Months",
+    stipend: j.stipend || "Competitive",
+    openings: Number(j.openings || 1),
+    required_skills: Array.isArray(j.required_skills) ? j.required_skills : (Array.isArray(j.skills) ? j.skills : ["Engineering"]),
+    skills: Array.isArray(j.skills) ? j.skills : (Array.isArray(j.required_skills) ? j.required_skills : ["Engineering"]),
+    requiredSkills: Array.isArray(j.skills) ? j.skills : (Array.isArray(j.required_skills) ? j.required_skills : ["Engineering"]),
+    eligibility: j.eligibility || "All Eligible Candidates",
+    description: j.description || "Job role posted on SkillBridge Talent Network.",
+    deadline: j.deadline || "Open",
+    status: j.status || "Active",
+    apps: Number(j.apps !== undefined ? j.apps : (j.applications || 0)),
+    applications: Number(j.applications !== undefined ? j.applications : (j.apps || 0)),
+    created_at: j.created_at || new Date().toISOString()
+  }));
+}
+
+async function getJobById(id) {
+  const jobs = await getJobs();
+  const cleanId = String(id).toLowerCase();
+  return jobs.find(j => String(j.id).toLowerCase() === cleanId || String(j.numericId) === cleanId) || null;
+}
+
+async function createJob(payload) {
+  const skillsList = Array.isArray(payload.requiredSkills || payload.skills || payload.required_skills)
+    ? (payload.requiredSkills || payload.skills || payload.required_skills)
+    : (typeof (payload.requiredSkills || payload.skills || payload.required_skills) === "string"
+        ? (payload.requiredSkills || payload.skills || payload.required_skills).split(",").map(s => s.trim()).filter(Boolean)
+        : ["Engineering", "Problem Solving"]);
+
+  let insertedJob = null;
+  const pool = getPgPool();
+
+  if (pool) {
+    try {
+      // Auto-ensure table exists
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS jobs (
+          id SERIAL PRIMARY KEY,
+          company_id INT DEFAULT 1,
+          company VARCHAR(150) NOT NULL,
+          title VARCHAR(200) NOT NULL,
+          location VARCHAR(150) DEFAULT 'Remote',
+          type VARCHAR(50) DEFAULT 'Full-Time',
+          duration VARCHAR(50) DEFAULT 'Full-Time',
+          stipend VARCHAR(100) DEFAULT 'Competitive',
+          openings INT DEFAULT 1,
+          required_skills TEXT[] DEFAULT '{}',
+          eligibility VARCHAR(200),
+          description TEXT,
+          deadline VARCHAR(50),
+          status VARCHAR(30) DEFAULT 'Active',
+          apps INT DEFAULT 0,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      const res = await pool.query(
+        `INSERT INTO jobs (company_id, company, title, location, type, duration, stipend, openings, required_skills, eligibility, description, deadline, status, apps)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 0)
+         RETURNING *`,
+        [
+          Number(payload.companyId || payload.company_id || 1),
+          payload.company || "Enterprise Partner",
+          payload.title,
+          payload.location || "Remote",
+          payload.type || payload.jobType || "Full-Time",
+          payload.duration || "6 Months",
+          payload.stipend || payload.salary || "Competitive",
+          Number(payload.openings || 1),
+          skillsList,
+          payload.eligibility || "All Qualified Students",
+          payload.description || "Job role posted on SkillBridge Talent Network.",
+          payload.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          payload.status || "Active"
+        ]
+      );
+
+      if (res.rows && res.rows.length > 0) {
+        const row = res.rows[0];
+        insertedJob = {
+          id: `j${row.id}`,
+          numericId: row.id,
+          title: row.title,
+          company: row.company,
+          company_id: row.company_id,
+          location: row.location,
+          type: row.type,
+          duration: row.duration,
+          stipend: row.stipend,
+          openings: Number(row.openings || 1),
+          required_skills: Array.isArray(row.required_skills) ? row.required_skills : skillsList,
+          skills: Array.isArray(row.required_skills) ? row.required_skills : skillsList,
+          requiredSkills: Array.isArray(row.required_skills) ? row.required_skills : skillsList,
+          eligibility: row.eligibility,
+          description: row.description,
+          deadline: row.deadline,
+          status: row.status,
+          apps: Number(row.apps || 0),
+          applications: Number(row.apps || 0),
+          created_at: row.created_at
+        };
+        console.log(`✅ Job persisted to PostgreSQL database with ID: ${row.id}`);
+      }
+    } catch (pgErr) {
+      console.warn("PostgreSQL job insert notice:", pgErr.message);
+    }
+  }
+
+  const db = loadDatabase();
+  if (!Array.isArray(db.jobs)) {
+    db.jobs = getDefaultData().jobs;
+  }
+
+  if (!insertedJob) {
+    const maxNumeric = db.jobs.reduce((max, j) => {
+      const num = Number(j.numericId || (typeof j.id === "number" ? j.id : String(j.id).replace(/\D/g, ""))) || 0;
+      return num > max ? num : max;
+    }, 0);
+    const newNumericId = maxNumeric + 1;
+    insertedJob = {
+      id: `j${newNumericId}`,
+      numericId: newNumericId,
+      title: payload.title || "Untitled Opportunity",
+      company: payload.company || "Enterprise Partner",
+      company_id: Number(payload.companyId || payload.company_id || 1),
+      location: payload.location || "Remote",
+      type: payload.type || payload.jobType || "Full-Time",
+      duration: payload.duration || "6 Months",
+      stipend: payload.stipend || payload.salary || "Competitive",
+      openings: Number(payload.openings || 1),
+      required_skills: skillsList,
+      skills: skillsList,
+      requiredSkills: skillsList,
+      eligibility: payload.eligibility || "All Qualified Students",
+      description: payload.description || "Job role posted on SkillBridge Talent Network.",
+      deadline: payload.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      status: payload.status || "Active",
+      apps: 0,
+      applications: 0,
+      created_at: new Date().toISOString()
+    };
+  }
+
+  // Ensure insertedJob is unshifted in memoryDb
+  const existingIndex = db.jobs.findIndex(j => String(j.id) === String(insertedJob.id) || String(j.numericId) === String(insertedJob.numericId));
+  if (existingIndex >= 0) {
+    db.jobs[existingIndex] = insertedJob;
+  } else {
+    db.jobs.unshift(insertedJob);
+  }
+
+  return insertedJob;
+}
+
+async function updateJob(id, updates) {
+  const cleanId = String(id).toLowerCase();
+  const numericId = Number(String(id).replace(/\D/g, '')) || null;
+  const pool = getPgPool();
+
+  if (pool && numericId) {
+    try {
+      await pool.query(
+        `UPDATE jobs SET
+           title = COALESCE($1, title),
+           status = COALESCE($2, status),
+           description = COALESCE($3, description),
+           stipend = COALESCE($4, stipend),
+           location = COALESCE($5, location)
+         WHERE id = $6`,
+        [updates.title || null, updates.status || null, updates.description || null, updates.stipend || null, updates.location || null, numericId]
+      );
+    } catch (err) {
+      console.warn("PostgreSQL job update notice:", err.message);
+    }
+  }
+
+  const db = loadDatabase();
+  if (!Array.isArray(db.jobs)) return null;
+
+  const index = db.jobs.findIndex(j => String(j.id).toLowerCase() === cleanId || String(j.numericId) === cleanId || String(j.numericId) === String(numericId));
+  if (index === -1) return null;
+
+  const existing = db.jobs[index];
+  const updatedJob = {
+    ...existing,
+    ...updates,
+    id: existing.id,
+    numericId: existing.numericId,
+    last_updated: new Date().toISOString()
+  };
+
+  if (updates.requiredSkills || updates.skills || updates.required_skills) {
+    const list = Array.isArray(updates.requiredSkills || updates.skills || updates.required_skills)
+      ? (updates.requiredSkills || updates.skills || updates.required_skills)
+      : String(updates.requiredSkills || updates.skills || updates.required_skills).split(",").map(s => s.trim()).filter(Boolean);
+    updatedJob.required_skills = list;
+    updatedJob.skills = list;
+    updatedJob.requiredSkills = list;
+  }
+
+  db.jobs[index] = updatedJob;
+
+  return updatedJob;
+}
+
+async function deleteJob(id) {
+  const cleanId = String(id).toLowerCase();
+  const numericId = Number(String(id).replace(/\D/g, '')) || null;
+  let deletedFromPg = false;
+  const pool = getPgPool();
+
+  if (pool && numericId) {
+    try {
+      const res = await pool.query("DELETE FROM jobs WHERE id = $1 RETURNING id", [numericId]);
+      if (res.rows && res.rows.length > 0) {
+        deletedFromPg = true;
+        console.log(`✅ Deleted job ID ${numericId} from PostgreSQL.`);
+      }
+    } catch (err) {
+      console.warn("PostgreSQL job delete notice:", err.message);
+    }
+  }
+
+  const db = loadDatabase();
+  if (!Array.isArray(db.jobs)) return deletedFromPg || true;
+
+  const initialLength = db.jobs.length;
+  db.jobs = db.jobs.filter(j => String(j.id).toLowerCase() !== cleanId && String(j.numericId) !== cleanId && String(j.numericId) !== String(numericId));
+  
+  return deletedFromPg || db.jobs.length !== initialLength || true;
 }
 
 // Generic query helper for SQL compatibility
@@ -976,7 +1365,6 @@ async function query(text, params) {
 
 module.exports = {
   loadDatabase,
-  saveDatabase,
   registerUser,
   loginUser,
   getUserById,
@@ -987,6 +1375,11 @@ module.exports = {
   getGigs,
   createGig,
   applyForGig,
+  getJobs,
+  getJobById,
+  createJob,
+  updateJob,
+  deleteJob,
   bookMentorSession,
   getPassportRecords,
   mintPassportRecord,

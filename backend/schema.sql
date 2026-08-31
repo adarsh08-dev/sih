@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'company', 'admin')),
+    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'company', 'admin', 'hod')),
     student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
     mentor_id INTEGER REFERENCES mentors(id) ON DELETE SET NULL,
     company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
@@ -115,6 +115,26 @@ CREATE TABLE IF NOT EXISTS helpdesk_tickets (
     priority VARCHAR(50) DEFAULT 'medium',
     status VARCHAR(50) DEFAULT 'open',
     ai_summary TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 12. RECRUITER JOB POSTINGS
+CREATE TABLE IF NOT EXISTS jobs (
+    id SERIAL PRIMARY KEY,
+    company_id INT REFERENCES companies(id) ON DELETE SET NULL,
+    company VARCHAR(150) NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    location VARCHAR(150) DEFAULT 'Remote',
+    type VARCHAR(50) DEFAULT 'Full-Time',
+    duration VARCHAR(50) DEFAULT 'Full-Time',
+    stipend VARCHAR(100) DEFAULT 'Competitive',
+    openings INT DEFAULT 1,
+    required_skills TEXT[] DEFAULT '{}',
+    eligibility VARCHAR(200),
+    description TEXT,
+    deadline VARCHAR(50),
+    status VARCHAR(30) DEFAULT 'Active',
+    apps INT DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -145,6 +165,16 @@ VALUES
 (3, 3, 'SQL Business Analytics Challenge', 'Write analytical queries for financial reports', 'SQL', 3, 1800.00, 'open')
 ON CONFLICT (id) DO NOTHING;
 
+INSERT INTO jobs (id, company_id, company, title, location, type, duration, stipend, openings, required_skills, eligibility, description, deadline, status, apps)
+VALUES
+(1, 1, 'TechNova Solutions', 'Software Engineer Intern', 'Bengaluru', 'Hybrid', '6 Months', '₹25,000/month', 8, ARRAY['React', 'Node.js', 'PostgreSQL'], 'B.Tech CSE/IT 2026/2027', 'Work on high-scale cloud-native web microservices and UI components.', '2026-09-15', 'Active', 64),
+(2, 2, 'PixelWorks Digital', 'Frontend Developer Intern', 'Remote', 'Remote', '3 Months', '₹20,000/month', 5, ARRAY['React', 'TypeScript', 'Tailwind CSS'], 'All Engineering Branches', 'Build responsive interactive dashboards and accessible user components.', '2026-09-20', 'Active', 41),
+(3, 3, 'DataSphere Analytics', 'Data Analyst Intern', 'Noida', 'In-Office', '6 Months', '₹22,000/month', 3, ARRAY['Python', 'SQL', 'Power BI'], 'B.Tech / MCA / Data Science', 'Perform cohort queries, pipeline automation and KPI dashboard visualizations.', '2026-09-25', 'Active', 28),
+(4, 1, 'CloudMatrix Systems', 'Java Cloud Developer', 'Pune', 'In-Office', 'Full-Time', '₹8.5 LPA', 2, ARRAY['Java', 'Spring Boot', 'AWS'], 'B.Tech CSE / IT 2025/2026', 'Develop mission critical backend services and Kubernetes deployments.', '2026-10-01', 'Active', 31),
+(5, 2, 'AI Labs Global', 'ML Engineer Intern', 'Hyderabad', 'Hybrid', '6 Months', '₹30,000/month', 4, ARRAY['Python', 'PyTorch', 'FastAPI'], 'B.Tech CSE / AI Specialization', 'Train, benchmark and deploy generative models and predictive algorithms.', '2026-09-30', 'Active', 20),
+(6, 3, 'NexaCloud Infrastructure', 'Cloud Support Associate', 'Bengaluru', 'In-Office', 'Full-Time', '₹7.2 LPA', 10, ARRAY['Linux', 'Docker', 'Bash'], 'B.Tech / BCA 2026', 'Assist enterprise clients in cloud migrations, monitoring and SLAs.', '2026-10-15', 'Draft', 18)
+ON CONFLICT (id) DO NOTHING;
+
 -- SYNC SEQUENCES WITH SEEDED IDS
 SELECT setval('students_id_seq', (SELECT COALESCE(MAX(id), 1) FROM students));
 SELECT setval('companies_id_seq', (SELECT COALESCE(MAX(id), 1) FROM companies));
@@ -152,4 +182,5 @@ SELECT setval('mentors_id_seq', (SELECT COALESCE(MAX(id), 1) FROM mentors));
 SELECT setval('gigs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM gigs));
 SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users));
 SELECT setval('helpdesk_tickets_id_seq', (SELECT COALESCE(MAX(id), 1) FROM helpdesk_tickets));
+SELECT setval('jobs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM jobs));
 

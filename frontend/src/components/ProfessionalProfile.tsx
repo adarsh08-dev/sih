@@ -288,8 +288,8 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
         onClick={onClose}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#0B0F2A] border-l border-white/10 shadow-2xl flex flex-col justify-between text-slate-100 animate-in slide-in-from-right duration-300">
+      <div className="fixed inset-y-0 left-0 max-w-full flex pr-10">
+        <div className="w-screen max-w-md bg-[#0B0F2A] border-r border-white/10 shadow-2xl flex flex-col justify-between text-slate-100 animate-in slide-in-from-left duration-300">
           
           {/* Scrollable Main Area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/10">

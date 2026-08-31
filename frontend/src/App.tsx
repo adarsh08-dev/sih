@@ -22,7 +22,6 @@ import { CertificationsAchievementsView } from './pages/CertificationsAchievemen
 import { ResumePortfolioView } from './pages/ResumePortfolioView';
 import { AICareerAdvisorView } from './pages/AICareerAdvisorView';
 
-import { GhostInternshipView } from './pages/GhostInternshipView';
 import { MicroGigsView } from './pages/MicroGigsView';
 import { MentorCapsulesView } from './pages/MentorCapsulesView';
 import { ExperiencePassportView } from './pages/ExperiencePassportView';
@@ -398,11 +397,21 @@ export const App: React.FC = () => {
             {currentRole === 'company' && (
               <>
                 {activeTab === 'dashboard' && <RecruiterDashboard />}
-                {activeTab === 'discover-talent' && <TalentDiscovery />}
+                {activeTab === 'discover-talent' && <TalentDiscovery onNavigate={(t) => setActiveTab(t)} />}
                 {activeTab === 'applications' && <ApplicationsPage />}
                 {activeTab === 'shortlisted' && <ShortlistedPage />}
-                {activeTab === 'job-postings' && <JobPostingsPage />}
-                {activeTab === 'post-job' && <PostJobPage />}
+                {activeTab === 'job-postings' && (
+                  <JobPostingsPage 
+                    onNavigate={(t) => setActiveTab(t)} 
+                    onShowToast={showToast} 
+                  />
+                )}
+                {activeTab === 'post-job' && (
+                  <PostJobPage 
+                    onNavigate={(t) => setActiveTab(t)} 
+                    onShowToast={showToast} 
+                  />
+                )}
                 {activeTab === 'interviews' && <InterviewsPage />}
                 {activeTab === 'campus-drives' && <CampusDrivesPage />}
                 {activeTab === 'internship-programs' && <InternshipProgramsPage />}
@@ -413,7 +422,7 @@ export const App: React.FC = () => {
                 {activeTab === 'company-profile' && <CompanyProfilePage />}
                 {activeTab === 'messages' && <MessagesPage />}
                 {activeTab === 'notifications' && <NotificationsPage />}
-                {activeTab === 'settings' && <SettingsPage />}
+                {activeTab === 'settings' && <SettingsPage onShowToast={showToast} />}
               </>
             )}
 
@@ -513,10 +522,6 @@ export const App: React.FC = () => {
                     student={student}
                     onNavigateTab={(t) => setActiveTab(t)}
                   />
-                )}
-
-                {activeTab === 'ghost' && (
-                  <GhostInternshipView onMintPassport={handleMintPassport} />
                 )}
 
                 {activeTab === 'gigs' && (
