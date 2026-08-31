@@ -112,6 +112,8 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
   const [isLocationRefreshing, setIsLocationRefreshing] = useState(false);
   const [locationSuccess, setLocationSuccess] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [isManualLocation, setIsManualLocation] = useState(false);
+  const [tempLocation, setTempLocation] = useState('');
 
   // Edit Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -142,6 +144,16 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
       setEditCompany(fresh.company || '');
     }
   }, [isOpen]);
+
+  const handleManualLocationSubmit = () => {
+    if (!tempLocation.trim()) return;
+    const updatedProfile = { ...p, location: tempLocation };
+    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+    localStorage.setItem('userLocation', tempLocation);
+    setP(updatedProfile);
+    setIsManualLocation(false);
+    setLocationError(null);
+  };
 
   // GPS Location refresh function
   const refreshLocation = useCallback(async () => {
@@ -398,48 +410,67 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
               {/* Location Row: [pulsing dot 6px #7C5CFC] [text 12px white/60 p.location] [Refresh Button 26x26] */}
               <div className="flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1">
-                  <span className={`w-1.5 h-1.5 rounded-full ${locationSuccess ? 'bg-emerald-400' : 'bg-[#7C5CFC]'} animate-pulse`} />
-                  <span className="text-xs text-white/60 font-medium">
-                    {p.location || 'Lucknow, Uttar Pradesh, India'}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={refreshLocation}
-                    disabled={isLocationRefreshing}
-                    className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
-                    title="Refresh GPS Coordinates"
-                  >
-                    {locationSuccess ? (
-                      <Check className="w-3 h-3 text-emerald-400" />
-                    ) : (
-                      <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#7C5CFC]' : ''}`} />
-                    )}
-                  </button>
-                </div>
+                {isManualLocation ? (
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full pl-4 pr-1 py-1 mt-1">
+                    <input
+                      type="text"
+                      autoFocus
+                      className="bg-transparent text-xs text-white outline-none w-40"
+                      placeholder="Enter City, State, Country"
+                      value={tempLocation}
+                      onChange={(e) => setTempLocation(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleManualLocationSubmit()}
+                    />
+                    <button
+                      onClick={handleManualLocationSubmit}
+                      className="bg-[#7C5CFC] text-white p-1 rounded-full hover:bg-[#6D4AE0]"
+                    >
+                      <Check className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => setIsManualLocation(false)}
+                      className="text-white/40 hover:text-white px-2"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1">
+                    <span className={`w-1.5 h-1.5 rounded-full ${locationSuccess ? 'bg-emerald-400' : 'bg-[#7C5CFC]'} animate-pulse`} />
+                    <span className="text-xs text-white/60 font-medium">
+                      {p.location || 'Lucknow, Uttar Pradesh, India'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={refreshLocation}
+                      disabled={isLocationRefreshing}
+                      className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
+                      title="Refresh GPS Coordinates"
+                    >
+                      {locationSuccess ? (
+                        <Check className="w-3 h-3 text-emerald-400" />
+                      ) : (
+                        <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#7C5CFC]' : ''}`} />
+                      )}
+                    </button>
+                  </div>
+                )}
 
-                {locationError && (
+                {locationError && !isManualLocation && (
                   <div className="flex flex-col items-center gap-1">
-                    <div className="flex items-center gap-1.5 text-[10px] text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
-                      <Info className="w-3 h-3" />
-                      <span>{locationError}</span>
+                    <div className="flex items-center gap-1.5 text-[10px] text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20 max-w-[280px]">
+                      <Info className="w-3 h-3 shrink-0" />
+                      <span className="truncate">{locationError}</span>
                       <button 
-                        onClick={refreshLocation}
-                        className="underline hover:text-white ml-1 font-bold"
+                        onClick={() => {
+                          setTempLocation(p.location || '');
+                          setIsManualLocation(true);
+                        }}
+                        className="underline hover:text-white ml-1 font-bold whitespace-nowrap"
                       >
-                        Retry
+                        Edit Manually
                       </button>
                     </div>
-                    {locationError.includes('denied') && (
-                      <a 
-                        href="https://support.google.com/chrome/answer/142065?hl=en" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[9px] text-indigo-400 hover:text-indigo-300 underline"
-                      >
-                        How to enable location in browser
-                      </a>
-                    )}
                   </div>
                 )}
               </div>
@@ -595,7 +626,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
           {/* Footer Ribbon */}
           <div className="p-4 border-t border-white/10 bg-[#090E2B] flex items-center justify-between text-xs text-white/50">
-            <span>Ladder AI · SIH26044</span>
+            <span>Ladder AI</span>
             <span className="text-[10px] text-[#7C5CFC]">v2.4.0 Live</span>
           </div>
         </div>

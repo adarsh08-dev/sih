@@ -317,9 +317,6 @@ export const Register: React.FC<RegisterProps> = ({
             <div>
               <h2 className="text-base font-extrabold text-white flex items-center gap-2">
                 <span>Ladder</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30">
-                  SIH26044
-                </span>
               </h2>
               <p className="text-xs text-white/45">3-Pathway Academic & Industry Onboarding</p>
             </div>

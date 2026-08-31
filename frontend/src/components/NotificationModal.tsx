@@ -52,7 +52,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Live Workspace Alerts</h3>
-              <p className="text-[11px] text-slate-400">SIH26044 Real-time Notification Engine</p>
+              <p className="text-[11px] text-slate-400">Real-time Notification Engine</p>
             </div>
           </div>
 

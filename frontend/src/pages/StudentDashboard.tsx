@@ -93,10 +93,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="max-w-xl">
-            <div className="text-[11px] tracking-[1.4px] text-white/35 font-medium uppercase mb-3 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#8B7CF8]" />
-              AI CAREER & PLACEMENT ENGINE
-            </div>
+
 
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
               Welcome back, {student?.name?.split(' ')[0] || 'Adarsh'}

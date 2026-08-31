@@ -799,7 +799,7 @@ export const INITIAL_ACHIEVEMENTS: AchievementItem[] = [
     organization: 'Ministry of Education & AICTE',
     date: 'July 2026',
     category: 'Hackathon',
-    awardRank: 'Top 5 National Finalist (Problem SIH26044)',
+    awardRank: 'Top 5 National Finalist (Problem)',
     description: 'Architected the unified industry-academia skill matchmaking OS with automated blockchain verified passport credentialing.',
     status: 'Verified'
   },

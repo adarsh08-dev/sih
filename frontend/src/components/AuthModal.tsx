@@ -194,7 +194,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             L
           </div>
           <h2 className="text-lg font-extrabold text-white">Ladder</h2>
-          <p className="text-xs text-white/40 mt-0.5">SIH26044 · Dynamic Authentication & Academic OS</p>
+          <p className="text-xs text-white/40 mt-0.5">Dynamic Authentication & Academic OS</p>
         </div>
 
         {/* 1-Click Role Switcher Presets */}

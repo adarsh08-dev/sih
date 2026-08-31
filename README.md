@@ -1,4 +1,4 @@
-# Ladder | Industry Career OS (SIH26044)
+# Ladder | Industry Career OS ()
 
 Ladder is an AI-powered Industry Career OS designed to bridge the gap between academic institutions, students, industry mentors, and hiring companies through verifiable micro-internships, intelligent mentor matching, skill gap analytics, and digital experience passports.
 

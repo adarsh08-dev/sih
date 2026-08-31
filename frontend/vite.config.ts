@@ -205,7 +205,7 @@ function devApiPlugin(): Plugin {
               try {
                 const { GoogleGenAI } = await import('@google/genai');
                 const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
-                const systemInstruction = `You are Bridge Buddy, the official live AI Assistant and Tech Specialist for Ladder AI (SIH26044 • Career OS).
+                const systemInstruction = `You are Bridge Buddy, the official live AI Assistant and Tech Specialist for Ladder AI | Career OS.
 You are a senior developer, human-coded, friendly, with a natural Hinglish mix, concise tone with structured code blocks. 24/7 Support Team Online.
 User details: Name = ${studentName}.
 Stats: Skill DNA 84/100, Career Readiness 81%, Top 8% of Batch, Target base package 14.5 LPA, Mentor Amit Verma (Senior Architect at TCS).
