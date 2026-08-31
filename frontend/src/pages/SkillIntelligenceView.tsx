@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Cpu, 
   Sparkles, 
@@ -8,180 +8,228 @@ import {
   ArrowRight,
   BookOpen,
   Code,
-  Layers
+  Layers,
+  Award,
+  Search,
+  Check,
+  Zap,
+  BarChart3
 } from 'lucide-react';
+import { SkillItem } from '../types';
+import { INITIAL_SKILLS, calculateOverallSkillScore, calculateTechnicalSkillScore, calculateSoftSkillScore } from '../data/portalData';
+import { getStudentSkills } from '../services/studentCareerService';
 
 interface SkillIntelligenceProps {
-  onNavigateToGigs: () => void;
+  onNavigateToGigs?: () => void;
+  onNavigateToAssessment?: () => void;
+  onNavigateToLearning?: () => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
-export const SkillIntelligenceView: React.FC<SkillIntelligenceProps> = ({ onNavigateToGigs }) => {
-  const [selectedDomain, setSelectedDomain] = useState<'backend' | 'cloud' | 'frontend' | 'ai'>('backend');
-
-  const skillsData = [
-    {
-      name: 'Backend Architecture',
-      category: 'backend',
-      currentScore: 42,
-      targetScore: 92,
-      severity: 'Critical Gap',
-      severityColor: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
-      actionTitle: 'Build Authenticated REST Microservices',
-      courseRecommendation: 'Design Patterns & Distributed Systems Capsule'
-    },
-    {
-      name: 'REST API & JWT Security',
-      category: 'backend',
-      currentScore: 55,
-      targetScore: 86,
-      severity: 'High Gap',
-      severityColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
-      actionTitle: 'Complete Token Blacklisting Middleware',
-      courseRecommendation: 'Zero-Leak JWT Middleware Sandbox'
-    },
-    {
-      name: 'PostgreSQL Query Optimization',
-      category: 'backend',
-      currentScore: 61,
-      targetScore: 88,
-      severity: 'Medium Gap',
-      severityColor: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-      actionTitle: 'Index Optimization on Cohort Tables',
-      courseRecommendation: 'Database Internals Masterclass'
-    },
-    {
-      name: 'Containerization & Docker',
-      category: 'cloud',
-      currentScore: 57,
-      targetScore: 78,
-      severity: 'Medium Gap',
-      severityColor: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-      actionTitle: 'Multi-stage Dockerfile Packaging',
-      courseRecommendation: 'Cloud Deployment Capsule'
-    },
-    {
-      name: 'React 18 & State Virtualization',
-      category: 'frontend',
-      currentScore: 84,
-      targetScore: 85,
-      severity: 'Mastered',
-      severityColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-      actionTitle: 'Zero-Layout Shift Data Grid',
-      courseRecommendation: 'Verified Passport Badge Active'
-    },
-    {
-      name: 'LLM & Gemini API Integration',
-      category: 'ai',
-      currentScore: 78,
-      targetScore: 82,
-      severity: 'Mastered',
-      severityColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-      actionTitle: 'Prompt Chaining & System Diagnostics',
-      courseRecommendation: 'GenAI SDK Certification'
+export const SkillIntelligenceView: React.FC<SkillIntelligenceProps> = ({ 
+  onNavigateToGigs,
+  onNavigateToAssessment,
+  onNavigateToLearning,
+  onNavigateTab
+}) => {
+  const [skills, setSkills] = useState<SkillItem[]>(() => {
+    try {
+      const stored = getStudentSkills();
+      if (stored && stored.length > 0) {
+        return stored.map((s, idx) => ({
+          id: s.id || `sk-${idx}`,
+          name: s.name,
+          category: (s.category === 'soft' ? 'soft' : 'technical') as 'technical' | 'soft' | 'aptitude',
+          level: s.currentLevel || 3,
+          maxLevel: 5,
+          score: s.score || 75,
+          requiredLevel: s.requiredLevel || 4,
+          verified: s.verified !== false,
+          assessmentsCompleted: s.assessmentsCompleted || 2,
+          gigsCompleted: s.gigsCompleted || 1,
+          trend: 'up' as const
+        }));
+      }
+    } catch {
+      // fallback
     }
-  ];
+    return INITIAL_SKILLS;
+  });
 
-  const filteredSkills = skillsData.filter(s => selectedDomain === 'backend' ? true : s.category === selectedDomain);
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'technical' | 'soft'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const overall = calculateOverallSkillScore(skills);
+  const tech = calculateTechnicalSkillScore(skills);
+  const soft = calculateSoftSkillScore(skills);
+
+  const handleNavAssessment = () => {
+    if (onNavigateToAssessment) onNavigateToAssessment();
+    else if (onNavigateTab) onNavigateTab('assessment');
+  };
+
+  const handleNavLearning = () => {
+    if (onNavigateToLearning) onNavigateToLearning();
+    else if (onNavigateTab) onNavigateTab('learning');
+  };
+
+  const handleNavGigs = () => {
+    if (onNavigateToGigs) onNavigateToGigs();
+    else if (onNavigateTab) onNavigateTab('gigs');
+  };
+
+  const filteredSkills = skills.filter(s => {
+    const matchesCat = selectedCategory === 'all' || s.category === selectedCategory;
+    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
 
   return (
     <div className="space-y-6 animate-fade-in select-none">
       {/* Header */}
-      <div className="p-6 rounded-2xl bg-[#0E1538] border border-[#1E2964] flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-[#0E1538] border border-[#1E2964] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Cpu className="w-5 h-5 text-cyan-400" />
             <h1 className="text-xl font-extrabold text-white">Skill Intelligence & Benchmark Matrix</h1>
           </div>
           <p className="text-xs text-slate-300">
-            Real-time telemetry benchmarking your skills against <strong>Tier-1 Software Engineer Job Architectures (2026–27)</strong>.
+            Cryptographic skill telemetry benchmarking against <strong>Tier-1 Software Engineer Job Architectures (2026–27)</strong>.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <button
+          onClick={handleNavAssessment}
+          className="px-4 py-2 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4AE8] text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-purple-500/25 transition-all cursor-pointer self-start md:self-auto"
+        >
+          <Award className="w-3.5 h-3.5" />
+          <span>Take Diagnostic Assessment</span>
+        </button>
+      </div>
+
+      {/* Aggregate Score Gauges */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="p-4 rounded-xl bg-[#0B1033] border border-[#1E2B68] text-center">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Overall DNA Score</span>
+          <span className="text-2xl font-black text-[#A78BFA]">{overall}%</span>
+          <div className="w-full bg-[#182352] h-1.5 rounded-full overflow-hidden mt-2">
+            <div className="bg-gradient-to-r from-[#7C5CFC] to-[#6366F1] h-full rounded-full" style={{ width: `${overall}%` }} />
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl bg-[#0B1033] border border-[#1E2B68] text-center">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Technical Skills</span>
+          <span className="text-2xl font-black text-cyan-400">{tech}%</span>
+          <div className="w-full bg-[#182352] h-1.5 rounded-full overflow-hidden mt-2">
+            <div className="bg-cyan-400 h-full rounded-full" style={{ width: `${tech}%` }} />
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl bg-[#0B1033] border border-[#1E2B68] text-center">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Soft Skills</span>
+          <span className="text-2xl font-black text-pink-400">{soft}%</span>
+          <div className="w-full bg-[#182352] h-1.5 rounded-full overflow-hidden mt-2">
+            <div className="bg-pink-400 h-full rounded-full" style={{ width: `${soft}%` }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="p-4 rounded-xl bg-[#0B1033] border border-[#1C265E] flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search skills (e.g. Python, AWS, SQL)..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#070B1E] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#7C5CFC]"
+          />
+        </div>
+
+        <div className="flex items-center gap-1.5">
           <button
-            onClick={() => setSelectedDomain('backend')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              selectedDomain === 'backend' ? 'bg-[#7C5CFC] text-white' : 'bg-[#141C48] text-slate-300 hover:text-white'
+            onClick={() => setSelectedCategory('all')}
+            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              selectedCategory === 'all' ? 'bg-[#7C5CFC] text-white' : 'bg-[#070B1E] text-slate-400 hover:text-white'
             }`}
           >
-            All Skills
+            All ({skills.length})
           </button>
           <button
-            onClick={() => setSelectedDomain('cloud')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              selectedDomain === 'cloud' ? 'bg-[#7C5CFC] text-white' : 'bg-[#141C48] text-slate-300 hover:text-white'
+            onClick={() => setSelectedCategory('technical')}
+            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              selectedCategory === 'technical' ? 'bg-[#7C5CFC] text-white' : 'bg-[#070B1E] text-slate-400 hover:text-white'
             }`}
           >
-            Cloud / DevOps
+            Technical
           </button>
           <button
-            onClick={() => setSelectedDomain('frontend')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              selectedDomain === 'frontend' ? 'bg-[#7C5CFC] text-white' : 'bg-[#141C48] text-slate-300 hover:text-white'
+            onClick={() => setSelectedCategory('soft')}
+            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              selectedCategory === 'soft' ? 'bg-[#7C5CFC] text-white' : 'bg-[#070B1E] text-slate-400 hover:text-white'
             }`}
           >
-            Frontend
-          </button>
-          <button
-            onClick={() => setSelectedDomain('ai')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              selectedDomain === 'ai' ? 'bg-[#7C5CFC] text-white' : 'bg-[#141C48] text-slate-300 hover:text-white'
-            }`}
-          >
-            AI / LLM
+            Soft Skills
           </button>
         </div>
       </div>
 
-      {/* Skills Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredSkills.map((skill, idx) => {
-          const gapPercentage = Math.max(0, skill.targetScore - skill.currentScore);
+      {/* Skills Matrix Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredSkills.map((skill) => {
+          const isMastered = skill.level >= 4;
           return (
-            <div key={idx} className="p-5 rounded-xl bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] transition-all flex flex-col justify-between">
+            <div 
+              key={skill.id} 
+              className="p-5 rounded-2xl bg-[#0B1033] border border-[#1C265E] hover:border-[#7C5CFC] transition-all flex flex-col justify-between group shadow-lg"
+            >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-white">{skill.name}</span>
-                  <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${skill.severityColor}`}>
-                    {skill.severity}
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <span className="text-xs font-black text-white group-hover:text-[#C4B5FD] transition-colors">
+                    {skill.name}
+                  </span>
+                  <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                    skill.verified 
+                      ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' 
+                      : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                  }`}>
+                    {skill.verified ? 'Verified Ledger ✓' : 'Self-Reported'}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 my-3">
-                  <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-                    <span>Current Score: <strong className="text-white">{skill.currentScore}%</strong></span>
-                    <span>Industry Benchmark: <strong className="text-cyan-400">{skill.targetScore}%</strong></span>
-                  </div>
-                  <div className="w-full bg-[#18214D] h-2.5 rounded-full overflow-hidden relative">
-                    <div 
-                      className="bg-cyan-500 h-full rounded-full transition-all"
-                      style={{ width: `${skill.currentScore}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-slate-400">
-                    <span>Baseline</span>
-                    <span>Gap: {gapPercentage}%</span>
-                  </div>
+                <div className="flex items-center justify-between text-xs my-2">
+                  <span className="text-slate-400 font-semibold">Proficiency:</span>
+                  <span className="text-cyan-300 font-bold">Level {skill.level} of 5 ({skill.score}%)</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-[#0B1033] border border-[#1B255C] mt-3">
-                  <p className="text-[11px] font-semibold text-slate-300">
-                    🎯 <strong className="text-white">Recommended Remediation:</strong> {skill.actionTitle}
-                  </p>
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    📖 {skill.courseRecommendation}
-                  </p>
+                <div className="w-full bg-[#18214D] h-2 rounded-full overflow-hidden mb-3">
+                  <div 
+                    className={`h-full rounded-full transition-all ${
+                      isMastered ? 'bg-emerald-400' : 'bg-cyan-400'
+                    }`}
+                    style={{ width: `${skill.score}%` }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mb-4">
+                  <span>Assessments: {(skill as any).assessmentsCompleted || 2}</span>
+                  <span>Gigs verified: {(skill as any).gigsCompleted || 1}</span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#18214D] flex items-center justify-between">
-                <span className="text-[11px] text-[#A78BFA] font-semibold">Earn +{gapPercentage} Readiness Pts</span>
+              <div className="flex items-center gap-2 pt-3 border-t border-[#182352]">
                 <button
-                  onClick={onNavigateToGigs}
-                  className="px-3 py-1.5 rounded-lg bg-[#7C5CFC] hover:bg-[#6D4AE8] text-white text-xs font-bold flex items-center gap-1.5 shadow transition-all"
+                  onClick={handleNavLearning}
+                  className="flex-1 py-1.5 rounded-lg bg-[#141C48] hover:bg-[#1D296C] text-slate-200 text-xs font-bold transition-colors cursor-pointer text-center"
                 >
-                  <span>Solve in Micro-Gig</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  Bridge Gap
+                </button>
+                <button
+                  onClick={handleNavGigs}
+                  className="flex-1 py-1.5 rounded-lg bg-[#7C5CFC] hover:bg-[#6D4AE8] text-white text-xs font-bold shadow transition-all cursor-pointer text-center"
+                >
+                  Solve Gig
                 </button>
               </div>
             </div>

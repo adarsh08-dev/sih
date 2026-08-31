@@ -144,10 +144,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* STUDENT PORTAL MENU */}
           {currentRole === 'student' && (
             <>
+              {/* Category 1: Skill Diagnostic & Readiness */}
               <div>
                 {!collapsed && (
                   <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
-                    Career Hub
+                    Skill Readiness
                   </div>
                 )}
                 <div className="space-y-0.5">
@@ -184,6 +185,96 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
 
                   <button
+                    id="nav-assessment"
+                    onClick={() => handleTabClick('assessment')}
+                    title="Skill Assessment"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'assessment'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Award className="w-4 h-4 text-cyan-300 shrink-0" />
+                    {!collapsed && <span className="truncate">Skill Assessment</span>}
+                  </button>
+
+                  <button
+                    id="nav-skill-gap"
+                    onClick={() => handleTabClick('skill-gap')}
+                    title="Skill Gap Analysis"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'skill-gap'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Skill Gap Analysis</span>}
+                  </button>
+
+                  <button
+                    id="nav-learning"
+                    onClick={() => handleTabClick('learning')}
+                    title="Learning Hub"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'learning'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <GraduationCap className="w-4 h-4 text-emerald-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Learning Hub</span>}
+                  </button>
+                </div>
+              </div>
+
+              {/* Category 2: Placements & Work */}
+              <div>
+                {!collapsed && (
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                    Jobs & Experience
+                  </div>
+                )}
+                <div className="space-y-0.5">
+                  <button
+                    id="nav-jobs"
+                    onClick={() => handleTabClick('jobs')}
+                    title="Jobs & Placements"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'jobs'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <BriefcaseBusiness className="w-4 h-4 text-indigo-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Jobs & Placements</span>}
+                  </button>
+
+                  <button
+                    id="nav-tracker"
+                    onClick={() => handleTabClick('tracker')}
+                    title="Application Tracker"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'tracker'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4 text-emerald-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Application Tracker</span>}
+                  </button>
+
+                  <button
                     id="nav-gigs"
                     onClick={() => handleTabClick('gigs')}
                     title="Micro-Internship Gigs"
@@ -196,7 +287,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                   >
                     <Briefcase className="w-4 h-4 text-amber-400 shrink-0" />
-                    {!collapsed && <span className="truncate">Micro-Internship Gigs</span>}
+                    {!collapsed && <span className="truncate">Micro-Internships</span>}
+                  </button>
+
+                  <button
+                    id="nav-projects"
+                    onClick={() => handleTabClick('projects')}
+                    title="Industry Projects"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'projects'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Live Projects & Bounties</span>}
                   </button>
 
                   <button
@@ -224,13 +331,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
 
+              {/* Category 3: Career Assets & Intelligence */}
               <div>
                 {!collapsed && (
                   <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
-                    Ledger & Intelligence
+                    Credentials & AI
                   </div>
                 )}
                 <div className="space-y-0.5">
+                  <button
+                    id="nav-resume"
+                    onClick={() => handleTabClick('resume')}
+                    title="ATS Resume & Portfolio"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'resume'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
+                    {!collapsed && <span className="truncate">ATS Resume & Portfolio</span>}
+                  </button>
+
+                  <button
+                    id="nav-certs"
+                    onClick={() => handleTabClick('certs')}
+                    title="Certifications"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'certs'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Award className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!collapsed && <span className="truncate">Certifications & Badges</span>}
+                  </button>
+
                   <button
                     id="nav-passport"
                     onClick={() => handleTabClick('passport')}
@@ -248,6 +388,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
 
                   <button
+                    id="nav-advisor"
+                    onClick={() => handleTabClick('advisor')}
+                    title="AI Career Advisor"
+                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      collapsed ? 'justify-center' : ''
+                    } ${
+                      activeTab === 'advisor'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
+                    {!collapsed && <span className="truncate">AI Career Advisor</span>}
+                  </button>
+
+                  <button
                     id="nav-helpdesk"
                     onClick={() => handleTabClick('helpdesk')}
                     title="AI Help Desk & Advisor"
@@ -260,7 +416,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                   >
                     <HelpCircle className="w-4 h-4 text-violet-400 shrink-0" />
-                    {!collapsed && <span className="truncate">AI Help Desk & Advisor</span>}
+                    {!collapsed && <span className="truncate">AI Help Desk (Bridge Buddy)</span>}
                   </button>
                 </div>
               </div>

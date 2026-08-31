@@ -12,6 +12,16 @@ import { BridgeBuddy } from './components/BridgeBuddy';
 
 import { StudentDashboard } from './pages/StudentDashboard';
 import { SkillIntelligenceView } from './pages/SkillIntelligenceView';
+import { SkillAssessmentView } from './pages/SkillAssessmentView';
+import { SkillGapAnalysisView } from './pages/SkillGapAnalysisView';
+import { LearningHubView } from './pages/LearningHubView';
+import { JobsPlacementsView } from './pages/JobsPlacementsView';
+import { ApplicationsTrackerView } from './pages/ApplicationsTrackerView';
+import { ProjectsChallengesView } from './pages/ProjectsChallengesView';
+import { CertificationsAchievementsView } from './pages/CertificationsAchievementsView';
+import { ResumePortfolioView } from './pages/ResumePortfolioView';
+import { AICareerAdvisorView } from './pages/AICareerAdvisorView';
+
 import { GhostInternshipView } from './pages/GhostInternshipView';
 import { MicroGigsView } from './pages/MicroGigsView';
 import { MentorCapsulesView } from './pages/MentorCapsulesView';
@@ -21,7 +31,7 @@ import { AIHelpdeskView } from './pages/AIHelpdeskView';
 import { FacultyDashboard } from './pages/FacultyDashboard';
 import { MentorDashboard } from './pages/MentorDashboard';
 
-import { UserRole, StudentProfile, Mentor, Gig, PassportRecord } from './types';
+import { UserRole, StudentProfile, Mentor, Gig, PassportRecord, JobOpportunity } from './types';
 import { getStoredUserProfile } from './components/ProfessionalProfile';
 import { CollegeItem, COLLEGES_DATA } from './data/colleges';
 import { 
@@ -49,7 +59,7 @@ export const App: React.FC = () => {
       college: p.college || 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly',
       rollNo: p.rollNo || '22001015001',
       email: p.email || 'adarsh.pratap@mjpru.ac.in',
-      targetRole: 'Full Stack Software Engineer',
+      targetRole: 'Full-Stack Software Engineer',
       careerReadiness: 81,
       experienceScore: 64,
       dnaScores: {
@@ -352,11 +362,7 @@ export const App: React.FC = () => {
           onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
         />
 
-        {/* Dynamic Page Routing with Strict Role Guard:
-            - Student Board is ONLY for Student role
-            - Mentor Board is ONLY for Mentor role
-            - HOD Board is ONLY for HOD role
-        */}
+        {/* Dynamic Page Routing with Strict Role Guard */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-5 lg:p-7 min-w-0">
           <div className="w-full max-w-7xl mx-auto pb-12 min-w-0">
             {/* ROUTE GUARD: If role === 'hod', render ONLY HOD dashboard */}
@@ -401,7 +407,85 @@ export const App: React.FC = () => {
                 )}
 
                 {activeTab === 'skills' && (
-                  <SkillIntelligenceView onNavigateToGigs={() => setActiveTab('gigs')} />
+                  <SkillIntelligenceView 
+                    onNavigateToGigs={() => setActiveTab('gigs')}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                  />
+                )}
+
+                {activeTab === 'assessment' && (
+                  <SkillAssessmentView 
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                    onScoreUpdated={() => {
+                      showToast('Skill DNA & Readiness updated from assessment results!', 'success');
+                    }}
+                  />
+                )}
+
+                {activeTab === 'skill-gap' && (
+                  <SkillGapAnalysisView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                    onBookMentor={(topic) => {
+                      showToast(`Opened mentor booking for "${topic}"`, 'info');
+                      setActiveTab('mentors');
+                    }}
+                  />
+                )}
+
+                {activeTab === 'learning' && (
+                  <LearningHubView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                    onSkillUpdated={() => {
+                      showToast('Course module completed! Skill readiness boosted.', 'success');
+                    }}
+                  />
+                )}
+
+                {activeTab === 'jobs' && (
+                  <JobsPlacementsView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                    onApplicationCreated={() => {
+                      showToast('Application registered in tracker ledger!', 'success');
+                    }}
+                  />
+                )}
+
+                {(activeTab === 'tracker' || activeTab === 'applications') && (
+                  <ApplicationsTrackerView
+                    onNavigateTab={(t) => setActiveTab(t)}
+                  />
+                )}
+
+                {activeTab === 'projects' && (
+                  <ProjectsChallengesView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                  />
+                )}
+
+                {activeTab === 'certs' && (
+                  <CertificationsAchievementsView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                  />
+                )}
+
+                {activeTab === 'resume' && (
+                  <ResumePortfolioView
+                    student={student}
+                    onOpenProfile={() => setIsProfileOpen(true)}
+                  />
+                )}
+
+                {activeTab === 'advisor' && (
+                  <AICareerAdvisorView
+                    student={student}
+                    onNavigateTab={(t) => setActiveTab(t)}
+                  />
                 )}
 
                 {activeTab === 'ghost' && (
