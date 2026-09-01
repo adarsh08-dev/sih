@@ -175,13 +175,24 @@ VALUES
 (6, 3, 'NexaCloud Infrastructure', 'Cloud Support Associate', 'Bengaluru', 'In-Office', 'Full-Time', '₹7.2 LPA', 10, ARRAY['Linux', 'Docker', 'Bash'], 'B.Tech / BCA 2026', 'Assist enterprise clients in cloud migrations, monitoring and SLAs.', '2026-10-15', 'Draft', 18)
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO users (id, name, email, password_hash, role, student_id, mentor_id, company_id)
-VALUES
-(1, 'Adarsh Pratap Singh', 'adarsh@mjpru.ac.in', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'student', 1, NULL, NULL),
-(2, 'Amit Verma', 'amit.verma@tcs.com', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'mentor', NULL, 1, NULL),
-(3, 'Dr. Arvind K. Sharma', 'hod.csit@mjpru.ac.in', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'hod', NULL, NULL, NULL),
-(4, 'Rahul Mehta', 'recruiter@technova.com', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'recruiter', NULL, NULL, 1)
-ON CONFLICT (id) DO NOTHING;
+-- 11. STUDENT PIPELINE (Mentorship Funnel)
+CREATE TABLE IF NOT EXISTS student_pipeline (
+    id SERIAL PRIMARY KEY,
+    student_id INT,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(150),
+    course VARCHAR(150),
+    year VARCHAR(50),
+    stage VARCHAR(50) DEFAULT 'Applied',
+    skills TEXT[],
+    mentor_id INT REFERENCES mentors(id) ON DELETE SET NULL,
+    mentor_name VARCHAR(150),
+    mentor_role VARCHAR(150),
+    mentor_company VARCHAR(150),
+    next_action TEXT,
+    updated_at VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- SYNC SEQUENCES WITH SEEDED IDS
 SELECT setval('students_id_seq', (SELECT COALESCE(MAX(id), 1) FROM students));
@@ -191,4 +202,6 @@ SELECT setval('gigs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM gigs));
 SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users));
 SELECT setval('helpdesk_tickets_id_seq', (SELECT COALESCE(MAX(id), 1) FROM helpdesk_tickets));
 SELECT setval('jobs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM jobs));
+SELECT setval('student_pipeline_id_seq', (SELECT COALESCE(MAX(id), 1) FROM student_pipeline));
+
 

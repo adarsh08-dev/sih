@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   CheckCircle2, 
@@ -9,21 +9,52 @@ import {
   MessageSquare, 
   ShieldCheck, 
   Award, 
-  Sparkles,
-  Plus,
-  ExternalLink,
-  ChevronRight,
-  Briefcase
+  Sparkles, 
+  Plus, 
+  ExternalLink, 
+  ChevronRight, 
+  Briefcase,
+  UserCheck,
+  Terminal,
+  Layers,
+  LayoutGrid
 } from 'lucide-react';
 import { Mentor, Gig, PassportRecord } from '../types';
 import { mintPassportRecord, createGig } from '../services/api';
+import { MentorPipelineView } from './MentorPipelineView';
 
 interface MentorDashboardProps {
   onShowToast: (msg: string, type?: 'success' | 'info' | 'error') => void;
+  activeTab?: string;
+  onNavigateTab?: (tab: string) => void;
 }
 
-export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast }) => {
-  const [activeTab, setActiveTab] = useState<'capsules' | 'reviews' | 'postgig'>('capsules');
+export const MentorDashboard: React.FC<MentorDashboardProps> = ({ 
+  onShowToast, 
+  activeTab: externalTab,
+  onNavigateTab 
+}) => {
+  const [internalTab, setInternalTab] = useState<'pipeline' | 'capsules' | 'reviews' | 'postgig'>('pipeline');
+
+  useEffect(() => {
+    if (externalTab === 'mentor-pipeline' || externalTab === 'dashboard') {
+      setInternalTab('pipeline');
+    } else if (externalTab === 'mentor-capsules') {
+      setInternalTab('capsules');
+    } else if (externalTab === 'mentor-reviews') {
+      setInternalTab('reviews');
+    }
+  }, [externalTab]);
+
+  const activeTab = internalTab;
+  const setActiveTab = (tab: 'pipeline' | 'capsules' | 'reviews' | 'postgig') => {
+    setInternalTab(tab);
+    if (onNavigateTab) {
+      if (tab === 'pipeline') onNavigateTab('mentor-pipeline');
+      else if (tab === 'capsules') onNavigateTab('mentor-capsules');
+      else if (tab === 'reviews') onNavigateTab('mentor-reviews');
+    }
+  };
 
   // New Gig Form State for Mentor
   const [gigTitle, setGigTitle] = useState('');
@@ -49,6 +80,22 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
       topic: 'PostgreSQL Indexing & High Concurrency Design',
       timeSlot: 'Tomorrow, 11:30 AM (15 Mins)',
       status: 'Confirmed'
+    },
+    {
+      id: 'cap-3',
+      studentName: 'Rohan Joshi',
+      college: 'KNIT Sultanpur',
+      topic: 'Frontend State Architecture & Realtime WebSockets',
+      timeSlot: 'Thursday, 3:00 PM (30 Mins)',
+      status: 'Confirmed'
+    },
+    {
+      id: 'cap-4',
+      studentName: 'Meera Iyer',
+      college: 'College of Engineering Guindy',
+      topic: 'API Threat Modeling & Zero-Trust Authentication',
+      timeSlot: 'Friday, 4:30 PM (15 Mins)',
+      status: 'Confirmed'
     }
   ]);
 
@@ -64,6 +111,15 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
     },
     {
       id: 'rev-2',
+      studentName: 'Vikram Choudhury',
+      taskTitle: 'Ghost Task: High-Throughput gRPC Service with Distributed Tracing',
+      submittedAt: '4 hours ago',
+      testsPassed: '5/5 (100%)',
+      repoUrl: 'https://github.com/aryan-11825114/sih',
+      status: 'pending'
+    },
+    {
+      id: 'rev-3',
       studentName: 'Rohan Joshi',
       taskTitle: 'Micro-Gig: PostgreSQL Query Optimization & Pool Tuning',
       submittedAt: '5 hours ago',
@@ -80,7 +136,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
         title: taskTitle,
         company: 'Tata Consultancy Services',
         score: 96,
-        skillsVerified: ['Node.js', 'Express', 'JWT Auth', 'PostgreSQL']
+        skillsVerified: ['Node.js', 'Express', 'JWT Auth', 'PostgreSQL', 'Redis']
       });
     } catch (e) {}
 
@@ -89,7 +145,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
   };
 
   const handleLaunchMeeting = (studentName: string) => {
-    onShowToast(`Launching 15-Minute Capsule Meeting Room for ${studentName}...`, 'info');
+    onShowToast(`Launching 15-Minute Capsule Meeting Room with ${studentName}...`, 'info');
   };
 
   const handleCreateMentorGig = async (e: React.FormEvent) => {
@@ -118,49 +174,50 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
 
   return (
     <div className="space-y-6 animate-fade-in select-none">
-      {/* Header */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#141C48] via-[#10173F] to-[#0A0F2E] border border-[#1E2B68] flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/15 border border-pink-500/30 text-pink-300 text-[11px] font-bold tracking-wide uppercase mb-2">
-            <Users className="w-3.5 h-3.5" />
-            <span>Industry Mentor Console · TCS Enterprise</span>
-          </div>
-          <h1 className="text-2xl font-black text-white">Amit Verma</h1>
-          <p className="text-xs text-slate-300">
-            Lead Software Architect · Tata Consultancy Services · 12+ Yrs Experience
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          <div className="p-3 rounded-xl bg-[#0E1538] border border-[#1E2964] text-center">
-            <span className="text-[10px] text-slate-400 font-bold uppercase block">Total Mentored</span>
-            <span className="text-sm font-black text-emerald-400">48 Students</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
+      {/* Top Navigation Tabs */}
       <div className="flex items-center gap-2 border-b border-[#18214D] pb-3 overflow-x-auto">
         <button
-          onClick={() => setActiveTab('capsules')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
-            activeTab === 'capsules' ? 'bg-[#7C5CFC] text-white shadow-md' : 'bg-[#0E1538] border border-[#1E2964] text-slate-300'
+          onClick={() => setActiveTab('pipeline')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 ${
+            activeTab === 'pipeline' 
+              ? 'bg-[#7C5CFC] text-white shadow-lg shadow-purple-500/25' 
+              : 'bg-[#0E1538] border border-[#1E2964] text-slate-300 hover:text-white'
           }`}
         >
-          Scheduled 15-Min Capsules ({capsuleBookings.length})
+          <UserCheck className="w-4 h-4 text-emerald-400" />
+          <span>Student Pipeline Funnel</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('capsules')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 ${
+            activeTab === 'capsules' 
+              ? 'bg-[#7C5CFC] text-white shadow-lg shadow-purple-500/25' 
+              : 'bg-[#0E1538] border border-[#1E2964] text-slate-300 hover:text-white'
+          }`}
+        >
+          <Video className="w-4 h-4 text-pink-400" />
+          <span>15-Min Capsule Slots ({capsuleBookings.length})</span>
+        </button>
+
         <button
           onClick={() => setActiveTab('reviews')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
-            activeTab === 'reviews' ? 'bg-[#7C5CFC] text-white shadow-md' : 'bg-[#0E1538] border border-[#1E2964] text-slate-300'
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 ${
+            activeTab === 'reviews' 
+              ? 'bg-[#7C5CFC] text-white shadow-lg shadow-purple-500/25' 
+              : 'bg-[#0E1538] border border-[#1E2964] text-slate-300 hover:text-white'
           }`}
         >
-          Pending Deliverable Reviews ({pendingReviews.length})
+          <Terminal className="w-4 h-4 text-amber-400" />
+          <span>Pending Deliverable Reviews ({pendingReviews.length})</span>
         </button>
+
         <button
           onClick={() => setActiveTab('postgig')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
-            activeTab === 'postgig' ? 'bg-[#7C5CFC] text-white shadow-md' : 'bg-[#0E1538] border border-[#1E2964] text-slate-300'
+            activeTab === 'postgig' 
+              ? 'bg-[#7C5CFC] text-white shadow-lg shadow-purple-500/25' 
+              : 'bg-[#0E1538] border border-[#1E2964] text-slate-300 hover:text-white'
           }`}
         >
           <Plus className="w-3.5 h-3.5" />
@@ -168,12 +225,27 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
         </button>
       </div>
 
-      {/* 1. SCHEDULED CAPSULES */}
+      {/* 1. STUDENT PIPELINE VIEW */}
+      {activeTab === 'pipeline' && (
+        <MentorPipelineView onShowToast={onShowToast} onNavigateTab={onNavigateTab} />
+      )}
+
+      {/* 2. SCHEDULED CAPSULES */}
       {activeTab === 'capsules' && (
         <div className="space-y-4 animate-fade-in">
+          <div className="p-4 rounded-xl bg-[#0E1538] border border-[#1E2964] flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-bold text-white">Scheduled 15-Minute Mentorship Capsules</h2>
+              <p className="text-xs text-slate-400">Direct video consultation sprint rooms for candidate architecture reviews and career milestones.</p>
+            </div>
+            <span className="text-xs font-bold text-pink-400 bg-pink-500/10 border border-pink-500/30 px-3 py-1 rounded-lg">
+              {capsuleBookings.length} Active Sessions
+            </span>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {capsuleBookings.map((booking) => (
-              <div key={booking.id} className="p-5 rounded-2xl bg-[#0E1538] border border-[#1E2964] flex flex-col justify-between">
+              <div key={booking.id} className="p-5 rounded-2xl bg-[#0E1538] border border-[#1E2964] flex flex-col justify-between hover:border-[#7C5CFC]/40 transition-all">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-black text-white">{booking.studentName}</span>
@@ -202,7 +274,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
                     className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 shadow"
                   >
                     <Video className="w-3.5 h-3.5" />
-                    <span>Join Room</span>
+                    <span>Launch Meet</span>
                   </button>
                 </div>
               </div>
@@ -211,16 +283,26 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
         </div>
       )}
 
-      {/* 2. PENDING DELIVERABLE REVIEWS */}
+      {/* 3. PENDING DELIVERABLE REVIEWS */}
       {activeTab === 'reviews' && (
         <div className="space-y-4 animate-fade-in">
+          <div className="p-4 rounded-xl bg-[#0E1538] border border-[#1E2964] flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-bold text-white">Pending Ghost Task Code Reviews</h2>
+              <p className="text-xs text-slate-400">Verify candidate repositories, inspect automated test outputs, and sign cryptographic credentials.</p>
+            </div>
+            <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg">
+              {pendingReviews.length} Submissions Waiting
+            </span>
+          </div>
+
           {pendingReviews.length === 0 ? (
             <div className="p-8 rounded-xl bg-[#0E1538] border border-[#1E2964] text-center text-xs text-slate-400">
               No pending reviews! All candidate code submissions have been graded.
             </div>
           ) : (
             pendingReviews.map((rev) => (
-              <div key={rev.id} className="p-5 rounded-2xl bg-[#0E1538] border border-[#1E2964] space-y-3">
+              <div key={rev.id} className="p-5 rounded-2xl bg-[#0E1538] border border-[#1E2964] space-y-3 hover:border-[#7C5CFC]/40 transition-all">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-bold text-white">{rev.taskTitle}</h3>
@@ -259,7 +341,7 @@ export const MentorDashboard: React.FC<MentorDashboardProps> = ({ onShowToast })
         </div>
       )}
 
-      {/* 3. POST MICRO GIG TAB */}
+      {/* 4. POST MICRO GIG TAB */}
       {activeTab === 'postgig' && (
         <div className="p-6 rounded-2xl bg-[#0E1538] border border-[#1E2964] max-w-2xl animate-fade-in">
           <div className="flex items-center gap-2 mb-4">

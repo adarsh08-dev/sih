@@ -399,6 +399,19 @@ export const App: React.FC = () => {
           onRoleChange={handleRoleChange}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          onNavigateTab={(tab) => setActiveTab(tab)}
+          onSelectGig={(gig) => {
+            setActiveTab('gigs');
+            setApplyingGig(gig);
+          }}
+          onSelectMentor={(mentor) => {
+            setActiveTab('mentors');
+            setBookingMentor(mentor);
+          }}
+          onShowToast={showToast}
+          gigs={gigs}
+          mentors={mentors}
+          passport={passport}
           onToggleMobileSidebar={() => setIsMobileMenuOpen(prev => !prev)}
           isSidebarCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
@@ -416,7 +429,11 @@ export const App: React.FC = () => {
 
             {/* ROUTE GUARD: If role === 'mentor', render ONLY Mentor dashboard */}
             {currentRole === 'mentor' && (
-              <MentorDashboard onShowToast={showToast} />
+              <MentorDashboard 
+                onShowToast={showToast} 
+                activeTab={activeTab}
+                onNavigateTab={(t) => setActiveTab(t)}
+              />
             )}
 
             {/* ROUTE GUARD: If role === 'company' / Recruiter */}

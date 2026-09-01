@@ -445,3 +445,340 @@ export interface StudentForIntervention {
   lastActivity: string;
 }
 
+export interface FdpProgram {
+  id: string;
+  title: string;
+  type: string;
+  mode: 'Online' | 'Offline' | 'Hybrid';
+  duration: string;
+  startDate: string;
+  endDate: string;
+  datesFormatted: string;
+  resourcePerson: {
+    name: string;
+    designation: string;
+    organization: string;
+    bio?: string;
+  };
+  organizingBody: string;
+  status: 'Open for Registration' | 'Upcoming' | 'Completed';
+  totalSeats: number;
+  registeredSeats: number;
+  description: string;
+  learningOutcomes: string[];
+  targetAudience: string;
+  prerequisites?: string;
+  venueOrPlatform?: string;
+  certificateAvailable?: boolean;
+  certificateDetails?: {
+    certificateId: string;
+    issueDate: string;
+    recipientName: string;
+    recipientDesignation: string;
+    grade: string;
+    accreditation: string;
+  };
+  isRegistered?: boolean;
+}
+
+export interface ConsultancyMilestone {
+  id: string;
+  title: string;
+  dueDate: string;
+  completed: boolean;
+  valueShare: string;
+}
+
+export interface ConsultancyProject {
+  id: string;
+  projectTitle: string;
+  clientOrganization: string;
+  domain: string;
+  facultyLead: string;
+  coInvestigators?: string[];
+  duration: string;
+  startDate: string;
+  endDate: string;
+  engagementType: string;
+  status: 'Ongoing' | 'Completed' | 'Proposal Stage';
+  consultancyValue: number;
+  consultancyValueFormatted: string;
+  description: string;
+  deliverables: string[];
+  milestones?: ConsultancyMilestone[];
+  contractRefNumber?: string;
+}
+
+export interface ResearchCollaboration {
+  id: string;
+  title: string;
+  partnerInstitution: string;
+  pi: string;
+  coPis?: string[];
+  fundingAgency: string;
+  grantAmount: number;
+  grantAmountFormatted: string;
+  duration: string;
+  startDate: string;
+  endDate: string;
+  status: 'Active/Ongoing' | 'Upcoming' | 'Completed' | 'Proposal Stage';
+  researchDomain: string;
+  description: string;
+  sanctionOrderNumber?: string;
+  keyDeliverables: string[];
+  publicationsExpected?: string;
+  thrustArea?: string;
+  milestones?: {
+    id: string;
+    title: string;
+    targetDate: string;
+    completed: boolean;
+    grantShare?: string;
+  }[];
+}
+
+export interface LiveIndustryProject {
+  id: string;
+  title: string;
+  clientCompany: string;
+  facultyMentor: string;
+  coMentor?: string;
+  teamSize: number;
+  teamSizeFormatted: string;
+  studentTeam: {
+    name: string;
+    rollNo: string;
+    role: string;
+    program?: string;
+  }[];
+  techStack: string[];
+  domain: string;
+  duration: string;
+  startDate: string;
+  endDate: string;
+  status: 'Active/Ongoing' | 'Upcoming' | 'Completed' | 'Proposal Stage';
+  description: string;
+  keyMilestones: {
+    id: string;
+    title: string;
+    dueDate: string;
+    completed: boolean;
+  }[];
+  githubOrJiraRef?: string;
+  stipendOrBounty?: string;
+  deliverables: string[];
+  industrySupervisor?: {
+    name: string;
+    designation: string;
+    email?: string;
+  };
+}
+
+export interface MenteeSession {
+  id: string;
+  date: string;
+  topic: string;
+  duration: string;
+  summary: string;
+  actionItems: string[];
+  completed: boolean;
+  attendance: 'Present' | 'Absent' | 'Rescheduled';
+}
+
+export interface FacultyStudentMentorship {
+  id: string;
+  studentName: string;
+  rollNo: string;
+  program: string;
+  semester: string;
+  cgpa: number;
+  email: string;
+  phone?: string;
+  mentorshipArea: string;
+  mentor: string;
+  coMentor?: string;
+  sessionsCompleted: number;
+  totalPlannedSessions: number;
+  status: 'Active/Ongoing' | 'Upcoming' | 'Completed' | 'Proposal Stage';
+  startDate: string;
+  targetCareerGoal: string;
+  skillGapsIdentified: string[];
+  strengths: string[];
+  rating: number;
+  recentNotes: string;
+  actionChecklist: {
+    id: string;
+    task: string;
+    completed: boolean;
+    dueDate?: string;
+  }[];
+  sessionLogs?: MenteeSession[];
+}
+
+export interface WorkshopGuestLecture {
+  id: string;
+  title: string;
+  type: 'Workshop' | 'Guest Lecture' | 'Hands-on Bootcamp' | 'Masterclass' | 'Industry Keynote';
+  speaker: {
+    name: string;
+    designation: string;
+    organization: string;
+    bio?: string;
+    avatarUrl?: string;
+  };
+  date: string;
+  time: string;
+  duration: string;
+  mode: 'Online' | 'Offline' | 'Hybrid';
+  venue: string;
+  attendeesCount: number;
+  maxCapacity: number;
+  status: 'Active/Ongoing' | 'Upcoming' | 'Completed' | 'Proposal Stage';
+  department: string;
+  organizingCoordinator: string;
+  description: string;
+  keyTakeaways: string[];
+  targetAudience: string;
+  recordingOrSlidesUrl?: string;
+  certificateProvided: boolean;
+  collaboratingPartner?: string;
+}
+
+// ==========================================
+// FACULTY MY APPLICATIONS & TIMELINE
+// ==========================================
+export type FacultyAppStatus = 'Under Review' | 'Approved' | 'Rejected' | 'Shortlisted' | 'In Progress';
+export type FacultyAppType = 'Research Grant' | 'Industry Fellowship' | 'FDP Participation' | 'Consultancy Bid' | 'Faculty Exchange' | 'Lab Modernization';
+
+export interface FacultyAppTimelineStep {
+  id: string;
+  title: string;
+  date: string;
+  actor: string;
+  status: 'Completed' | 'Current' | 'Pending' | 'Rejected';
+  notes?: string;
+}
+
+export interface FacultyMyApplication {
+  id: string;
+  title: string;
+  applicationType: FacultyAppType;
+  dateApplied: string;
+  status: FacultyAppStatus;
+  hostOrGrantBody: string;
+  sanctionAmountFormatted?: string;
+  reviewer: string;
+  reviewerDesignation?: string;
+  remarks: string;
+  approvalDate?: string;
+  rejectionReason?: string;
+  duration?: string;
+  submissionRefNo: string;
+  department: string;
+  documentsAttached: string[];
+  timeline: FacultyAppTimelineStep[];
+}
+
+// ==========================================
+// FACULTY MY COLLABORATIONS
+// ==========================================
+export type PartnerType = 'Academic' | 'Industry' | 'Government';
+export type CollaborationStatus = 'Ongoing' | 'Completed' | 'Proposal Stage';
+
+export interface FacultyMyCollaboration {
+  id: string;
+  title: string;
+  partnerType: PartnerType;
+  partnerName: string;
+  partnerLogoOrInitials?: string;
+  facultyRole: string; // e.g. 'Lead Principal Investigator', 'Co-Principal Investigator', 'Chief Consultant', 'Industry Liaison'
+  status: CollaborationStatus;
+  duration: string;
+  startDate: string;
+  endDate: string;
+  mouOrSanctionRef: string;
+  department: string;
+  fundingValueFormatted?: string;
+  leadCoordinator: string;
+  description: string;
+  keyDeliverables: string[];
+  contactPerson: {
+    name: string;
+    designation: string;
+    email: string;
+  };
+  milestones: {
+    id: string;
+    title: string;
+    dueDate: string;
+    completed: boolean;
+  }[];
+}
+
+// ==========================================
+// FACULTY ACHIEVEMENTS & CERTIFICATES
+// ==========================================
+export type AchievementCategory = 'Award' | 'Certification' | 'FDP Contribution' | 'Research Excellence';
+
+export interface FacultyAchievementCertificate {
+  id: string;
+  title: string;
+  issuingBody: string;
+  category: AchievementCategory;
+  dateReceived: string;
+  credentialId?: string;
+  downloadUrl?: string;
+  isPendingUpload?: boolean;
+  description: string;
+  skillsOrDomain: string[];
+  verificationBadge?: string;
+  citationOrScore?: string;
+}
+
+// ==========================================
+// ACADEMIC INTELLIGENCE TYPES
+// ==========================================
+export interface PublicationYearStat {
+  year: number;
+  count: number;
+  citations: number;
+  impactFactorAvg: number;
+}
+
+export interface DomainDistributionItem {
+  domain: string;
+  percentage: number;
+  count: number;
+  color: string;
+}
+
+export interface AcademicRecommendation {
+  id: string;
+  category: 'Grant Opportunity' | 'Citation Impact' | 'Collaboration Match' | 'Curriculum Sync';
+  title: string;
+  description: string;
+  actionLabel: string;
+  urgency: 'High' | 'Medium' | 'Low';
+  metricImpact: string;
+}
+
+export interface AcademicIntelligenceMetrics {
+  totalPublications: number;
+  hIndex: number;
+  i10Index: number;
+  totalCitations: number;
+  activeGrants: number;
+  grantValueFormatted: string;
+  grantValueNumber: number;
+  studentsSupervised: number;
+  phdScholarsCount: number;
+  ongoingCollaborations: number;
+  patentsPublished: number;
+  consultancyRevenueFormatted: string;
+  publicationTrend: PublicationYearStat[];
+  domainDistribution: DomainDistributionItem[];
+  recommendations: AcademicRecommendation[];
+}
+
+
+

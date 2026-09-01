@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Search, 
   Bell, 
   Menu, 
   LogOut, 
@@ -10,7 +9,8 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
-import { UserRole, StudentProfile } from '../types';
+import { UserRole, StudentProfile, Mentor, Gig, PassportRecord } from '../types';
+import { GlobalOmniSearch } from './GlobalOmniSearch';
 
 interface TopbarProps {
   currentRole: UserRole;
@@ -23,6 +23,13 @@ interface TopbarProps {
   onLogout: () => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  onNavigateTab?: (tab: string) => void;
+  onSelectGig?: (gig: Gig) => void;
+  onSelectMentor?: (mentor: Mentor) => void;
+  onShowToast?: (msg: string, type?: 'success' | 'info' | 'error') => void;
+  gigs?: Gig[];
+  mentors?: Mentor[];
+  passport?: PassportRecord[];
   onToggleMobileSidebar?: () => void;
   isSidebarCollapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -42,6 +49,13 @@ export const Topbar: React.FC<TopbarProps> = ({
   onLogout,
   searchQuery,
   setSearchQuery,
+  onNavigateTab = () => {},
+  onSelectGig,
+  onSelectMentor,
+  onShowToast,
+  gigs,
+  mentors,
+  passport,
   onToggleMobileSidebar,
   isSidebarCollapsed,
   onToggleCollapse,
@@ -68,8 +82,8 @@ export const Topbar: React.FC<TopbarProps> = ({
 
   return (
     <header className="h-16 shrink-0 bg-[#090E2B] border-b border-[#18214D] sticky top-0 z-30 flex items-center justify-between px-3 sm:px-6 select-none min-w-0">
-      {/* Left section: Avatar Icon + Hamburger / Collapse + Search */}
-      <div className="flex items-center gap-2 sm:gap-3 flex-1 max-w-lg min-w-0">
+      {/* Left section: Avatar Icon + Hamburger / Collapse + Global OmniSearch */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-1 max-w-2xl min-w-0">
         {/* Mobile Hamburger Toggle */}
         {onToggleMobileSidebar && (
           <button
@@ -92,7 +106,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           </button>
         )}
 
-        {/* TOP HEADER - LEFT AVATAR ICON (LinkedIn Style) */}
+        {/* TOP HEADER - LEFT AVATAR ICON */}
         <div
           onClick={onOpenProfile}
           className="w-9 h-9 min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] rounded-full flex items-center justify-center overflow-hidden shrink-0 cursor-pointer shadow-sm hover:ring-2 hover:ring-[#7C5CFC]/50 transition-all bg-[#E5E7EB]"
@@ -111,17 +125,20 @@ export const Topbar: React.FC<TopbarProps> = ({
           )}
         </div>
 
-        {/* Search input with responsive behavior */}
-        <div className="relative flex-1 min-w-0">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search skills, gigs, mentors, passports..."
-            className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-slate-200 placeholder-slate-400 text-xs rounded-xl pl-8 pr-3 py-1.5 sm:py-2 outline-none transition-all shadow-inner truncate"
-          />
-        </div>
+        {/* Full Interactive OmniSearch Bar for all 4 Portals */}
+        <GlobalOmniSearch
+          currentRole={currentRole}
+          student={student}
+          gigs={gigs}
+          mentors={mentors}
+          passport={passport}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onNavigateTab={onNavigateTab}
+          onSelectGig={onSelectGig}
+          onSelectMentor={onSelectMentor}
+          onShowToast={onShowToast}
+        />
       </div>
 
       {/* Right action controls */}
@@ -168,3 +185,4 @@ export const Topbar: React.FC<TopbarProps> = ({
     </header>
   );
 };
+

@@ -13,12 +13,19 @@ import { FacultySwapView } from './FacultySwapView';
 import { FacultyInternshipsView } from './FacultyInternshipsView';
 import { CurriculumAlignmentView } from './CurriculumAlignmentView';
 import { ResearchCollaborationView } from './ResearchCollaborationView';
+import { FdpProgramsView } from './FdpProgramsView';
+import { ConsultancyView } from './ConsultancyView';
+import { LiveIndustryProjectsView } from './LiveIndustryProjectsView';
+import { WorkshopsGuestLecturesView } from './WorkshopsGuestLecturesView';
 import { GenericFacultyView } from './GenericFacultyView';
 
 import { StudentMentorshipView } from './StudentMentorshipView';
 import { AcademicIntelligenceView } from './AcademicIntelligenceView';
 import { AiFacultyAdvisorView } from './AiFacultyAdvisorView';
 import { HODDashboardView } from './HODDashboardView';
+import { MyApplicationsView } from './MyApplicationsView';
+import { MyCollaborationsView } from './MyCollaborationsView';
+import { AchievementsCertificatesView } from './AchievementsCertificatesView';
 
 interface FacultyDashboardProps {
   onShowToast: (msg: string, type?: 'success' | 'info' | 'error') => void;
@@ -38,23 +45,24 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({ onShowToast,
       case 'industry-opportunities': return <IndustryOpportunities />;
       case 'auto-mou': return <AutoMouView />;
       case 'faculty-swap': return <FacultySwapView />;
-      case 'student-mentorship': return <StudentMentorshipView />;
-      case 'academic-intelligence': return <AcademicIntelligenceView />;
+      case 'student-mentorship': return <StudentMentorshipView onShowToast={onShowToast} />;
+      case 'academic-intelligence': return <AcademicIntelligenceView onShowToast={onShowToast} />;
+      case 'ai-faculty-advisor': return <AiFacultyAdvisorView />;
       case 'dashboard': return <HODDashboardView />;
 
       case 'curriculum-alignment': return <CurriculumAlignmentView />;
       case 'industrial-training': return <IndustrialTrainingView />;
       case 'faculty-internships': return <FacultyInternshipsView />;
-      case 'research-collaboration': return <ResearchCollaborationView />;
-      case 'consultancy': return <GenericFacultyView title="Consultancy" />;
-      case 'fdp-programs': return <GenericFacultyView title="FDP Programs" />;
-      case 'live-projects': return <GenericFacultyView title="Live Projects" />;
+      case 'research-collaboration': return <ResearchCollaborationView onShowToast={onShowToast} />;
+      case 'consultancy': return <ConsultancyView onShowToast={onShowToast} />;
+      case 'fdp-programs': return <FdpProgramsView onShowToast={onShowToast} />;
+      case 'live-projects': return <LiveIndustryProjectsView onShowToast={onShowToast} />;
       case 'collaboration-hub': return <GenericFacultyView title="Collaboration Hub" />;
-      case 'my-applications': return <GenericFacultyView title="My Applications" />;
-      case 'workshops': return <GenericFacultyView title="Workshops & Guest Lectures" />;
+      case 'my-applications': return <MyApplicationsView onShowToast={onShowToast} />;
+      case 'workshops': return <WorkshopsGuestLecturesView onShowToast={onShowToast} />;
       case 'innovation-challenges': return <GenericFacultyView title="Innovation Challenges" />;
-      case 'my-collaborations': return <GenericFacultyView title="My Collaborations" />;
-      case 'achievements': return <GenericFacultyView title="Achievements & Certificates" />;
+      case 'my-collaborations': return <MyCollaborationsView onShowToast={onShowToast} />;
+      case 'achievements': return <AchievementsCertificatesView onShowToast={onShowToast} />;
       default: return <div className="p-8 text-center text-slate-400">Section content: {activeTab}</div>;
     }
   };

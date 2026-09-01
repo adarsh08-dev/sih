@@ -1666,32 +1666,11 @@ export const RecruiterAnalyticsPage: React.FC = () => {
     { college: 'BIET Jhansi', applicants: 36, shortlisted: 9, avgScore: 77.2, offerRate: '11.1%' }
   ];
 
-  const topSkillsInDemand = [
-    { skill: 'React & TypeScript', matchRate: 94, verifiedCount: 78 },
-    { skill: 'PostgreSQL & Database Optimization', matchRate: 88, verifiedCount: 65 },
-    { skill: 'Node.js & Microservices', matchRate: 85, verifiedCount: 61 },
-    { skill: 'Python & AI/ML Pipelines', matchRate: 79, verifiedCount: 44 },
-    { skill: 'Docker & Cloud Native', matchRate: 72, verifiedCount: 38 }
-  ];
-
-  return (
-    <div className="bg-[#0E1538] p-6 rounded-2xl border border-[#1E2964] space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-xl font-black text-white">Recruitment Performance & Talent Analytics</h2>
-          <p className="text-xs text-slate-400">Campus drive velocity, candidate conversion funnel and verifiable skill DNA benchmarks.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select 
-            value={selectedCycle}
-            onChange={(e) => setSelectedCycle(e.target.value)}
-            className="px-3 py-1.5 bg-[#0B1033] border border-[#1E2964] text-xs font-semibold text-slate-200 rounded-lg outline-none focus:border-indigo-500"
-          >
-            <option>Campus Season 2026-27</option>
-            <option>Summer Internship 2026</option>
-            <option>Lateral Placement 2025-26</option>
-          </select>
-        </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
+        <p className="text-slate-400 text-xs">Total Applications</p>
+        <p className="text-2xl font-black text-white">{initialMockApplications.length}</p>
+        <p className="text-[10px] text-emerald-400">+18% this campus cycle</p>
       </div>
 
       {/* KPI Cards */}
