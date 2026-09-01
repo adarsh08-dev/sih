@@ -1654,7 +1654,7 @@ export const RecruiterAnalyticsPage: React.FC = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
         <p className="text-slate-400 text-xs">Total Applications</p>
-        <p className="text-2xl font-black text-white">{mockApplications.length}</p>
+        <p className="text-2xl font-black text-white">{initialMockApplications.length}</p>
         <p className="text-[10px] text-emerald-400">+18% this campus cycle</p>
       </div>
       <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">

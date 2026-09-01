@@ -375,6 +375,19 @@ export const App: React.FC = () => {
           onRoleChange={handleRoleChange}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          onNavigateTab={(tab) => setActiveTab(tab)}
+          onSelectGig={(gig) => {
+            setActiveTab('gigs');
+            setApplyingGig(gig);
+          }}
+          onSelectMentor={(mentor) => {
+            setActiveTab('mentors');
+            setBookingMentor(mentor);
+          }}
+          onShowToast={showToast}
+          gigs={gigs}
+          mentors={mentors}
+          passport={passport}
           onToggleMobileSidebar={() => setIsMobileMenuOpen(prev => !prev)}
           isSidebarCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
