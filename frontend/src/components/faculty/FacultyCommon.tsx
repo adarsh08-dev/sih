@@ -12,11 +12,11 @@ export const StatCard: React.FC<{ label: string; value: string | number; icon: R
 
 export const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const colors: Record<string, string> = {
-    Compliant: 'bg-emerald-900/50 text-emerald-300',
-    'Needs Review': 'bg-amber-900/50 text-amber-300',
-    'In Progress': 'bg-blue-900/50 text-blue-300',
-    Completed: 'bg-emerald-900/50 text-emerald-300',
-    'Pending Approval': 'bg-slate-700 text-slate-300',
+    Compliant: 'bg-emerald-900/40 text-emerald-300 border border-emerald-500/30',
+    'Needs Review': 'bg-amber-900/40 text-amber-300 border border-amber-500/30',
+    'In Progress': 'bg-blue-900/40 text-blue-300 border border-blue-500/30',
+    Completed: 'bg-emerald-900/40 text-emerald-300 border border-emerald-500/30',
+    'Pending Approval': 'bg-slate-700/60 text-slate-300 border border-slate-600/30',
   };
-  return <span className={`px-2 py-0.5 rounded-full text-[10px] ${colors[status] || 'bg-slate-700'}`}>{status}</span>;
+  return <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${colors[status] || 'bg-slate-700/60 text-slate-300 border border-slate-600/30'}`}>{status}</span>;
 };

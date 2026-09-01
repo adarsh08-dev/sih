@@ -11,7 +11,12 @@
   }
 }
 
-/* Custom Scrollbars */
+/* Standard Web & Custom Scrollbars (Dark Mode Default) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1E2756 #080C24;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -21,10 +26,544 @@
 }
 ::-webkit-scrollbar-thumb {
   background: #1E2756;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #2E3B7D;
+}
+
+/* Sidebar Custom Scrollbar - Dark Mode */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 92, 252, 0.3) transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 252, 0.3);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 252, 0.7);
+}
+
+/* Generic Thin Scrollbar utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Light Theme Engine */
+.light,
+html.light,
+body.light {
+  color-scheme: light;
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Light Theme: Global Scrollbars */
+.light *,
+html.light *,
+body.light * {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 #F1F5F9;
+}
+
+.light ::-webkit-scrollbar-track,
+html.light ::-webkit-scrollbar-track,
+body.light ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+.light ::-webkit-scrollbar-thumb,
+html.light ::-webkit-scrollbar-thumb,
+body.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+.light ::-webkit-scrollbar-thumb:hover,
+html.light ::-webkit-scrollbar-thumb:hover,
+body.light ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Light Theme: Sidebar Custom Scrollbar */
+.light .sidebar-scrollbar,
+html.light .sidebar-scrollbar,
+body.light .sidebar-scrollbar,
+.light .sidebar-scrollbar *,
+html.light .sidebar-scrollbar * {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent !important;
+}
+
+.light .sidebar-scrollbar::-webkit-scrollbar,
+html.light .sidebar-scrollbar::-webkit-scrollbar,
+body.light .sidebar-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.light .sidebar-scrollbar::-webkit-scrollbar-track,
+html.light .sidebar-scrollbar::-webkit-scrollbar-track,
+body.light .sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.light .sidebar-scrollbar::-webkit-scrollbar-thumb,
+html.light .sidebar-scrollbar::-webkit-scrollbar-thumb,
+body.light .sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1 !important;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.light .sidebar-scrollbar::-webkit-scrollbar-thumb:hover,
+html.light .sidebar-scrollbar::-webkit-scrollbar-thumb:hover,
+body.light .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7C5CFC !important;
+}
+
+/* Light Theme: Thin Scrollbar utility */
+.light .scrollbar-thin,
+html.light .scrollbar-thin,
+body.light .scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+.light .scrollbar-thin::-webkit-scrollbar-track,
+html.light .scrollbar-thin::-webkit-scrollbar-track,
+body.light .scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.light .scrollbar-thin::-webkit-scrollbar-thumb,
+html.light .scrollbar-thin::-webkit-scrollbar-thumb,
+body.light .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+.light .scrollbar-thin::-webkit-scrollbar-thumb:hover,
+html.light .scrollbar-thin::-webkit-scrollbar-thumb:hover,
+body.light .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* --- LIGHT THEME: CANVAS & WORKSPACE BACKGROUNDS --- */
+.light .bg-\[\#070B1E\],
+.light .bg-\[\#080C24\],
+.light .bg-\[\#070B20\],
+.light .bg-\[\#070B22\],
+.light .bg-\[\#090D24\],
+.light .bg-\[\#090D25\],
+.light .bg-\[\#0A0E2A\],
+.light .bg-\[\#090E2A\] {
+  background-color: #F8FAFC !important;
+}
+
+/* --- LIGHT THEME: PRIMARY CARDS, PANELS, SIDEBAR & TOPBAR --- */
+.light .bg-\[\#0B0F2A\],
+.light .bg-\[\#090E2B\],
+.light .bg-\[\#0E1438\],
+.light .bg-\[\#0E1538\],
+.light .bg-\[\#0A0F2E\],
+.light .bg-\[\#10163A\],
+.light .bg-\[\#10173F\],
+.light .bg-\[\#12162E\],
+.light .bg-\[\#121633\],
+.light .bg-\[\#12183D\],
+.light .bg-\[\#141C48\],
+.light .bg-\[\#141D4E\],
+.light .bg-\[\#151A32\],
+.light .bg-slate-900,
+.light .bg-slate-950 {
+  background-color: #FFFFFF !important;
+}
+
+/* --- LIGHT THEME: NESTED CONTAINERS, SUB-CARDS, PILLS & BARS --- */
+.light .bg-\[\#0B1033\],
+.light .bg-\[\#1A1F3D\],
+.light .bg-\[\#1D296C\],
+.light .bg-\[\#182352\],
+.light .bg-\[\#182358\],
+.light .bg-\[\#131B4D\],
+.light .bg-\[\#18214D\],
+.light .bg-\[\#1A2254\],
+.light .bg-\[\#1A1E4E\],
+.light .bg-\[\#121A46\],
+.light .bg-\[\#161D48\],
+.light .bg-\[\#0C133B\],
+.light .bg-\[\#0E1744\],
+.light .bg-\[\#1D275A\],
+.light .bg-\[\#202E72\],
+.light .bg-\[\#1E2964\],
+.light .bg-\[\#1E2B68\],
+.light .bg-slate-800,
+.light .bg-white\/5,
+.light .bg-white\/6,
+.light .bg-white\/8,
+.light .bg-white\/10 {
+  background-color: #F1F5F9 !important;
+}
+
+/* --- LIGHT THEME: STATUS BADGES, TAGS & ACCENT PILLS --- */
+.light .bg-indigo-900\/20,
+.light .bg-indigo-900\/30,
+.light .bg-indigo-900\/40,
+.light .bg-indigo-900\/50,
+.light .bg-indigo-900 {
+  background-color: #EEF2FF !important;
+  color: #4338CA !important;
+  border-color: #C7D2FE !important;
+}
+.light .bg-indigo-900\/20 *,
+.light .bg-indigo-900\/30 *,
+.light .bg-indigo-900\/40 *,
+.light .bg-indigo-900\/50 *,
+.light .bg-indigo-900 * {
+  color: #4338CA !important;
+}
+
+.light .bg-blue-900\/20,
+.light .bg-blue-900\/30,
+.light .bg-blue-900\/40,
+.light .bg-blue-900\/50,
+.light .bg-blue-900 {
+  background-color: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border-color: #BFDBFE !important;
+}
+.light .bg-blue-900\/20 *,
+.light .bg-blue-900\/30 *,
+.light .bg-blue-900\/40 *,
+.light .bg-blue-900\/50 *,
+.light .bg-blue-900 * {
+  color: #1D4ED8 !important;
+}
+
+.light .bg-emerald-900\/20,
+.light .bg-emerald-900\/30,
+.light .bg-emerald-900\/40,
+.light .bg-emerald-900\/50,
+.light .bg-emerald-900 {
+  background-color: #ECFDF5 !important;
+  color: #047857 !important;
+  border-color: #A7F3D0 !important;
+}
+.light .bg-emerald-900\/20 *,
+.light .bg-emerald-900\/30 *,
+.light .bg-emerald-900\/40 *,
+.light .bg-emerald-900\/50 *,
+.light .bg-emerald-900 * {
+  color: #047857 !important;
+}
+
+.light .bg-amber-900\/20,
+.light .bg-amber-900\/30,
+.light .bg-amber-900\/40,
+.light .bg-amber-900\/50,
+.light .bg-amber-900 {
+  background-color: #FFFBEB !important;
+  color: #B45309 !important;
+  border-color: #FDE68A !important;
+}
+.light .bg-amber-900\/20 *,
+.light .bg-amber-900\/30 *,
+.light .bg-amber-900\/40 *,
+.light .bg-amber-900\/50 *,
+.light .bg-amber-900 * {
+  color: #B45309 !important;
+}
+
+.light .bg-purple-900\/20,
+.light .bg-purple-900\/30,
+.light .bg-purple-900\/40,
+.light .bg-purple-900\/50,
+.light .bg-purple-900 {
+  background-color: #FAF5FF !important;
+  color: #6D28D9 !important;
+  border-color: #E9D5FF !important;
+}
+.light .bg-purple-900\/20 *,
+.light .bg-purple-900\/30 *,
+.light .bg-purple-900\/40 *,
+.light .bg-purple-900\/50 *,
+.light .bg-purple-900 * {
+  color: #6D28D9 !important;
+}
+
+.light .bg-rose-900\/20,
+.light .bg-rose-900\/30,
+.light .bg-rose-900\/40,
+.light .bg-rose-900\/50,
+.light .bg-rose-900,
+.light .bg-red-900\/20,
+.light .bg-red-900\/30,
+.light .bg-red-900\/40,
+.light .bg-red-900\/50,
+.light .bg-red-900 {
+  background-color: #FFF1F2 !important;
+  color: #BE123C !important;
+  border-color: #FECDD3 !important;
+}
+.light .bg-rose-900\/20 *,
+.light .bg-rose-900\/30 *,
+.light .bg-rose-900\/40 *,
+.light .bg-rose-900\/50 *,
+.light .bg-rose-900 *,
+.light .bg-red-900\/20 *,
+.light .bg-red-900\/30 *,
+.light .bg-red-900\/40 *,
+.light .bg-red-900\/50 *,
+.light .bg-red-900 * {
+  color: #BE123C !important;
+}
+
+.light .bg-slate-700,
+.light .bg-slate-700\/40,
+.light .bg-slate-700\/50,
+.light .bg-slate-700\/60,
+.light .bg-slate-800\/50,
+.light .bg-slate-800\/60 {
+  background-color: #F1F5F9 !important;
+  color: #475569 !important;
+  border-color: #CBD5E1 !important;
+}
+.light .bg-slate-700 *,
+.light .bg-slate-700\/40 *,
+.light .bg-slate-700\/50 *,
+.light .bg-slate-700\/60 *,
+.light .bg-slate-800\/50 *,
+.light .bg-slate-800\/60 * {
+  color: #475569 !important;
+}
+
+/* Badge specific borders */
+.light .border-indigo-500\/20,
+.light .border-indigo-500\/30,
+.light .border-indigo-500\/40,
+.light .border-indigo-900\/50 {
+  border-color: #C7D2FE !important;
+}
+.light .border-blue-500\/20,
+.light .border-blue-500\/30,
+.light .border-blue-500\/40 {
+  border-color: #BFDBFE !important;
+}
+.light .border-emerald-500\/20,
+.light .border-emerald-500\/30,
+.light .border-emerald-500\/40 {
+  border-color: #A7F3D0 !important;
+}
+.light .border-amber-500\/20,
+.light .border-amber-500\/30,
+.light .border-amber-500\/40 {
+  border-color: #FDE68A !important;
+}
+.light .border-rose-500\/20,
+.light .border-rose-500\/30,
+.light .border-rose-500\/40 {
+  border-color: #FECDD3 !important;
+}
+.light .border-slate-600\/30,
+.light .border-slate-600\/40,
+.light .border-slate-700\/40 {
+  border-color: #CBD5E1 !important;
+}
+
+/* --- LIGHT THEME: HERO & HIGHLIGHT GRADIENTS --- */
+.light .from-\[\#121A46\],
+.light .from-\[\#141C48\],
+.light .from-\[\#12162E\],
+.light .from-\[\#10173F\],
+.light .from-\[\#0E1538\] {
+  background-image: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 50%, #FAF5FF 100%) !important;
+}
+
+/* --- LIGHT THEME: ALL BORDERS --- */
+.light .border-\[\#18214D\],
+.light .border-\[\#1E2964\],
+.light .border-\[\#1E2756\],
+.light .border-\[\#1E2B68\],
+.light .border-\[\#253275\],
+.light .border-\[\#1C265E\],
+.light .border-\[\#182352\],
+.light .border-\[\#1A2352\],
+.light .border-\[\#243378\],
+.light .border-\[\#232F6E\],
+.light .border-\[\#2D3C84\],
+.light .border-\[\#2B3B8A\],
+.light .border-\[\#2A377C\],
+.light .border-\[\#2A3578\],
+.light .border-\[\#1B255C\],
+.light .border-\[\#1A1F3D\],
+.light .border-\[\#12162E\],
+.light .border-\[\#0B1033\],
+.light .border-\[\#0B0F2A\],
+.light .border-\[\#0A0F2E\],
+.light .border-\[\#090E2B\],
+.light .border-\[\#070B1E\],
+.light .border-white\/5,
+.light .border-white\/6,
+.light .border-white\/8,
+.light .border-white\/10,
+.light .border-white\/15,
+.light .border-white\/20,
+.light .border-slate-800,
+.light .border-slate-700 {
+  border-color: #E2E8F0 !important;
+}
+
+/* --- LIGHT THEME: TEXT & CONTRAST --- */
+.light .text-white,
+.light .text-slate-100,
+.light .text-slate-200 {
+  color: #0F172A !important;
+}
+
+.light .text-slate-300,
+.light .text-slate-400 {
+  color: #334155 !important;
+}
+
+.light .text-white\/30,
+.light .text-white\/40,
+.light .text-white\/50,
+.light .text-white\/60,
+.light .text-white\/70,
+.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+/* PRESERVE WHITE TEXT ON VIBRANT/SOLID BUTTONS & BADGES */
+.light .bg-\[\#7C5CFC\],
+.light .bg-\[\#7C5CFC\] *,
+.light .bg-\[\#6D4AE8\],
+.light .bg-\[\#6D4AE8\] *,
+.light .bg-\[\#6D4CE8\],
+.light .bg-\[\#6D4CE8\] *,
+.light .bg-indigo-600,
+.light .bg-indigo-600 *,
+.light .bg-indigo-700,
+.light .bg-indigo-700 *,
+.light .bg-indigo-500,
+.light .bg-indigo-500 *,
+.light .bg-blue-600,
+.light .bg-blue-600 *,
+.light .bg-emerald-600,
+.light .bg-emerald-600 *,
+.light .bg-emerald-500,
+.light .bg-emerald-500 *,
+.light .bg-rose-600,
+.light .bg-rose-600 *,
+.light .bg-purple-600,
+.light .bg-purple-600 *,
+.light .bg-violet-600,
+.light .bg-violet-600 * {
+  color: #FFFFFF !important;
+}
+
+/* Preserve colored badge text */
+.light .text-indigo-400 { color: #4F46E5 !important; }
+.light .text-indigo-300 { color: #4338CA !important; }
+.light .text-blue-400   { color: #2563EB !important; }
+.light .text-blue-300   { color: #1D4ED8 !important; }
+.light .text-purple-400 { color: #7C3AED !important; }
+.light .text-purple-300 { color: #6D28D9 !important; }
+.light .text-cyan-400   { color: #0891B2 !important; }
+.light .text-cyan-300   { color: #0E7490 !important; }
+.light .text-teal-400   { color: #0D9488 !important; }
+.light .text-teal-300   { color: #0F766E !important; }
+.light .text-emerald-400{ color: #059669 !important; }
+.light .text-emerald-300{ color: #047857 !important; }
+.light .text-green-400  { color: #16A34A !important; }
+.light .text-green-300  { color: #15803D !important; }
+.light .text-amber-400  { color: #D97706 !important; }
+.light .text-amber-300  { color: #B45309 !important; }
+.light .text-rose-400   { color: #E11D48 !important; }
+.light .text-rose-300   { color: #BE123C !important; }
+.light .text-red-400    { color: #DC2626 !important; }
+.light .text-red-300    { color: #B91C1C !important; }
+.light .text-\[\#C4B5FD\]{ color: #6D28D9 !important; }
+.light .text-\[\#A78BFA\]{ color: #7C3AED !important; }
+
+/* Slate buttons in light mode */
+.light button.bg-slate-800,
+.light button.bg-slate-700,
+.light .button-secondary {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+.light button.bg-slate-800:hover,
+.light button.bg-slate-700:hover,
+.light .button-secondary:hover {
+  background-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+/* --- LIGHT THEME: INPUTS, SELECTS & TEXTAREAS --- */
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.light select,
+.light textarea,
+.light .sb-input {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* --- LIGHT THEME: HOVER STATES --- */
+.light .hover\:bg-white\/5:hover,
+.light .hover\:bg-white\/10:hover {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+.light .hover\:text-white:hover {
+  color: #0F172A !important;
+}
+
+/* --- LIGHT THEME: CARDS & SHADOWS --- */
+.light .sb-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.light .sb-card-interactive {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.light .sb-card-interactive:hover {
+  background-color: #FFFFFF !important;
+  border-color: #7C5CFC !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
 /* Animations */
