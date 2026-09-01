@@ -6,83 +6,67 @@ Ladder is an AI-powered Industry Career OS designed to bridge the gap between ac
 
 ## 🛠️ Technology Stack
 
-### **Frontend**
-- **HTML5 & Semantic UI**: Structured multi-module single-page application layout.
-- **CSS3 Modern Styles**: Responsive layout, CSS variables, glass-morphism panels, badges, modals, and toast notifications.
-- **Vanilla JavaScript (ES6+)**: Asynchronous REST API integration, state management, interactive modal workflows, search and filter engine, JSON passport export.
+### 🎨 Frontend
 
-### **Backend**
-- **Runtime**: [Node.js](https://nodejs.org/) (v18+)
-- **Framework**: [Express.js](https://expressjs.com/) (v4.21.2)
-- **Middleware & Security**:
-  - `cors`: Cross-Origin Resource Sharing
-  - `dotenv`: Environment variable management
-  - `express.json`: JSON payload parsing
-- **Database Driver**: [`pg` (node-postgres)](https://node-postgres.com/) with connection pooling and automated SSL configuration.
+* React 19 — main UI framework
+* TypeScript — frontend source files .tsx / .ts
+* Vite 8 — development server & production bundler
+* Tailwind CSS 4 — utility-first styling
+* @tailwindcss/vite — Tailwind’s Vite integration
+* Lucide React — icons
+* Motion — animations
+* React Markdown — Markdown rendering
+* Canvas Confetti — UI celebration effects
+* HTML5
+* CSS3
+* Google Fonts — Plus Jakarta Sans & JetBrains Mono 
 
-### **Database & Data Layer**
-- **Engine**: [PostgreSQL](https://www.postgresql.org/) (Relational Database)
-- **Schema & Migrations (`backend/schema.sql`)**:
-  - `students`: Academic details, career readiness, experience scores
-  - `skills` & `student_skills`: Skill mapping and proficiency levels
-  - `mentors`: Industry profiles, experience metrics, availability status
-  - `mentor_bookings`: 15-minute monthly mentorship capsule scheduling
-  - `companies`: Verified corporate and startup partners
-  - `gigs`: Micro-internships with deliverables, durations, and stipend values
-  - `gig_applications`: Application lifecycle tracking
-  - `experience_records`: Verifiable Experience Passport credentials
-- **Auto-Initialization**: Built-in bootstrap runner in `backend/db.js` that verifies and seeds tables automatically upon startup.
+The actual App.tsx confirms a large React component/page architecture with TypeScript, React state/hooks and multiple dashboard modules. 
 
----
+### ⚙️ Backend
 
-## 📂 Project Structure
+* Node.js
+* Express.js 4.21.x
+* JavaScript (CommonJS) for the primary backend
+* CORS
+* dotenv
+* JWT — jsonwebtoken
+* bcryptjs for password hashing
+* REST API architecture 
 
-```
-skillbridge-ai/
-├── backend/
-│   ├── db.js              # PostgreSQL connection pool, health check & auto-seeder
-│   ├── package.json       # Backend dependencies (express, pg, cors, dotenv)
-│   ├── schema.sql         # PostgreSQL schema definition & initial seed data
-│   └── server.js          # REST API endpoints & static frontend server
-├── frontend/
-│   ├── app.js             # Client-side state, API calls, event handlers & UI logic
-│   ├── index.html         # Main application interface & dashboard layout
-│   └── style.css          # Design system, layout grids, components & theme
-├── .env.example           # Environment variables template
-├── .gitignore             # Git ignore rules for node_modules, logs, and secrets
-├── metadata.json          # Application configuration metadata
-├── package.json           # Root workspace configuration & execution scripts
-└── README.md              # Project documentation
-```
+### 🗄️ Database
 
----
+* PostgreSQL
+* node-postgres (pg) as the Node.js PostgreSQL driver
+* Connection pooling through pg
+* SQL schema/migrations in backend/schema.sql
+* Database logic handled through backend/db.js 
 
-## 🔌 API Endpoints Reference
+### 🤖 AI
 
-### **Health & Database**
-- `GET /api/health` — Checks service health, uptime, and live PostgreSQL connection timestamp.
+* Google Gemini API
+* @google/genai SDK
+* Gemini-powered AI Helpdesk / Bridge Buddy
+* Gemini streaming chat for Faculty Advisor
+* GEMINI_API_KEY environment variable 
 
-### **Student Profile & Analytics**
-- `GET /api/student` — Retrieves student profile, target role, career readiness score, and experience points.
-- `GET /api/ai/career-analysis` — AI career compatibility, strongest capability, and priority gap analysis.
-- `GET /api/ai/skill-gaps` — Detailed skill breakdown with severity indicators.
+### 🔐 Authentication & Security
 
-### **Mentorship & Capsules**
-- `GET /api/mentors` — Returns all industry mentors and match percentages.
-- `GET /api/mentors/best-match` — Returns highest-rated AI-matched mentor.
-- `POST /api/mentors` — Adds a new mentor to the database.
-- `POST /api/mentors/book` — Schedules and records a 15-minute mentor capsule session.
+* JWT authentication
+* bcryptjs password hashing
+* CORS
+* dotenv environment configuration
+* Role-based application pathways: Student, Mentor, HOD/Faculty and Recruiter/Company. 
 
-### **Micro-Internship Gig Board**
-- `GET /api/gigs` — Fetches active micro-internship listings with company info.
-- `POST /api/gigs` — Creates and publishes a new industry gig to PostgreSQL.
-- `POST /api/gigs/apply` — Submits a gig application and updates experience metrics.
+### 🛠️ Development / Build
 
-### **Experience Passport**
-- `GET /api/passport` — Returns verified experience credentials and portfolio history.
-
----
-
+* Vite
+* npm
+* Node.js
+* TypeScript compiler/build through Vite
+* Production start through Node/Express
+* Vite development server runs on port 3000.
+* 
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
