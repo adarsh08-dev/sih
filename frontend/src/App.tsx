@@ -136,6 +136,30 @@ export const App: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'success' | 'info' | 'error'>('success');
 
+  // Theme Management (Light / Dark Mode)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('appTheme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.classList.remove('dark');
+      document.body.classList.add('light');
+    } else {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      document.body.classList.remove('light');
+    }
+    localStorage.setItem('appTheme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Notifications
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
@@ -318,7 +342,7 @@ export const App: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="flex h-screen bg-[#070B1E] text-slate-100 overflow-hidden font-sans antialiased selection:bg-[#7C5CFC]/30">
+    <div className={`flex h-screen ${theme === 'light' ? 'bg-[#F8FAFC] text-slate-900' : 'bg-[#070B1E] text-slate-100'} overflow-hidden font-sans antialiased selection:bg-[#7C5CFC]/30`}>
       {/* Splash Screen on Registration / Login Launch */}
       {splashData.isOpen && (
         <DashboardSplash
@@ -391,6 +415,8 @@ export const App: React.FC = () => {
           onToggleMobileSidebar={() => setIsMobileMenuOpen(prev => !prev)}
           isSidebarCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
         />
 
         {/* Dynamic Page Routing with Strict Role Guard */}

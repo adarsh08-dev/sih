@@ -47,9 +47,9 @@ const AccountRow: React.FC<AccountProps> = ({ platform, collapsed }) => {
   const Icon = platform === 'github' ? GitHubIcon : LinkedInIcon;
 
   return (
-    <div className={`flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10 ${collapsed ? 'justify-center' : ''}`}>
-      <div className="flex items-center gap-2">
-        <Icon className={`w-5 h-5 ${platform === 'github' ? 'text-white' : 'text-blue-500'}`} />
+    <div className={`flex items-center ${collapsed ? 'justify-center p-2 w-9 h-9 mx-auto' : 'justify-between p-2'} rounded-lg bg-white/5 border border-white/10`}>
+      <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
+        <Icon className={`w-4 h-4 ${platform === 'github' ? 'text-white' : 'text-blue-400'}`} />
         {!collapsed && <span className="text-xs font-medium text-slate-300 capitalize">{platform}</span>}
       </div>
       

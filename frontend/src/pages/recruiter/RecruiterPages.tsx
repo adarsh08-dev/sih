@@ -1644,12 +1644,27 @@ export const InterviewsPage: React.FC = () => (
   </div>
 );
 
-export const RecruiterAnalyticsPage: React.FC = () => (
-  <div className="bg-[#0E1538] p-6 rounded-2xl border border-[#1E2964] space-y-6">
-    <div>
-      <h2 className="text-xl font-black text-white">Recruitment Performance & Analytics</h2>
-      <p className="text-xs text-slate-400">Campus drive velocity, candidate conversion funnel and skill benchmarks.</p>
-    </div>
+export const RecruiterAnalyticsPage: React.FC = () => {
+  const [selectedCycle, setSelectedCycle] = useState('Campus Season 2026-27');
+  const [selectedDept, setSelectedDept] = useState('All Departments');
+
+  const apps = initialMockApplications || [];
+  const interviews = mockInterviews || [];
+
+  const funnelStages = [
+    { name: 'Applied Candidates', count: 184, rate: '100%', color: 'from-blue-600 to-indigo-600', icon: Users },
+    { name: 'DNA & Skill Screened', count: 126, rate: '68.5%', color: 'from-indigo-600 to-purple-600', icon: ShieldCheck },
+    { name: 'Shortlisted for Round 1', count: 68, rate: '37.0%', color: 'from-purple-600 to-pink-600', icon: Award },
+    { name: 'Technical Interviews', count: 32, rate: '17.4%', color: 'from-pink-600 to-rose-600', icon: Calendar },
+    { name: 'Final Offers Extended', count: 18, rate: '9.8%', color: 'from-emerald-600 to-teal-600', icon: CheckCircle2 }
+  ];
+
+  const collegeBenchmarks = [
+    { college: 'MJPRU Bareilly (CSIT)', applicants: 64, shortlisted: 28, avgScore: 84.6, offerRate: '18.7%' },
+    { college: 'IET Lucknow', applicants: 48, shortlisted: 19, avgScore: 82.1, offerRate: '16.6%' },
+    { college: 'KNIT Sultanpur', applicants: 36, shortlisted: 12, avgScore: 79.4, offerRate: '13.8%' },
+    { college: 'BIET Jhansi', applicants: 36, shortlisted: 9, avgScore: 77.2, offerRate: '11.1%' }
+  ];
 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
@@ -1657,24 +1672,119 @@ export const RecruiterAnalyticsPage: React.FC = () => (
         <p className="text-2xl font-black text-white">{initialMockApplications.length}</p>
         <p className="text-[10px] text-emerald-400">+18% this campus cycle</p>
       </div>
-      <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
-        <p className="text-slate-400 text-xs">Interviews Conducted</p>
-        <p className="text-2xl font-black text-white">{mockInterviews.length}</p>
-        <p className="text-[10px] text-indigo-400">92% attendance rate</p>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
+          <p className="text-slate-400 text-xs font-medium">Total Applications</p>
+          <p className="text-2xl font-black text-white">184</p>
+          <p className="text-[10px] text-emerald-400 font-semibold">+24% vs. previous cohort</p>
+        </div>
+        <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
+          <p className="text-slate-400 text-xs font-medium">Interviews Conducted</p>
+          <p className="text-2xl font-black text-white">32</p>
+          <p className="text-[10px] text-indigo-400 font-semibold">93.8% attendance rate</p>
+        </div>
+        <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
+          <p className="text-slate-400 text-xs font-medium">Offer Acceptance Rate</p>
+          <p className="text-2xl font-black text-emerald-400">94.4%</p>
+          <p className="text-[10px] text-slate-400 font-semibold">17 of 18 accepted</p>
+        </div>
+        <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
+          <p className="text-slate-400 text-xs font-medium">Avg. Time to Hire</p>
+          <p className="text-2xl font-black text-indigo-300">11.4 Days</p>
+          <p className="text-[10px] text-emerald-400 font-semibold">4.2x faster with verified DNA</p>
+        </div>
       </div>
-      <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
-        <p className="text-slate-400 text-xs">Offer Acceptance Rate</p>
-        <p className="text-2xl font-black text-emerald-400">94.2%</p>
-        <p className="text-[10px] text-slate-400">High engagement</p>
+
+      {/* Candidate Conversion Funnel */}
+      <div className="p-5 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-white">End-to-End Candidate Conversion Funnel</h3>
+          <span className="text-[11px] font-semibold text-slate-400">Total Pipeline: 184 Candidates</span>
+        </div>
+        
+        <div className="space-y-3">
+          {funnelStages.map((stage, idx) => (
+            <div key={stage.name} className="space-y-1.5">
+              <div className="flex justify-between items-center text-xs">
+                <div className="flex items-center gap-2">
+                  <stage.icon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="font-semibold text-white">{stage.name}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-slate-400">{stage.count} candidates</span>
+                  <span className="font-mono font-bold text-indigo-300">{stage.rate}</span>
+                </div>
+              </div>
+              <div className="w-full bg-[#1A1F3D] h-2.5 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full bg-gradient-to-r ${stage.color} rounded-full transition-all duration-500`}
+                  style={{ width: stage.rate }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
-        <p className="text-slate-400 text-xs">Avg. Time to Hire</p>
-        <p className="text-2xl font-black text-indigo-300">12 Days</p>
-        <p className="text-[10px] text-emerald-400">4x faster than benchmark</p>
+
+      {/* College-wise Performance & Skill DNA Demand */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* College Benchmarks */}
+        <div className="p-5 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-4">
+          <h3 className="text-sm font-bold text-white">Campus Drive Yield by University</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="text-slate-400 border-b border-[#1E2964]">
+                  <th className="pb-2 font-semibold">Institute</th>
+                  <th className="pb-2 font-semibold text-center">Applied</th>
+                  <th className="pb-2 font-semibold text-center">Avg DNA</th>
+                  <th className="pb-2 font-semibold text-right">Offer Yield</th>
+                </tr>
+              </thead>
+              <tbody>
+                {collegeBenchmarks.map((col) => (
+                  <tr key={col.college} className="border-t border-[#1E2964]/60">
+                    <td className="py-2.5 font-bold text-white">{col.college}</td>
+                    <td className="py-2.5 text-center text-slate-300">{col.applicants}</td>
+                    <td className="py-2.5 text-center">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">
+                        {col.avgScore}%
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-right font-bold text-indigo-300">{col.offerRate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Top Verified Skills */}
+        <div className="p-5 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-4">
+          <h3 className="text-sm font-bold text-white">Candidate Verified Skills Distribution</h3>
+          <div className="space-y-3">
+            {topSkillsInDemand.map((item) => (
+              <div key={item.skill} className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="font-semibold text-slate-200">{item.skill}</span>
+                  <span className="text-slate-400">{item.verifiedCount} verified candidates ({item.matchRate}% match)</span>
+                </div>
+                <div className="w-full bg-[#1A1F3D] h-2 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full"
+                    style={{ width: `${item.matchRate}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const CompanyProfilePage: React.FC = () => (
   <div className="bg-[#0E1538] p-6 rounded-2xl border border-[#1E2964] space-y-6">

@@ -61,6 +61,23 @@ export const ResumePortfolioView: React.FC<ResumePortfolioViewProps> = ({
 
   useEffect(() => {
     reloadPortfolioData();
+
+    const handleLocationUpdate = (e: any) => {
+      const loc = e?.detail?.location;
+      if (loc) {
+        setCustomData(prev => ({ ...prev, location: loc }));
+      } else {
+        reloadPortfolioData();
+      }
+    };
+
+    window.addEventListener('ladder_location_updated', handleLocationUpdate);
+    window.addEventListener('storage', reloadPortfolioData);
+
+    return () => {
+      window.removeEventListener('ladder_location_updated', handleLocationUpdate);
+      window.removeEventListener('storage', reloadPortfolioData);
+    };
   }, []);
 
   const readiness = calculateReadinessMetrics(skills);
@@ -93,7 +110,7 @@ export const ResumePortfolioView: React.FC<ResumePortfolioViewProps> = ({
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-900/40 border border-indigo-500/30 text-indigo-300 text-xs font-bold mb-2">
             <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-            ATS-VERIFIED DIGITAL RESUME & PORTFOLIO
+            VERIFIED DIGITAL RESUME & PORTFOLIO
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             Verified Candidate Portfolio

@@ -86,9 +86,9 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({ onShowToast,
         <div className="flex items-center gap-2.5">
           <button
             onClick={handleExportNaac}
-            className="px-4 py-2 rounded-xl bg-[#182358] hover:bg-[#202E72] border border-[#2B3B8A] text-slate-100 text-xs font-bold flex items-center gap-2 transition-all shadow"
+            className="px-4 py-2 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4AE0] text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-[#7C5CFC]/20 active:scale-95 cursor-pointer"
           >
-            <Download className="w-4 h-4 text-emerald-400" />
+            <Download className="w-4 h-4 text-emerald-300" />
             <span>NAAC Report</span>
           </button>
         </div>

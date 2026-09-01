@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'company', 'admin', 'hod')),
+    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'hod', 'recruiter', 'company', 'admin')),
     student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
     mentor_id INTEGER REFERENCES mentors(id) ON DELETE SET NULL,
     company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,

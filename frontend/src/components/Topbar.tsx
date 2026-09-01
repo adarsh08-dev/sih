@@ -5,7 +5,9 @@ import {
   LogOut, 
   User as UserIcon,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { UserRole, StudentProfile, Mentor, Gig, PassportRecord } from '../types';
 import { GlobalOmniSearch } from './GlobalOmniSearch';
@@ -32,6 +34,8 @@ interface TopbarProps {
   isSidebarCollapsed?: boolean;
   onToggleCollapse?: () => void;
   onRoleChange?: (role: UserRole) => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
@@ -55,7 +59,9 @@ export const Topbar: React.FC<TopbarProps> = ({
   onToggleMobileSidebar,
   isSidebarCollapsed,
   onToggleCollapse,
-  onRoleChange
+  onRoleChange,
+  theme = 'dark',
+  onToggleTheme
 }) => {
   const [profilePhoto, setProfilePhoto] = useState<string | null>(() => {
     return localStorage.getItem('profilePhoto');
@@ -137,6 +143,22 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {/* Right action controls */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-2">
+        {/* Light / Dark Mode Toggle */}
+        {onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            className="p-2 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] text-slate-300 hover:text-white transition-all shrink-0 cursor-pointer shadow-sm"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-180 duration-300" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-400 animate-in spin-in-180 duration-300" />
+            )}
+          </button>
+        )}
+
         {/* Notifications */}
         <button
           onClick={onOpenNotifications}
