@@ -390,7 +390,11 @@ export const App: React.FC = () => {
 
             {/* ROUTE GUARD: If role === 'mentor', render ONLY Mentor dashboard */}
             {currentRole === 'mentor' && (
-              <MentorDashboard onShowToast={showToast} />
+              <MentorDashboard 
+                onShowToast={showToast} 
+                activeTab={activeTab}
+                onNavigateTab={(t) => setActiveTab(t)}
+              />
             )}
 
             {/* ROUTE GUARD: If role === 'company' / Recruiter */}

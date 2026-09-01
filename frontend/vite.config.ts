@@ -452,6 +452,23 @@ CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
           }
         }
 
+        // 13. Student Pipeline & Mentorship Funnel
+        if (url.startsWith('/api/mentor/pipeline') || url.startsWith('/api/student-pipeline')) {
+          if (req.method === 'POST') {
+            const body = await readBody();
+            res.statusCode = 201;
+            return res.end(JSON.stringify({ success: true, student: body }));
+          }
+          if (db && typeof db.getPipelineStudents === 'function') {
+            const list = await db.getPipelineStudents();
+            res.statusCode = 200;
+            return res.end(JSON.stringify(list));
+          }
+          // Default empty or handled on client-side
+          res.statusCode = 200;
+          return res.end(JSON.stringify([]));
+        }
+
         // Generic catch-all
         res.statusCode = 200;
         return res.end(JSON.stringify({ success: true, message: 'Ladder API response OK' }));

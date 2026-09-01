@@ -175,6 +175,25 @@ VALUES
 (6, 3, 'NexaCloud Infrastructure', 'Cloud Support Associate', 'Bengaluru', 'In-Office', 'Full-Time', '₹7.2 LPA', 10, ARRAY['Linux', 'Docker', 'Bash'], 'B.Tech / BCA 2026', 'Assist enterprise clients in cloud migrations, monitoring and SLAs.', '2026-10-15', 'Draft', 18)
 ON CONFLICT (id) DO NOTHING;
 
+-- 11. STUDENT PIPELINE (Mentorship Funnel)
+CREATE TABLE IF NOT EXISTS student_pipeline (
+    id SERIAL PRIMARY KEY,
+    student_id INT,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(150),
+    course VARCHAR(150),
+    year VARCHAR(50),
+    stage VARCHAR(50) DEFAULT 'Applied',
+    skills TEXT[],
+    mentor_id INT REFERENCES mentors(id) ON DELETE SET NULL,
+    mentor_name VARCHAR(150),
+    mentor_role VARCHAR(150),
+    mentor_company VARCHAR(150),
+    next_action TEXT,
+    updated_at VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- SYNC SEQUENCES WITH SEEDED IDS
 SELECT setval('students_id_seq', (SELECT COALESCE(MAX(id), 1) FROM students));
 SELECT setval('companies_id_seq', (SELECT COALESCE(MAX(id), 1) FROM companies));
@@ -183,4 +202,6 @@ SELECT setval('gigs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM gigs));
 SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users));
 SELECT setval('helpdesk_tickets_id_seq', (SELECT COALESCE(MAX(id), 1) FROM helpdesk_tickets));
 SELECT setval('jobs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM jobs));
+SELECT setval('student_pipeline_id_seq', (SELECT COALESCE(MAX(id), 1) FROM student_pipeline));
+
 
