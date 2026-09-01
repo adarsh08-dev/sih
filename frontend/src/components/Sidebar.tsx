@@ -149,7 +149,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Navigation Menus */}
-        <div className="flex-1 overflow-y-auto px-2.5 py-2 space-y-4">
+        <div className={`flex-1 overflow-y-auto ${collapsed ? 'px-1.5' : 'px-2.5'} py-2 space-y-4 sidebar-scrollbar`}>
           {/* STUDENT PORTAL MENU */}
           {currentRole === 'student' && (
             <>
@@ -165,11 +165,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-dashboard"
                     onClick={() => handleTabClick('dashboard')}
                     title="Career Overview"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'dashboard'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -181,11 +179,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-skills"
                     onClick={() => handleTabClick('skills')}
                     title="Skill Intelligence"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'skills'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -197,11 +193,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-assessment"
                     onClick={() => handleTabClick('assessment')}
                     title="Skill Assessment"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'assessment'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -213,11 +207,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-skill-gap"
                     onClick={() => handleTabClick('skill-gap')}
                     title="Skill Gap Analysis"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'skill-gap'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -229,11 +221,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-learning"
                     onClick={() => handleTabClick('learning')}
                     title="Learning Hub"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'learning'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -255,11 +245,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-jobs"
                     onClick={() => handleTabClick('jobs')}
                     title="Jobs & Placements"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'jobs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -271,11 +259,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-tracker"
                     onClick={() => handleTabClick('tracker')}
                     title="Application Tracker"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'tracker'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -287,11 +273,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-gigs"
                     onClick={() => handleTabClick('gigs')}
                     title="Micro-Internship Gigs"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'gigs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -303,11 +287,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-projects"
                     onClick={() => handleTabClick('projects')}
                     title="Industry Projects"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'projects'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -319,11 +301,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-mentors"
                     onClick={() => handleTabClick('mentors')}
                     title="Mentor Capsules (15 Min)"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'mentors'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -351,28 +331,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <button
                     id="nav-resume"
                     onClick={() => handleTabClick('resume')}
-                    title="ATS Resume & Portfolio"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    title="Resume & Portfolio"
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'resume'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
-                    {!collapsed && <span className="truncate">ATS Resume & Portfolio</span>}
+                    {!collapsed && <span className="truncate">Resume & Portfolio</span>}
                   </button>
 
                   <button
                     id="nav-certs"
                     onClick={() => handleTabClick('certs')}
                     title="Certifications"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'certs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -384,11 +360,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-passport"
                     onClick={() => handleTabClick('passport')}
                     title="Experience Passport"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'passport'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -400,11 +374,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-advisor"
                     onClick={() => handleTabClick('advisor')}
                     title="AI Career Advisor"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'advisor'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -416,11 +388,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-helpdesk"
                     onClick={() => handleTabClick('helpdesk')}
                     title="AI Help Desk & Advisor"
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === 'helpdesk'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -456,11 +426,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -486,11 +454,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -515,11 +481,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -543,11 +507,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -571,11 +533,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={() => handleTabClick('mentor-pipeline')}
                   title="Assigned Student Pipeline"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
+                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                     activeTab === 'mentor-pipeline' || activeTab === 'dashboard'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                       : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
@@ -586,11 +546,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={() => handleTabClick('mentor-reviews')}
                   title="Ghost Task Submissions"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
+                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                     activeTab === 'mentor-reviews'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                       : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
@@ -601,11 +559,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={() => handleTabClick('mentor-capsules')}
                   title="15-Min Capsule Slots"
-                  className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    collapsed ? 'justify-center' : ''
-                  } ${
+                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                     activeTab === 'mentor-capsules'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                       : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
@@ -617,7 +573,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
 
           {/* RECRUITER PORTAL MENU */}
-          {currentRole === 'company' && (
+          {(currentRole === 'company' || currentRole === 'recruiter') && (
             <div>
               {!collapsed && (
                 <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
@@ -640,11 +596,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      collapsed ? 'justify-center' : ''
-                    } ${
+                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -669,11 +623,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         key={item.id}
                         onClick={() => handleTabClick(item.id)}
                         title={item.label}
-                        className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                        collapsed ? 'justify-center' : ''
-                        } ${
+                        className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                         activeTab === item.id
-                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                             : 'text-slate-300 hover:bg-white/5 hover:text-white'
                         }`}
                     >
@@ -700,11 +652,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         key={item.id}
                         onClick={() => handleTabClick(item.id)}
                         title={item.label}
-                        className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                        collapsed ? 'justify-center' : ''
-                        } ${
+                        className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
                         activeTab === item.id
-                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/20 shadow-sm font-bold'
+                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
                             : 'text-slate-300 hover:bg-white/5 hover:text-white'
                         }`}
                     >
@@ -809,6 +759,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     ? 'Dr. Arvind'
                     : currentRole === 'mentor'
                     ? 'Amit'
+                    : currentRole === 'company' || currentRole === 'recruiter'
+                    ? (localStorage.getItem('userName') || 'Recruiter')
                     : student?.name || localStorage.getItem('userName') || 'Adarsh'
                 )}
               </button>

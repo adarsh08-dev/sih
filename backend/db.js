@@ -68,6 +68,17 @@ function getDefaultData() {
         mentor_id: null,
         company_id: null,
         created_at: "2026-08-01T10:00:00.000Z"
+      },
+      {
+        id: 4,
+        name: "Rahul Mehta",
+        email: "recruiter@technova.com",
+        password_hash: defaultPasswordHash,
+        role: "recruiter",
+        student_id: null,
+        mentor_id: null,
+        company_id: 1,
+        created_at: "2026-08-01T10:00:00.000Z"
       }
     ],
     students: [
@@ -601,11 +612,11 @@ async function registerUser({ name, email, password, role, extraInfo = {} }) {
       specialization: ["Full Stack", "System Design"]
     };
     db.mentors.push(newMentor);
-  } else if (role === "company") {
+  } else if (role === "company" || role === "recruiter") {
     companyId = db.companies.length > 0 ? Math.max(...db.companies.map((c) => c.id)) + 1 : 1;
     const newCompany = {
       id: companyId,
-      company_name: name,
+      company_name: extraInfo.company || name,
       industry: extraInfo.industry || "Technology",
       verified: true
     };

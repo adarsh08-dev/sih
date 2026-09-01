@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'company', 'admin', 'hod')),
+    role VARCHAR(50) NOT NULL CHECK (role IN ('student', 'mentor', 'hod', 'recruiter', 'company', 'admin')),
     student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
     mentor_id INTEGER REFERENCES mentors(id) ON DELETE SET NULL,
     company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
@@ -173,6 +173,14 @@ VALUES
 (4, 1, 'CloudMatrix Systems', 'Java Cloud Developer', 'Pune', 'In-Office', 'Full-Time', '₹8.5 LPA', 2, ARRAY['Java', 'Spring Boot', 'AWS'], 'B.Tech CSE / IT 2025/2026', 'Develop mission critical backend services and Kubernetes deployments.', '2026-10-01', 'Active', 31),
 (5, 2, 'AI Labs Global', 'ML Engineer Intern', 'Hyderabad', 'Hybrid', '6 Months', '₹30,000/month', 4, ARRAY['Python', 'PyTorch', 'FastAPI'], 'B.Tech CSE / AI Specialization', 'Train, benchmark and deploy generative models and predictive algorithms.', '2026-09-30', 'Active', 20),
 (6, 3, 'NexaCloud Infrastructure', 'Cloud Support Associate', 'Bengaluru', 'In-Office', 'Full-Time', '₹7.2 LPA', 10, ARRAY['Linux', 'Docker', 'Bash'], 'B.Tech / BCA 2026', 'Assist enterprise clients in cloud migrations, monitoring and SLAs.', '2026-10-15', 'Draft', 18)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO users (id, name, email, password_hash, role, student_id, mentor_id, company_id)
+VALUES
+(1, 'Adarsh Pratap Singh', 'adarsh@mjpru.ac.in', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'student', 1, NULL, NULL),
+(2, 'Amit Verma', 'amit.verma@tcs.com', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'mentor', NULL, 1, NULL),
+(3, 'Dr. Arvind K. Sharma', 'hod.csit@mjpru.ac.in', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'hod', NULL, NULL, NULL),
+(4, 'Rahul Mehta', 'recruiter@technova.com', '$2a$10$7vI6V2tB5k3K7MeqY.v6jOlBsz2vYQ6.Fw8Lg6gT8x3U6kEwG49l2', 'recruiter', NULL, NULL, 1)
 ON CONFLICT (id) DO NOTHING;
 
 -- SYNC SEQUENCES WITH SEEDED IDS

@@ -25,6 +25,7 @@ import {
   updateStudentSkills
 } from '../services/studentCareerService';
 import { ProjectItem, CertificationItem, SkillItem } from '../types';
+import { syncLocationAcrossApp } from '../utils/locationService';
 
 interface EditPortfolioModalProps {
   isOpen: boolean;
@@ -58,6 +59,10 @@ export const EditPortfolioModal: React.FC<EditPortfolioModalProps> = ({
     saveCertifications(certsList);
     updateStudentSkills(skillsList);
 
+    if (portfolioData.location) {
+      syncLocationAcrossApp(portfolioData.location);
+    }
+
     // Also sync standard localStorage profile if needed
     try {
       const stored = localStorage.getItem('sb_user_profile');
@@ -66,6 +71,7 @@ export const EditPortfolioModal: React.FC<EditPortfolioModalProps> = ({
         parsed.name = portfolioData.name || parsed.name;
         parsed.targetRole = portfolioData.role || parsed.targetRole;
         parsed.email = portfolioData.email || parsed.email;
+        if (portfolioData.location) parsed.location = portfolioData.location;
         localStorage.setItem('sb_user_profile', JSON.stringify(parsed));
       }
     } catch (e) {

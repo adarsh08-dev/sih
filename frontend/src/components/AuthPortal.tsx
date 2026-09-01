@@ -28,6 +28,7 @@ import {
   CollegeItem 
 } from '../data/colleges';
 import { UniversityDropdown } from './UniversityDropdown';
+import { detectAccurateLocation, syncLocationAcrossApp } from '../utils/locationService';
 import { Logo } from './Logo';
 
 export interface AuthSuccessPayload {
@@ -157,33 +158,20 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     reader.readAsDataURL(file);
   };
 
-  // GPS Location auto detector
+  // GPS & IP Location auto detector
   const getCurrentLocation = async (): Promise<{ location: string; lat: number; lng: number }> => {
     try {
-      if (!navigator.geolocation) {
-        return { location: 'Lucknow, Uttar Pradesh, India', lat: 26.8467, lng: 80.9462 };
-      }
-
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 8000
-        });
-      });
-
-      const { latitude, longitude } = pos.coords;
-      const r = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-      );
-      if (!r.ok) throw new Error('Geocode failed');
-      const d = await r.json();
-      const city = d.address?.city || d.address?.town || d.address?.village || d.address?.suburb || 'Lucknow';
-      const state = d.address?.state || 'Uttar Pradesh';
-      const locStr = `${city}, ${state}, India`;
-      setDetectedLocation(locStr);
-      return { location: locStr, lat: latitude, lng: longitude };
+      const res = await detectAccurateLocation();
+      setDetectedLocation(res.location);
+      return { 
+        location: res.location, 
+        lat: res.lat || 28.3670, 
+        lng: res.lng || 79.4304 
+      };
     } catch {
-      return { location: 'Lucknow, Uttar Pradesh, India', lat: 26.8467, lng: 80.9462 };
+      const fallback = 'Bareilly, Uttar Pradesh, India';
+      setDetectedLocation(fallback);
+      return { location: fallback, lat: 28.3670, lng: 79.4304 };
     }
   };
 

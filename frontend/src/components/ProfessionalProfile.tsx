@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, 
   Plus, 
@@ -33,9 +34,11 @@ import {
   Clock,
   Check,
   Camera,
-  Info
+  Info,
+  Edit2
 } from 'lucide-react';
 import { StudentProfile, UserRole } from '../types';
+import { detectAccurateLocation, syncLocationAcrossApp, normalizeLocationString } from '../utils/locationService';
 
 export interface UserProfileData {
   name: string;
@@ -64,7 +67,7 @@ export const getStoredUserProfile = (): UserProfileData => {
     year: '2025-29',
     role: 'student',
     type: 'Student Candidate',
-    location: 'Lucknow, Uttar Pradesh, India'
+    location: 'Bareilly, Uttar Pradesh, India'
   };
 
   try {
@@ -82,6 +85,14 @@ export const getStoredUserProfile = (): UserProfileData => {
 
   const loc = localStorage.getItem('userLocation');
   if (loc) p.location = loc;
+
+  // Geographic state normalization
+  if (p.location && typeof p.location === 'string') {
+    const parts = p.location.split(',').map((s: string) => s.trim());
+    if (parts.length >= 2) {
+      p.location = normalizeLocationString(parts[0], parts[1], parts[2]);
+    }
+  }
 
   const savedRole = localStorage.getItem('userRole') || localStorage.getItem('role');
   if (savedRole) {
@@ -145,103 +156,47 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
     }
   }, [isOpen]);
 
-  const handleManualLocationSubmit = () => {
-    if (!tempLocation.trim()) return;
-    const updatedProfile = { ...p, location: tempLocation };
-    localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-    localStorage.setItem('userLocation', tempLocation);
+  const handleManualLocationSubmit = (customLoc?: string) => {
+    const locToSave = (customLoc || tempLocation || '').trim();
+    if (!locToSave) return;
+    
+    // Normalize string if formatted with commas
+    const parts = locToSave.split(',').map(s => s.trim());
+    const normalized = parts.length >= 2 ? normalizeLocationString(parts[0], parts[1], parts[2]) : locToSave;
+
+    const updatedProfile = { ...p, location: normalized };
+    syncLocationAcrossApp(normalized);
     setP(updatedProfile);
     setIsManualLocation(false);
     setLocationError(null);
+    setLocationSuccess(true);
+    setTimeout(() => setLocationSuccess(false), 2500);
   };
 
-  // GPS Location refresh function
+  // GPS & Network Geolocation refresh function
   const refreshLocation = useCallback(async () => {
-    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-      console.warn('Geolocation API requires a secure context (HTTPS).');
-    }
-
-    if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported by your browser.');
-      return;
-    }
-
     setIsLocationRefreshing(true);
     setLocationSuccess(false);
     setLocationError(null);
 
     try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, (err) => {
-          // If high accuracy fails with timeout or unavailable, try low accuracy
-          if (err.code === 3 || err.code === 2) {
-            console.warn('High accuracy failed, falling back to standard accuracy...');
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-              enableHighAccuracy: false,
-              timeout: 10000,
-              maximumAge: 60000
-            });
-          } else {
-            reject(err);
-          }
-        }, {
-          enableHighAccuracy: true,
-          timeout: 8000,
-          maximumAge: 0
-        });
-      });
+      const result = await detectAccurateLocation();
+      const newLoc = result.location;
 
-      const { latitude, longitude } = pos.coords;
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-        {
-          headers: {
-            'Accept-Language': 'en'
-          }
-        }
-      );
-      
-      if (!res.ok) throw new Error('Geocoding service unavailable');
-      const data = await res.json();
-      
-      const address = data.address || {};
-      const city = address.city || address.town || address.village || address.suburb || address.city_district || 'Bareilly';
-      const state = address.state || 'Uttar Pradesh';
-      const country = address.country || 'India';
-      const newLoc = `${city}, ${state}, ${country}`;
-
-      // Update state and storage seamlessly
       const updatedProfile = {
         ...p,
         location: newLoc,
-        lat: latitude,
-        lng: longitude
+        lat: result.lat,
+        lng: result.lng
       };
-      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-      localStorage.setItem('userLocation', newLoc);
+      
+      syncLocationAcrossApp(newLoc, result.lat, result.lng);
       setP(updatedProfile);
       setLocationSuccess(true);
       setTimeout(() => setLocationSuccess(false), 3000);
     } catch (err: any) {
-      console.error('Geolocation Error:', {
-        code: err?.code,
-        message: err?.message,
-        error: err
-      });
-      
-      if (err.code === 1) { // PERMISSION_DENIED
-        setLocationError('Location access blocked. Please click "Allow" on the browser prompt or check your site settings. If using the preview, try opening the app in a new tab.');
-      } else if (err.code === 2) { // POSITION_UNAVAILABLE
-        setLocationError('GPS signal unavailable. Please try again or check your device settings.');
-      } else if (err.code === 3) { // TIMEOUT
-        setLocationError('Location request timed out. Please try again with a better connection.');
-      } else {
-        setLocationError(err.message || 'Unable to fetch location. Please try again.');
-      }
-      
-      const fallbackLoc = p.location || 'Lucknow, Uttar Pradesh, India';
-      const updatedProfile = { ...p, location: fallbackLoc };
-      setP(updatedProfile);
+      console.error('Geolocation Error:', err);
+      setLocationError(err?.message || 'Unable to detect GPS. Click to edit manually.');
     } finally {
       setIsLocationRefreshing(false);
     }
@@ -313,8 +268,6 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isEditModalOpen, activeModal, onClose]);
 
-  if (!isOpen) return null;
-
   const isHOD = (p.role || '').toLowerCase().includes('hod') || currentRole === 'hod';
   const isMentor = (p.role || '').toLowerCase().includes('mentor') || currentRole === 'mentor';
   const isStudent = !isHOD && !isMentor;
@@ -328,37 +281,49 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
   const roleLabel = isHOD ? 'HOD / Faculty' : isMentor ? 'Industry Mentor' : 'Student Candidate';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden select-none animate-in fade-in font-sans">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden select-none font-sans">
+          {/* Backdrop with fade animation */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            onClick={onClose}
+          />
 
-      <div className="fixed inset-y-0 left-0 max-w-full flex pr-10">
-        <div className="w-screen max-w-md bg-[#0B0F2A] border-r border-white/10 shadow-2xl flex flex-col justify-between text-slate-100 animate-in slide-in-from-left duration-300">
-          
-          {/* Scrollable Main Area */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/10">
-            
-            {/* Header: PROFESSIONAL PROFILE 11px tracking 1.6px #7C5CFC + badge 🔒 {p.role} */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold text-[#7C5CFC] tracking-[1.6px] uppercase">
-                  PROFESSIONAL PROFILE
-                </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/6 text-white/60 font-semibold border border-white/10 flex items-center gap-1">
-                  🔒 {p.role || currentRole}
-                </span>
-              </div>
-              <button 
-                onClick={onClose}
-                className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
-                title="Close"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="fixed inset-y-0 left-0 max-w-full flex pr-10 pointer-events-none">
+            <motion.div 
+              initial={{ x: '-100%', opacity: 0.9 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0.9 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 240, mass: 0.8 }}
+              className="w-screen max-w-md bg-[#0B0F2A] border-r border-white/10 shadow-2xl flex flex-col justify-between text-slate-100 pointer-events-auto"
+            >
+              
+              {/* Scrollable Main Area */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6 sidebar-scrollbar">
+                
+                {/* Header: PROFESSIONAL PROFILE 11px tracking 1.6px #7C5CFC + badge 🔒 {p.role} */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold text-[#7C5CFC] tracking-[1.6px] uppercase">
+                      PROFESSIONAL PROFILE
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/6 text-white/60 font-semibold border border-white/10 flex items-center gap-1">
+                      🔒 {p.role || currentRole}
+                    </span>
+                  </div>
+                  <button 
+                    onClick={onClose}
+                    className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
 
             {/* Profile Avatar Card */}
             <div className="flex flex-col items-center text-center space-y-3 pt-2">
@@ -411,41 +376,74 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
               {/* Location Row: [pulsing dot 6px #7C5CFC] [text 12px white/60 p.location] [Refresh Button 26x26] */}
               <div className="flex flex-col items-center gap-2">
                 {isManualLocation ? (
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full pl-4 pr-1 py-1 mt-1">
-                    <input
-                      type="text"
-                      autoFocus
-                      className="bg-transparent text-xs text-white outline-none w-40"
-                      placeholder="Enter City, State, Country"
-                      value={tempLocation}
-                      onChange={(e) => setTempLocation(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleManualLocationSubmit()}
-                    />
-                    <button
-                      onClick={handleManualLocationSubmit}
-                      className="bg-[#7C5CFC] text-white p-1 rounded-full hover:bg-[#6D4AE0]"
-                    >
-                      <Check className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => setIsManualLocation(false)}
-                      className="text-white/40 hover:text-white px-2"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
+                  <div className="flex flex-col items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-[#7C5CFC]/40 shadow-md">
+                      <input
+                        type="text"
+                        autoFocus
+                        className="bg-transparent text-xs text-white placeholder-white/40 outline-none w-48 font-medium"
+                        placeholder="e.g. Bareilly, Uttar Pradesh, India"
+                        value={tempLocation}
+                        onChange={(e) => setTempLocation(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleManualLocationSubmit()}
+                      />
+                      <button
+                        onClick={() => handleManualLocationSubmit()}
+                        className="bg-[#7C5CFC] text-white p-1 rounded-full hover:bg-[#6D4AE0] transition-colors"
+                        title="Save location"
+                      >
+                        <Check className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => setIsManualLocation(false)}
+                        className="text-white/40 hover:text-white px-1"
+                        title="Cancel"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+
+                    {/* Quick City Presets */}
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 max-w-xs">
+                      {[
+                        'Bareilly, Uttar Pradesh, India',
+                        'Lucknow, Uttar Pradesh, India',
+                        'Delhi NCR, India',
+                        'Bengaluru, Karnataka, India',
+                        'Pune, Maharashtra, India',
+                        'Remote / Worldwide'
+                      ].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => handleManualLocationSubmit(preset)}
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 hover:bg-[#7C5CFC]/30 text-white/70 hover:text-white border border-white/10 transition-colors"
+                        >
+                          {preset.split(',')[0]}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1 group">
                     <span className={`w-1.5 h-1.5 rounded-full ${locationSuccess ? 'bg-emerald-400' : 'bg-[#7C5CFC]'} animate-pulse`} />
-                    <span className="text-xs text-white/60 font-medium">
-                      {p.location || 'Lucknow, Uttar Pradesh, India'}
+                    <span 
+                      onClick={() => {
+                        setTempLocation(p.location || '');
+                        setIsManualLocation(true);
+                      }}
+                      className="text-xs text-white/70 hover:text-white font-medium cursor-pointer transition-colors flex items-center gap-1"
+                      title="Click to edit location"
+                    >
+                      {p.location || 'Bareilly, Uttar Pradesh, India'}
+                      <Edit2 className="w-2.5 h-2.5 opacity-0 group-hover:opacity-60 transition-opacity ml-0.5 text-white/50" />
                     </span>
                     <button
                       type="button"
                       onClick={refreshLocation}
                       disabled={isLocationRefreshing}
                       className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
-                      title="Refresh GPS Coordinates"
+                      title="Auto-detect Live GPS / Network Location"
                     >
                       {locationSuccess ? (
                         <Check className="w-3 h-3 text-emerald-400" />
@@ -629,7 +627,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
             <span>Ladder AI</span>
             <span className="text-[10px] text-[#7C5CFC]">v2.4.0 Live</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Edit Profile Modal */}
@@ -888,6 +886,8 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
         </div>
       )}
     </div>
+    )}
+    </AnimatePresence>
   );
 };
 

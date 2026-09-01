@@ -10,12 +10,12 @@ export const StatCard: React.FC<{ label: string; value: number | string; trend?:
 
 export const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const colors: Record<string, string> = {
-    Ongoing: 'bg-indigo-900/50 text-indigo-300',
-    Completed: 'bg-slate-800 text-slate-300',
-    'Pending Approval': 'bg-amber-900/50 text-amber-300',
-    Rejected: 'bg-red-900/50 text-red-300',
-    Applied: 'bg-blue-900/50 text-blue-300',
-    Approved: 'bg-emerald-900/50 text-emerald-300'
+    Ongoing: 'bg-indigo-900/40 text-indigo-300 border border-indigo-500/30',
+    Completed: 'bg-emerald-900/40 text-emerald-300 border border-emerald-500/30',
+    'Pending Approval': 'bg-amber-900/40 text-amber-300 border border-amber-500/30',
+    Rejected: 'bg-rose-900/40 text-rose-300 border border-rose-500/30',
+    Applied: 'bg-blue-900/40 text-blue-300 border border-blue-500/30',
+    Approved: 'bg-emerald-900/40 text-emerald-300 border border-emerald-500/30'
   };
-  return <span className={`px-2 py-0.5 rounded-full text-[10px] ${colors[status] || 'bg-slate-700'}`}>{status}</span>;
+  return <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${colors[status] || 'bg-slate-700/60 text-slate-300 border border-slate-600/30'}`}>{status}</span>;
 };
