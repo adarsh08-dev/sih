@@ -1666,11 +1666,24 @@ export const RecruiterAnalyticsPage: React.FC = () => {
     { college: 'BIET Jhansi', applicants: 36, shortlisted: 9, avgScore: 77.2, offerRate: '11.1%' }
   ];
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div className="p-4 bg-[#0B1033] rounded-xl border border-[#1E2964] space-y-1">
-        <p className="text-slate-400 text-xs">Total Applications</p>
-        <p className="text-2xl font-black text-white">{initialMockApplications.length}</p>
-        <p className="text-[10px] text-emerald-400">+18% this campus cycle</p>
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#0E1538] p-6 rounded-2xl border border-[#1E2964]">
+        <div>
+          <h2 className="text-xl font-black text-white">Campus & Recruitment Intelligence</h2>
+          <p className="text-xs text-slate-400">Deep talent analytics across partner universities and skill DNA matches.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <select 
+            value={selectedCycle} 
+            onChange={(e) => setSelectedCycle(e.target.value)}
+            className="bg-[#0B1033] border border-[#1E2964] rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none"
+          >
+            <option>Campus Season 2026-27</option>
+            <option>Winter Cohort 2026</option>
+            <option>Summer Internship 2026</option>
+          </select>
+        </div>
       </div>
 
       {/* KPI Cards */}
