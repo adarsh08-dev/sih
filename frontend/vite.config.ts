@@ -469,6 +469,51 @@ CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
           return res.end(JSON.stringify([]));
         }
 
+        // 14. OAuth Connection endpoints
+        if (url.startsWith('/api/auth/status/')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({ connected: false }));
+        }
+
+        if (url.startsWith('/api/auth/url')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({ url: '#' }));
+        }
+
+        if (url.startsWith('/api/auth/disconnect/')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({ success: true }));
+        }
+
+        // 15. AI Career Analysis & Skill Gaps
+        if (url.startsWith('/api/ai/career-analysis')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({
+            analysis: 'Student demonstrates strong algorithmic foundational skill with highest career velocity toward Full-Stack & Microservices engineering.',
+            strengths: ['Algorithmic Logic (88%)', 'Code Quality & Clean Architecture (85%)', 'Adaptability (84%)'],
+            recommendations: ['Build high-concurrency microservice deliverable', 'Complete 3 Ghost simulation sandboxes']
+          }));
+        }
+
+        if (url.startsWith('/api/ai/skill-gaps')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({
+            gaps: [
+              { skill: 'Distributed Sharding', gap: 40, priority: 'High' },
+              { skill: 'Zero-Trust JWT Blacklisting', gap: 28, priority: 'Medium' }
+            ]
+          }));
+        }
+
+        // 16. Chat API (AI Faculty Advisor)
+        if (url.startsWith('/api/chat')) {
+          res.statusCode = 200;
+          return res.end(JSON.stringify({
+            reply: 'CSIT Academic Advisory: Curriculum aligns with industry standards. 84% student cohort on track for 2026-27 placement cycle.',
+            text: 'CSIT Academic Advisory: Curriculum aligns with industry standards. 84% student cohort on track for 2026-27 placement cycle.'
+          }));
+        }
+
         // Generic catch-all
         res.statusCode = 200;
         return res.end(JSON.stringify({ success: true, message: 'Ladder API response OK' }));

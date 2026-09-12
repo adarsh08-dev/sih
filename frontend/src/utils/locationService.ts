@@ -187,7 +187,7 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
               // Try fallback low accuracy
               navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: false,
-                timeout: 6000,
+                timeout: 3000,
                 maximumAge: 60000
               });
             } else {
@@ -195,9 +195,9 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
             }
           },
           {
-            enableHighAccuracy: true,
-            timeout: 7000,
-            maximumAge: 0
+            enableHighAccuracy: false,
+            timeout: 3000,
+            maximumAge: 60000
           }
         );
       });
@@ -206,9 +206,13 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
 
       // Tier 1A: BigDataCloud Reverse Geocode Client (fast & accurate)
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
         const bdcRes = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+          { signal: controller.signal }
         );
+        clearTimeout(timeoutId);
         if (bdcRes.ok) {
           const bdcData = await bdcRes.json();
           const city = bdcData.locality || bdcData.city || bdcData.principalSubdivisionDistrict || 'Bareilly';
@@ -231,26 +235,34 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
       }
 
       // Tier 1B: OpenStreetMap Nominatim
-      const nomRes = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`
-      );
-      if (nomRes.ok) {
-        const nomData = await nomRes.json();
-        const address = nomData.address || {};
-        const city = address.city || address.town || address.village || address.suburb || address.city_district || address.county || 'Bareilly';
-        const state = address.state || 'Uttar Pradesh';
-        const country = address.country || 'India';
-        const loc = normalizeLocationString(city, state, country);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const nomRes = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`,
+          { signal: controller.signal }
+        );
+        clearTimeout(timeoutId);
+        if (nomRes.ok) {
+          const nomData = await nomRes.json();
+          const address = nomData.address || {};
+          const city = address.city || address.town || address.village || address.suburb || address.city_district || address.county || 'Bareilly';
+          const state = address.state || 'Uttar Pradesh';
+          const country = address.country || 'India';
+          const loc = normalizeLocationString(city, state, country);
 
-        return {
-          location: loc,
-          city,
-          state,
-          country,
-          lat: latitude,
-          lng: longitude,
-          source: 'gps'
-        };
+          return {
+            location: loc,
+            city,
+            state,
+            country,
+            lat: latitude,
+            lng: longitude,
+            source: 'gps'
+          };
+        }
+      } catch {
+        // Fall through
       }
     } catch {
       // GPS failed or permission denied in preview iframe, proceed to IP fallback
@@ -259,10 +271,13 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
 
   // Step 2: IP-Based Geolocation Fallback (works across iframes and sandboxes)
   try {
-    const ipRes = await fetch('https://ipapi.co/json/');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const ipRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+    clearTimeout(timeoutId);
     if (ipRes.ok) {
       const ipData = await ipRes.json();
-      if (ipData.city && ipData.region) {
+      if (ipData && ipData.city && ipData.region) {
         const city = ipData.city;
         const state = ipData.region;
         const country = ipData.country_name || 'India';
@@ -284,10 +299,13 @@ export async function detectAccurateLocation(): Promise<LocationResult> {
   }
 
   try {
-    const ipWhoRes = await fetch('https://ipwho.is/');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const ipWhoRes = await fetch('https://ipwho.is/', { signal: controller.signal });
+    clearTimeout(timeoutId);
     if (ipWhoRes.ok) {
       const whoData = await ipWhoRes.json();
-      if (whoData.success && whoData.city) {
+      if (whoData && whoData.success && whoData.city) {
         const city = whoData.city;
         const state = whoData.region || 'Uttar Pradesh';
         const country = whoData.country || 'India';

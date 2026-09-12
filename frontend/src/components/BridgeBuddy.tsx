@@ -160,17 +160,27 @@ export const BridgeBuddy: React.FC<BridgeBuddyProps> = ({ student, currentRole }
       }
 
       // Remove the cursor and finalize
+      let finalText = streamedText;
+      try {
+        const parsed = JSON.parse(streamedText);
+        if (parsed && typeof parsed.reply === 'string') {
+          finalText = parsed.reply;
+        }
+      } catch {
+        // Plain text stream
+      }
+
       setMessages(prev => {
         const newMsgs = [...prev];
         newMsgs[newMsgs.length - 1] = {
           ...newMsgs[newMsgs.length - 1],
-          text: streamedText,
+          text: finalText,
           isStreaming: false
         };
         return newMsgs;
       });
 
-      queryCache.set(queryKey, streamedText);
+      queryCache.set(queryKey, finalText);
       console.log(`Total stream completion Time: ${Date.now() - start}ms`);
 
     } catch (err) {
