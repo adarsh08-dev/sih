@@ -40,7 +40,7 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 bg-[#0B0F2A] flex flex-col items-center justify-center font-sans select-none transition-opacity duration-400 ease-out ${
+      className={`fixed inset-0 z-50 bg-[#00030E] flex flex-col items-center justify-center font-sans select-none transition-opacity duration-400 ease-out text-[#F3E9EC] ${
         stage === 'fading' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -48,11 +48,11 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
         @keyframes splashPulse {
           0%, 100% {
             transform: scale(0.96);
-            filter: drop-shadow(0 0 12px rgba(124, 92, 252, 0.4));
+            filter: drop-shadow(0 0 12px rgba(94, 58, 92, 0.4));
           }
           50% {
             transform: scale(1.06);
-            filter: drop-shadow(0 0 24px rgba(124, 92, 252, 0.8));
+            filter: drop-shadow(0 0 24px rgba(180, 122, 154, 0.8));
           }
         }
         @keyframes loaderDots {
@@ -86,7 +86,7 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
       {/* Center Logo with 1.2s pulse animation */}
       <div className="relative flex flex-col items-center">
         {/* Glow ambient background ring */}
-        <div className="w-64 h-64 rounded-full bg-[#7C5CFC]/15 blur-3xl absolute -top-12 pointer-events-none" />
+        <div className="w-64 h-64 rounded-full bg-[#5E3A5C]/20 blur-3xl absolute -top-12 pointer-events-none" />
 
         {/* Center Animated Logo: 220px or Logo with specs */}
         <div className="relative z-10 flex flex-col items-center mb-6 splash-pulse-logo">
@@ -109,7 +109,7 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
 
         {/* College Sync Badge if available */}
         {college && (
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0E1538] border border-white/10 shadow-md mb-4 animate-in fade-in zoom-in-95">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#2C1B2F] border border-[#5E3A5C] shadow-md mb-4 animate-in fade-in zoom-in-95">
             <div className="w-5 h-5 rounded bg-white p-0.5 flex items-center justify-center shrink-0">
               <img 
                 src={college.logo || college.fallbackLogo} 
@@ -117,7 +117,7 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
                 className="w-full h-full object-contain" 
               />
             </div>
-            <span className="text-xs font-semibold text-slate-300">
+            <span className="text-xs font-semibold text-[#F3E9EC]/80">
               Syncing with {college.short}...
             </span>
           </div>
@@ -126,20 +126,19 @@ export const DashboardSplash: React.FC<DashboardSplashProps> = ({
         {/* Dynamic Subtext + Animated Dots Loader */}
         <div className="flex items-center gap-2 mt-2">
           <p 
-            className="text-[13px] text-white/60 font-medium tracking-wide"
-            style={{ fontFamily: 'Inter, sans-serif' }}
+            className="text-[13px] text-[#F3E9EC]/70 font-medium tracking-wide"
           >
             {getSubtext()}
           </p>
           <div className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] loader-dot-1" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] loader-dot-2" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] loader-dot-3" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B47A9A] loader-dot-1" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B47A9A] loader-dot-2" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B47A9A] loader-dot-3" />
           </div>
         </div>
 
         {/* Tagline */}
-        <p className="text-[11.5px] text-white/45 mt-3 font-normal tracking-[0.2px]">
+        <p className="text-[11.5px] text-[#F3E9EC]/45 mt-3 font-normal tracking-[0.2px]">
           Empowering Talent, Bridging Academia & Industry
         </p>
       </div>

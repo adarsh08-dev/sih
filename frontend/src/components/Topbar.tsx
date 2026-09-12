@@ -81,14 +81,14 @@ export const Topbar: React.FC<TopbarProps> = ({
   }, []);
 
   return (
-    <header className="h-16 shrink-0 bg-[#090E2B] border-b border-[#18214D] sticky top-0 z-30 flex items-center justify-between px-3 sm:px-6 select-none min-w-0">
+    <header className="h-16 shrink-0 bg-[#0B0E1A] border-b border-[#5E3A5C]/40 sticky top-0 z-30 flex items-center justify-between px-3 sm:px-6 select-none min-w-0">
       {/* Left section: Avatar Icon + Hamburger / Collapse + Global OmniSearch */}
       <div className="flex items-center gap-2 sm:gap-3 flex-1 max-w-2xl min-w-0">
         {/* Mobile Hamburger Toggle */}
         {onToggleMobileSidebar && (
           <button
             onClick={onToggleMobileSidebar}
-            className="md:hidden p-2 rounded-xl bg-[#0E1538] border border-[#1E2964] text-slate-300 hover:text-white shrink-0 cursor-pointer"
+            className="md:hidden p-2 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] text-[#F3E9EC]/70 hover:text-[#F3E9EC] hover:border-[#B47A9A] shrink-0 cursor-pointer"
             title="Open Navigation"
           >
             <Menu className="w-4 h-4" />
@@ -99,17 +99,17 @@ export const Topbar: React.FC<TopbarProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="hidden md:flex p-2 rounded-xl bg-[#0E1538] border border-[#1E2964] text-slate-400 hover:text-white hover:border-[#7C5CFC] transition-colors shrink-0 cursor-pointer"
+            className="hidden md:flex p-2 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] text-[#F3E9EC]/70 hover:text-[#F3E9EC] hover:border-[#B47A9A] transition-colors shrink-0 cursor-pointer"
             title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
-            {isSidebarCollapsed ? <PanelLeft className="w-4 h-4 text-[#A78BFA]" /> : <PanelLeftClose className="w-4 h-4" />}
+            {isSidebarCollapsed ? <PanelLeft className="w-4 h-4 text-[#B47A9A]" /> : <PanelLeftClose className="w-4 h-4" />}
           </button>
         )}
 
         {/* TOP HEADER - LEFT AVATAR ICON */}
         <div
           onClick={onOpenProfile}
-          className="w-9 h-9 min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] rounded-full flex items-center justify-center overflow-hidden shrink-0 cursor-pointer shadow-sm hover:ring-2 hover:ring-[#7C5CFC]/50 transition-all bg-[#E5E7EB]"
+          className="w-9 h-9 min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] rounded-full flex items-center justify-center overflow-hidden shrink-0 cursor-pointer shadow-sm border border-[#5E3A5C] hover:ring-2 hover:ring-[#B47A9A]/50 transition-all bg-[#2C1B2F]"
           title="Open Profile Drawer"
         >
           {profilePhoto ? (
@@ -119,8 +119,8 @@ export const Topbar: React.FC<TopbarProps> = ({
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-[#E5E7EB] flex items-center justify-center">
-              <UserIcon className="w-5 h-5 text-[#6B7280]" />
+            <div className="w-full h-full bg-[#2C1B2F] flex items-center justify-center">
+              <UserIcon className="w-5 h-5 text-[#B47A9A]" />
             </div>
           )}
         </div>
@@ -147,14 +147,14 @@ export const Topbar: React.FC<TopbarProps> = ({
         {onToggleTheme && (
           <button
             onClick={onToggleTheme}
-            className="p-2 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] text-slate-300 hover:text-white transition-all shrink-0 cursor-pointer shadow-sm"
+            className="p-2 rounded-lg bg-[#2C1B2F] border border-[#5E3A5C] hover:border-[#B47A9A] text-[#F3E9EC]/70 hover:text-[#F3E9EC] transition-all shrink-0 cursor-pointer shadow-sm"
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-180 duration-300" />
+              <Sun className="w-4 h-4 text-[#B47A9A] animate-in spin-in-180 duration-300" />
             ) : (
-              <Moon className="w-4 h-4 text-indigo-400 animate-in spin-in-180 duration-300" />
+              <Moon className="w-4 h-4 text-[#5E3A5C] animate-in spin-in-180 duration-300" />
             )}
           </button>
         )}
@@ -162,12 +162,12 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Notifications */}
         <button
           onClick={onOpenNotifications}
-          className="relative p-2 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-[#7C5CFC] text-slate-300 hover:text-white transition-colors shrink-0 cursor-pointer"
+          className="relative p-2 rounded-lg bg-[#2C1B2F] border border-[#5E3A5C] hover:border-[#B47A9A] text-[#F3E9EC]/70 hover:text-[#F3E9EC] transition-colors shrink-0 cursor-pointer"
           title="Notification Alerts"
         >
           <Bell className="w-4 h-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-rose-500 text-white font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center border-2 border-[#090E2B] animate-pulse">
+            <span className="absolute -top-1 -right-1 bg-rose-500 text-white font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center border-2 border-[#0B0E1A] animate-pulse">
               {unreadCount}
             </span>
           )}
@@ -176,7 +176,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Logout Quick Action */}
         <button
           onClick={onLogout}
-          className="p-2 rounded-lg bg-[#0E1538] border border-[#1E2964] hover:border-rose-500 text-slate-400 hover:text-rose-400 transition-colors shrink-0 cursor-pointer"
+          className="p-2 rounded-lg bg-[#2C1B2F] border border-[#5E3A5C] hover:border-rose-500 text-[#F3E9EC]/60 hover:text-rose-400 transition-colors shrink-0 cursor-pointer"
           title="Sign Out"
         >
           <LogOut className="w-4 h-4" />

@@ -83,17 +83,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Render Inner Sidebar Content (parameterized by whether it's collapsed or in drawer)
   const renderContent = (collapsed: boolean, isDrawer = false) => {
+    const navBtnClass = (tabKey: string) => `w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
+      activeTab === tabKey
+        ? 'bg-[#2C1B2F] text-[#F3E9EC] border border-[#5E3A5C] shadow-sm font-bold'
+        : 'text-[#F3E9EC]/70 hover:bg-[#2C1B2F]/40 hover:text-[#F3E9EC]'
+    }`;
+
     return (
-      <div className="flex flex-col h-full bg-[#0B0F2A] border-r border-white/5 select-none text-slate-300">
+      <div className="flex flex-col h-full bg-[#0B0E1A] border-r border-[#5E3A5C]/40 select-none text-[#F3E9EC]">
         {/* Brand Header */}
-        <div className={`px-4 py-4 border-b border-white/6 bg-[#0B0F2A] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        <div className={`px-4 py-4 border-b border-[#5E3A5C]/40 bg-[#0B0E1A] flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
           <Logo showText={!collapsed} subtitle={!collapsed} iconSize={36} />
 
           {/* Close button for mobile drawer */}
           {isDrawer && onCloseMobile && (
             <button
               onClick={onCloseMobile}
-              className="p-1.5 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-xl bg-[#2C1B2F] text-[#F3E9EC]/70 hover:text-[#F3E9EC] border border-[#5E3A5C] transition-colors"
               title="Close Navigation"
             >
               <X className="w-5 h-5" />
@@ -104,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isDrawer && onToggleCollapse && !collapsed && (
             <button
               onClick={onToggleCollapse}
-              className="hidden lg:flex p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+              className="hidden lg:flex p-1.5 rounded-xl text-[#F3E9EC]/60 hover:text-[#F3E9EC] hover:bg-[#2C1B2F] transition-colors"
               title="Collapse Sidebar"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -115,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* ACTIVE ROLE (Locked) */}
         {!collapsed ? (
           <div className="px-3.5 pt-3.5 pb-2.5">
-            <div className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#1A1F3D] border border-white/5 shadow-md">
+            <div className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] shadow-md">
               <div className="flex items-center gap-2.5 min-w-0">
                 {/* Green dot pulse */}
                 <span className="relative flex h-2 w-2 shrink-0">
@@ -123,21 +129,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[10px] text-white/30 font-bold uppercase tracking-[1.5px]">Active Role</p>
-                  <p className="text-xs font-semibold text-white capitalize truncate">
+                  <p className="text-[10px] text-[#F3E9EC]/40 font-bold uppercase tracking-[1.5px]">Active Role</p>
+                  <p className="text-xs font-semibold text-[#F3E9EC] capitalize truncate">
                     {currentRole === 'hod' ? 'HOD / Faculty' : currentRole === 'mentor' ? 'Industry Mentor' : currentRole === 'company' ? 'Recruiter' : 'Student Candidate'}
                   </p>
                 </div>
               </div>
-              {/* Lock icon in circle bg white/5 */}
-              <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/5" title="Role is locked">
-                <Lock className="w-3.5 h-3.5 text-white/40" />
+              {/* Lock icon in circle */}
+              <div className="w-6 h-6 rounded-full bg-[#0B0E1A] flex items-center justify-center shrink-0 border border-[#5E3A5C]" title="Role is locked">
+                <Lock className="w-3.5 h-3.5 text-[#B47A9A]" />
               </div>
             </div>
           </div>
         ) : (
           <div className="py-3 flex justify-center">
-            <div className="w-8 h-8 rounded-lg bg-[#1A1F3D] border border-white/5 flex items-center justify-center text-white/40" title="Role is locked">
+            <div className="w-8 h-8 rounded-lg bg-[#2C1B2F] border border-[#5E3A5C] flex items-center justify-center text-[#B47A9A]" title="Role is locked">
               <Lock className="w-4 h-4" />
             </div>
           </div>
@@ -156,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Category 1: Skill Diagnostic & Readiness */}
               <div>
                 {!collapsed && (
-                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                     Skill Readiness
                   </div>
                 )}
@@ -165,13 +171,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-dashboard"
                     onClick={() => handleTabClick('dashboard')}
                     title="Career Overview"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'dashboard'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('dashboard')}
                   >
-                    <Compass className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <Compass className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Career Overview</span>}
                   </button>
 
@@ -179,13 +181,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-skills"
                     onClick={() => handleTabClick('skills')}
                     title="Skill Intelligence"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'skills'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('skills')}
                   >
-                    <Cpu className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Cpu className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Skill Intelligence</span>}
                   </button>
 
@@ -193,13 +191,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-assessment"
                     onClick={() => handleTabClick('assessment')}
                     title="Skill Assessment"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'assessment'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('assessment')}
                   >
-                    <Award className="w-4 h-4 text-cyan-300 shrink-0" />
+                    <Award className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Skill Assessment</span>}
                   </button>
 
@@ -207,13 +201,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-skill-gap"
                     onClick={() => handleTabClick('skill-gap')}
                     title="Skill Gap Analysis"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'skill-gap'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('skill-gap')}
                   >
-                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Sparkles className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Skill Gap Analysis</span>}
                   </button>
 
@@ -221,13 +211,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-learning"
                     onClick={() => handleTabClick('learning')}
                     title="Learning Hub"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'learning'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('learning')}
                   >
-                    <GraduationCap className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <GraduationCap className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Learning Hub</span>}
                   </button>
                 </div>
@@ -236,7 +222,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Category 2: Placements & Work */}
               <div>
                 {!collapsed && (
-                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                     Jobs & Experience
                   </div>
                 )}
@@ -245,13 +231,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-jobs"
                     onClick={() => handleTabClick('jobs')}
                     title="Jobs & Placements"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'jobs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('jobs')}
                   >
-                    <BriefcaseBusiness className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <BriefcaseBusiness className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Jobs & Placements</span>}
                   </button>
 
@@ -259,13 +241,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-tracker"
                     onClick={() => handleTabClick('tracker')}
                     title="Application Tracker"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'tracker'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('tracker')}
                   >
-                    <FileText className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <FileText className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Application Tracker</span>}
                   </button>
 
@@ -273,13 +251,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-gigs"
                     onClick={() => handleTabClick('gigs')}
                     title="Micro-Internship Gigs"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'gigs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('gigs')}
                   >
-                    <Briefcase className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Briefcase className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Micro-Internships</span>}
                   </button>
 
@@ -287,13 +261,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-projects"
                     onClick={() => handleTabClick('projects')}
                     title="Industry Projects"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'projects'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('projects')}
                   >
-                    <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Layers className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Live Projects & Bounties</span>}
                   </button>
 
@@ -301,17 +271,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-mentors"
                     onClick={() => handleTabClick('mentors')}
                     title="Mentor Capsules (15 Min)"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'mentors'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('mentors')}
                   >
-                    <Users className="w-4 h-4 text-pink-400 shrink-0" />
+                    <Users className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && (
                       <>
                         <span className="truncate">Mentor Capsules</span>
-                        <span className="ml-auto text-[9px] bg-pink-500/20 text-pink-300 font-bold px-1.5 py-0.5 rounded shrink-0">
+                        <span className="ml-auto text-[9px] bg-[#5E3A5C]/40 text-[#B47A9A] font-bold px-1.5 py-0.5 rounded shrink-0 border border-[#5E3A5C]">
                           15 Min
                         </span>
                       </>
@@ -323,7 +289,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Category 3: Career Assets & Intelligence */}
               <div>
                 {!collapsed && (
-                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                  <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                     Credentials & AI
                   </div>
                 )}
@@ -332,13 +298,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-resume"
                     onClick={() => handleTabClick('resume')}
                     title="Resume & Portfolio"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'resume'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('resume')}
                   >
-                    <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <FileText className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Resume & Portfolio</span>}
                   </button>
 
@@ -346,13 +308,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-certs"
                     onClick={() => handleTabClick('certs')}
                     title="Certifications"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'certs'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('certs')}
                   >
-                    <Award className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Award className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Certifications & Badges</span>}
                   </button>
 
@@ -360,13 +318,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-passport"
                     onClick={() => handleTabClick('passport')}
                     title="Experience Passport"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'passport'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('passport')}
                   >
-                    <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">Experience Passport</span>}
                   </button>
 
@@ -374,13 +328,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-advisor"
                     onClick={() => handleTabClick('advisor')}
                     title="AI Career Advisor"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'advisor'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('advisor')}
                   >
-                    <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
+                    <Sparkles className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">AI Career Advisor</span>}
                   </button>
 
@@ -388,13 +338,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     id="nav-helpdesk"
                     onClick={() => handleTabClick('helpdesk')}
                     title="AI Help Desk & Advisor"
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === 'helpdesk'
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass('helpdesk')}
                   >
-                    <HelpCircle className="w-4 h-4 text-violet-400 shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">AI Help Desk (Bridge Buddy)</span>}
                   </button>
                 </div>
@@ -406,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {currentRole === 'hod' && (
             <div>
               {!collapsed && (
-                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   ACADEMIC & INDUSTRY
                 </div>
               )}
@@ -426,20 +372,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass(item.id)}
                   >
-                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </button>
                 ))}
               </div>
 
               {!collapsed && (
-                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   ENGAGEMENT
                 </div>
               )}
@@ -454,20 +396,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass(item.id)}
                   >
-                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </button>
                 ))}
               </div>
 
               {!collapsed && (
-                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   ACTIVITY
                 </div>
               )}
@@ -481,20 +419,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass(item.id)}
                   >
-                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </button>
                 ))}
               </div>
 
               {!collapsed && (
-                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   INTELLIGENCE
                 </div>
               )}
@@ -507,13 +441,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass(item.id)}
                   >
-                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </button>
                 ))}
@@ -525,7 +455,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {currentRole === 'mentor' && (
             <div>
               {!collapsed && (
-                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   Mentorship
                 </div>
               )}
@@ -533,39 +463,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={() => handleTabClick('mentor-pipeline')}
                   title="Assigned Student Pipeline"
-                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                    activeTab === 'mentor-pipeline' || activeTab === 'dashboard'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
+                  className={navBtnClass('mentor-pipeline')}
                 >
-                  <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <UserCheck className="w-4 h-4 text-[#B47A9A] shrink-0" />
                   {!collapsed && <span className="truncate">Student Pipeline</span>}
                 </button>
 
                 <button
                   onClick={() => handleTabClick('mentor-reviews')}
                   title="Ghost Task Submissions"
-                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                    activeTab === 'mentor-reviews'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
+                  className={navBtnClass('mentor-reviews')}
                 >
-                  <Terminal className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <Terminal className="w-4 h-4 text-[#B47A9A] shrink-0" />
                   {!collapsed && <span className="truncate">Task Submissions</span>}
                 </button>
 
                 <button
                   onClick={() => handleTabClick('mentor-capsules')}
                   title="15-Min Capsule Slots"
-                  className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                    activeTab === 'mentor-capsules'
-                      ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
+                  className={navBtnClass('mentor-capsules')}
                 >
-                  <Users className="w-4 h-4 text-pink-400 shrink-0" />
+                  <Users className="w-4 h-4 text-[#B47A9A] shrink-0" />
                   {!collapsed && <span className="truncate">15-Min Capsule Slots</span>}
                 </button>
               </div>
@@ -576,7 +494,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {(currentRole === 'company' || currentRole === 'recruiter') && (
             <div>
               {!collapsed && (
-                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   TALENT & HIRING
                 </div>
               )}
@@ -596,20 +514,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
                     title={item.label}
-                    className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                    className={navBtnClass(item.id)}
                   >
-                    <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                    <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </button>
                 ))}
               </div>
 
               {!collapsed && (
-                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   COLLABORATION
                 </div>
               )}
@@ -623,20 +537,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         key={item.id}
                         onClick={() => handleTabClick(item.id)}
                         title={item.label}
-                        className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                        activeTab === item.id
-                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                        }`}
+                        className={navBtnClass(item.id)}
                     >
-                        <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                        <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                         {!collapsed && <span className="truncate">{item.label}</span>}
                     </button>
                 ))}
               </div>
 
               {!collapsed && (
-                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-white/30 uppercase tracking-[1.5px]">
+                <div className="px-2.5 mt-4 mb-1.5 text-[10px] font-bold text-[#F3E9EC]/40 uppercase tracking-[1.5px]">
                   ACCOUNT
                 </div>
               )}
@@ -652,13 +562,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         key={item.id}
                         onClick={() => handleTabClick(item.id)}
                         title={item.label}
-                        className={`w-full flex items-center ${collapsed ? 'justify-center w-10 h-10 mx-auto px-0 py-0 gap-0' : 'gap-3 px-2.5 py-2'} rounded-xl text-[13px] font-semibold transition-all ${
-                        activeTab === item.id
-                            ? 'bg-[#7C5CFC]/20 text-[#C4B5FD] border border-[#7C5CFC]/30 shadow-sm font-bold'
-                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                        }`}
+                        className={navBtnClass(item.id)}
                     >
-                        <item.icon className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                        <item.icon className="w-4 h-4 text-[#B47A9A] shrink-0" />
                         {!collapsed && <span className="truncate">{item.label}</span>}
                     </button>
                 ))}
@@ -669,7 +575,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Profile Card & Sign Out */}
-        <div className="p-3.5 border-t border-white/5 bg-[#090D25]">
+        <div className="p-3.5 border-t border-[#5E3A5C]/40 bg-[#0B0E1A]">
           {!collapsed ? (
             <div className="space-y-3">
               <div
@@ -677,17 +583,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onOpenProfile();
                   if (onCloseMobile) onCloseMobile();
                 }}
-                className="flex items-center gap-3 p-2.5 rounded-xl bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/30 cursor-pointer transition-all group shadow-sm"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] hover:border-[#B47A9A] cursor-pointer transition-all group shadow-sm"
               >
                 <div className="relative shrink-0">
                   {localStorage.getItem('profilePhoto') ? (
                     <img
                       src={localStorage.getItem('profilePhoto')!}
                       alt="Avatar"
-                      className="w-9 h-9 rounded-lg object-cover border border-[#7C5CFC]/30 shadow"
+                      className="w-9 h-9 rounded-lg object-cover border border-[#5E3A5C] shadow"
                     />
                   ) : (
-                    <div className="w-9 h-9 rounded-lg bg-[#7C5CFC]/20 border border-[#7C5CFC]/30 flex items-center justify-center font-bold text-[#A78BFA] text-xs shadow">
+                    <div className="w-9 h-9 rounded-lg bg-[#0B0E1A] border border-[#5E3A5C] flex items-center justify-center font-bold text-[#B47A9A] text-xs shadow">
                       {getInitials(
                         currentRole === 'hod'
                           ? 'Dr. Arvind Sharma'
@@ -699,10 +605,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       )}
                     </div>
                   )}
-                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1A1F3D] rounded-full" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#2C1B2F] rounded-full" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-white truncate group-hover:text-[#C4B5FD] transition-colors">
+                  <p className="text-xs font-semibold text-[#F3E9EC] truncate group-hover:text-[#B47A9A] transition-colors">
                     {currentRole === 'hod'
                       ? 'Dr. Arvind Sharma'
                       : currentRole === 'mentor'
@@ -711,7 +617,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       ? (localStorage.getItem('userName') || 'Corporate Recruiter')
                       : student?.name || localStorage.getItem('userName') || 'Adarsh Pratap'}
                   </p>
-                  <p className="text-[10px] text-white/30 truncate font-sans">
+                  <p className="text-[10px] text-[#F3E9EC]/50 truncate font-sans">
                     {currentRole === 'hod'
                       ? 'HOD • Dept of CSIT'
                       : currentRole === 'mentor'
@@ -729,20 +635,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onOpenProfile();
                     if (onCloseMobile) onCloseMobile();
                   }}
-                  className="text-white/40 hover:text-white flex items-center gap-1.5 transition-colors font-medium"
+                  className="text-[#F3E9EC]/50 hover:text-[#F3E9EC] flex items-center gap-1.5 transition-colors font-medium"
                 >
-                  <UserIcon className="w-3.5 h-3.5 text-white/30" />
+                  <UserIcon className="w-3.5 h-3.5 text-[#B47A9A]" />
                   <span>Profile</span>
                 </button>
-                <span className="text-white/10">|</span>
+                <span className="text-[#5E3A5C]">|</span>
                 <button
                   onClick={() => {
                     onLogout();
                     if (onCloseMobile) onCloseMobile();
                   }}
-                  className="text-rose-400/70 hover:text-rose-400 flex items-center gap-1 transition-colors font-medium"
+                  className="text-rose-400/80 hover:text-rose-400 flex items-center gap-1 transition-colors font-medium"
                 >
-                  <LogOut className="w-3.5 h-3.5 text-rose-400/50" />
+                  <LogOut className="w-3.5 h-3.5 text-rose-400/60" />
                   <span>Sign Out</span>
                 </button>
               </div>
@@ -751,7 +657,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex flex-col items-center gap-3 py-1">
               <button
                 onClick={onOpenProfile}
-                className="w-9 h-9 rounded-lg bg-[#7C5CFC]/20 border border-[#7C5CFC]/30 flex items-center justify-center font-bold text-[#A78BFA] text-xs shadow-md"
+                className="w-9 h-9 rounded-lg bg-[#2C1B2F] border border-[#5E3A5C] flex items-center justify-center font-bold text-[#B47A9A] text-xs shadow-md"
                 title="View Profile"
               >
                 {getInitials(
@@ -767,7 +673,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {onToggleCollapse && (
                 <button
                   onClick={onToggleCollapse}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#1A1F3D] transition-colors"
+                  className="p-1 rounded-lg text-[#F3E9EC]/60 hover:text-[#F3E9EC] hover:bg-[#2C1B2F] transition-colors"
                   title="Expand Sidebar"
                 >
                   <ChevronRight className="w-4 h-4" />

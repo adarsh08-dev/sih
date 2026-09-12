@@ -304,9 +304,9 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 font-sans select-none animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-[#0B0F2A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden text-slate-200 my-8">
+      <div className="relative w-full max-w-xl bg-[#0B0E1A] border border-[#5E3A5C]/40 rounded-2xl shadow-2xl overflow-hidden text-[#F3E9EC] my-8">
         {/* Header Ribbon & Close Button */}
-        <div className="px-4 py-4 border-b border-white/6 flex items-start justify-between bg-[#0B0F2A]">
+        <div className="px-4 py-4 border-b border-[#5E3A5C]/30 flex items-start justify-between bg-[#0B0E1A]">
           <Logo 
             showText={true} 
             subtitle={true} 
@@ -314,7 +314,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
           />
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] hover:border-[#B47A9A] text-[#F3E9EC]/60 hover:text-[#F3E9EC] transition-colors cursor-pointer"
             title="Close Portal"
           >
             <X className="w-4 h-4" />
@@ -322,16 +322,16 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
         </div>
 
         {/* Dual Switchers: 1. Mode Toggle [Sign In] [Register] + 2. Role Tabs [Student][Mentor][HOD][Recruiter] */}
-        <div className="px-6 pt-4 pb-2 space-y-3 bg-[#0E1538]/50">
+        <div className="px-6 pt-4 pb-2 space-y-3 bg-[#0B0E1A]">
           {/* Mode Toggle [Sign In] [Register Student / User] */}
-          <div className="flex items-center p-1 bg-[#1A1F3D] rounded-xl border border-white/10">
+          <div className="flex items-center p-1 bg-[#2C1B2F] rounded-xl border border-[#5E3A5C]">
             <button
               type="button"
               onClick={() => setAuthMode('login')}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 authMode === 'login'
-                  ? 'bg-[#7C5CFC] text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] shadow-md border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               Sign In
@@ -341,8 +341,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
               onClick={() => setAuthMode('register')}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 authMode === 'register'
-                  ? 'bg-[#7C5CFC] text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] shadow-md border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               Register Student / User
@@ -350,14 +350,14 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
           </div>
 
           {/* Role Tabs [Student] [Mentor] [HOD] [Recruiter] - Student Default */}
-          <div className="grid grid-cols-4 gap-1.5 p-1 bg-[#1A1F3D]/80 rounded-xl border border-white/5">
+          <div className="grid grid-cols-4 gap-1.5 p-1 bg-[#2C1B2F]/80 rounded-xl border border-[#5E3A5C]">
             <button
               type="button"
               onClick={() => setRoleTab('Student')}
               className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 roleTab === 'Student'
-                  ? 'bg-[#7C5CFC]/30 text-white border border-[#7C5CFC]'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5" />
@@ -369,8 +369,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
               onClick={() => setRoleTab('Mentor')}
               className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 roleTab === 'Mentor'
-                  ? 'bg-[#7C5CFC]/30 text-white border border-[#7C5CFC]'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -382,8 +382,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
               onClick={() => setRoleTab('HOD')}
               className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 roleTab === 'HOD'
-                  ? 'bg-[#7C5CFC]/30 text-white border border-[#7C5CFC]'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               <Building2 className="w-3.5 h-3.5" />
@@ -395,8 +395,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
               onClick={() => setRoleTab('Recruiter')}
               className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 roleTab === 'Recruiter'
-                  ? 'bg-[#7C5CFC]/30 text-white border border-[#7C5CFC]'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#5E3A5C] text-[#F3E9EC] border border-[#B47A9A]'
+                  : 'text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
@@ -419,7 +419,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
             />
             <label
               htmlFor="photoUpload"
-              className="w-20 h-20 rounded-full border-2 border-dashed border-white/20 bg-white/5 hover:border-[#7C5CFC] hover:bg-[#7C5CFC]/10 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-all relative group"
+              className="w-20 h-20 rounded-full border-2 border-dashed border-[#5E3A5C] bg-[#2C1B2F] hover:border-[#B47A9A] hover:bg-[#5E3A5C]/20 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-all relative group"
               title="Upload Profile Photo"
             >
               {photoPreview ? (
@@ -430,15 +430,15 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center text-center p-1">
-                  <Camera className="w-5 h-5 text-slate-400 group-hover:text-[#7C5CFC] transition-colors" />
-                  <span className="text-[9px] text-white/50 group-hover:text-white mt-1">Photo</span>
+                  <Camera className="w-5 h-5 text-[#B47A9A] group-hover:text-[#F3E9EC] transition-colors" />
+                  <span className="text-[9px] text-[#F3E9EC]/50 group-hover:text-[#F3E9EC] mt-1">Photo</span>
                 </div>
               )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                 <Camera className="w-4 h-4 text-white" />
               </div>
             </label>
-            <span className="text-[10px] text-white/40 mt-1.5">
+            <span className="text-[10px] text-[#F3E9EC]/50 mt-1.5">
               Click circle to upload profile photo (PNG, JPG, WebP)
             </span>
           </div>
@@ -450,35 +450,35 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                 <div className="space-y-3.5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         Full Name
                       </label>
                       <div className="relative">
-                        <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <User className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           required
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                           placeholder="e.g. Adarsh Pratap Singh"
-                          className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         Roll / Student ID
                       </label>
                       <div className="relative">
-                        <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Hash className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           required
                           value={studentRollNo}
                           onChange={(e) => setStudentRollNo(e.target.value)}
                           placeholder="e.g. 22001015001"
-                          className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                         />
                       </div>
                     </div>
@@ -486,15 +486,15 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         Academic Batch
                       </label>
                       <div className="relative">
-                        <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Calendar className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                         <select
                           value={academicYear}
                           onChange={(e) => setAcademicYear(e.target.value)}
-                          className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white outline-none cursor-pointer"
+                          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] outline-none cursor-pointer"
                         >
                           <option value="2023-27">2023-27 (4th Year / Senior)</option>
                           <option value="2024-28">2024-28 (3rd Year)</option>
@@ -505,13 +505,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         Department / Branch
                       </label>
                       <select
                         value={studentDept}
                         onChange={(e) => setStudentDept(e.target.value)}
-                        className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white outline-none cursor-pointer"
+                        className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none cursor-pointer"
                       >
                         {DEPARTMENTS.map((dept) => (
                           <option key={dept} value={dept}>
@@ -531,35 +531,35 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         University / Official Email
                       </label>
                       <div className="relative">
-                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Mail className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="email"
                           required
                           value={studentEmail}
                           onChange={(e) => setStudentEmail(e.target.value)}
                           placeholder="adarsh.pratap@mjpru.ac.in"
-                          className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                         Password
                       </label>
                       <div className="relative">
-                        <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Lock className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="password"
                           required
                           value={studentPassword}
                           onChange={(e) => setStudentPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                         />
                       </div>
                     </div>
@@ -569,35 +569,35 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                 /* Student Login Mode */
                 <div className="space-y-3.5">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                       Official University Email / Username
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="email"
                         required
                         value={studentEmail}
                         onChange={(e) => setStudentEmail(e.target.value)}
                         placeholder="adarsh.pratap@mjpru.ac.in"
-                        className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                        className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="password"
                         required
                         value={studentPassword}
                         onChange={(e) => setStudentPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                        className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                       />
                     </div>
                   </div>
@@ -609,17 +609,17 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                   />
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                       Roll Number Verification
                     </label>
                     <div className="relative">
-                      <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Hash className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={studentRollNo}
                         onChange={(e) => setStudentRollNo(e.target.value)}
                         placeholder="22001015001"
-                        className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white outline-none"
+                        className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] outline-none"
                       />
                     </div>
                   </div>
@@ -631,75 +631,75 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
           {/* 2. MENTOR PATHWAY */}
           {roleTab === 'Mentor' && (
             <div className="space-y-3.5">
-              <div className="p-3 rounded-xl bg-[#7C5CFC]/10 border border-[#7C5CFC]/20 flex items-start gap-2.5">
-                <Sparkles className="w-4 h-4 text-[#A78BFA] shrink-0 mt-0.5" />
-                <p className="text-xs text-slate-300">
-                  <strong className="text-white">Industry Mentor Capsule:</strong> Guide students via 1:1 15-minute high-impact capsules, review proof-of-work code, and sponsor micro-internships.
+              <div className="p-3 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-start gap-2.5">
+                <Sparkles className="w-4 h-4 text-[#B47A9A] shrink-0 mt-0.5" />
+                <p className="text-xs text-[#F3E9EC]/80">
+                  <strong className="text-[#F3E9EC]">Industry Mentor Capsule:</strong> Guide students via 1:1 15-minute high-impact capsules, review proof-of-work code, and sponsor micro-internships.
                 </p>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Mentor Full Name
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={mentorName}
                     onChange={(e) => setMentorName(e.target.value)}
                     placeholder="e.g. Amit Verma"
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Work Email
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
                       value={mentorEmail}
                       onChange={(e) => setMentorEmail(e.target.value)}
                       placeholder="amit.verma@tcs.com"
-                      className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="password"
                       required
                       value={mentorPassword}
                       onChange={(e) => setMentorPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Enterprise Company & Experience
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <select
                     value={mentorCompanyPreset}
                     onChange={(e) => setMentorCompanyPreset(e.target.value)}
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white outline-none cursor-pointer"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none cursor-pointer"
                   >
                     {MENTOR_COMPANIES_DATA.map((c) => (
                       <option key={c} value={c}>
@@ -712,13 +712,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                     value={customCompany}
                     onChange={(e) => setCustomCompany(e.target.value)}
                     placeholder="Or custom (e.g. Meta - 7 Yrs)"
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Technical Expertise Domains
                 </label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
@@ -731,8 +731,8 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                         onClick={() => toggleExpertise(tag)}
                         className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
                           active
-                            ? 'bg-[#7C5CFC]/30 border-[#7C5CFC] text-white font-medium'
-                            : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                            ? 'bg-[#5E3A5C] border-[#B47A9A] text-[#F3E9EC] font-medium'
+                            : 'bg-[#2C1B2F] border-[#5E3A5C] text-[#F3E9EC]/60 hover:text-[#F3E9EC]'
                         }`}
                       >
                         {tag} {active && '✓'}
@@ -747,26 +747,26 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
           {/* 3. HOD / FACULTY PATHWAY */}
           {roleTab === 'HOD' && (
             <div className="space-y-3.5">
-              <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-start gap-2.5">
-                <Building2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                <p className="text-xs text-slate-300">
-                  <strong className="text-white">Department Head (HOD) Panel:</strong> Institutional accreditation analytics, batch readiness telemetry, syllabus alignment, and placement pipeline tracking.
+              <div className="p-3 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-start gap-2.5">
+                <Building2 className="w-4 h-4 text-[#B47A9A] shrink-0 mt-0.5" />
+                <p className="text-xs text-[#F3E9EC]/80">
+                  <strong className="text-[#F3E9EC]">Department Head (HOD) Panel:</strong> Institutional accreditation analytics, batch readiness telemetry, syllabus alignment, and placement pipeline tracking.
                 </p>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   HOD / Faculty Full Name
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={hodName}
                     onChange={(e) => setHodName(e.target.value)}
                     placeholder="e.g. Dr. Arvind K. Sharma"
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                   />
                 </div>
               </div>
@@ -778,13 +778,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
               />
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Department Leadership
                 </label>
                 <select
                   value={hodDept}
                   onChange={(e) => setHodDept(e.target.value)}
-                  className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white outline-none cursor-pointer"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none cursor-pointer"
                 >
                   {DEPARTMENTS.map((dept) => (
                     <option key={dept} value={dept}>
@@ -796,35 +796,35 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Official Academic Email
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
                       value={hodEmail}
                       onChange={(e) => setHodEmail(e.target.value)}
                       placeholder="hod.csit@mjpru.ac.in"
-                      className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-4 h-4 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="password"
                       required
                       value={hodPassword}
                       onChange={(e) => setHodPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl pl-9 pr-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                     />
                   </div>
                 </div>
@@ -836,7 +836,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
           {roleTab === 'Recruiter' && (
             <div className="space-y-3.5">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Recruiter Full Name
                 </label>
                 <input
@@ -845,12 +845,12 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                   value={recruiterName}
                   onChange={(e) => setRecruiterName(e.target.value)}
                   placeholder="e.g. Priya Sharma"
-                  className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                   Hiring Organization / Company
                 </label>
                 <input
@@ -859,13 +859,13 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                   value={recruiterCompany}
                   onChange={(e) => setRecruiterCompany(e.target.value)}
                   placeholder="e.g. Google Cloud India"
-                  className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Corporate Email
                   </label>
                   <input
@@ -874,12 +874,12 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                     value={recruiterEmail}
                     onChange={(e) => setRecruiterEmail(e.target.value)}
                     placeholder="priya.sharma@google.com"
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/80 uppercase tracking-wider mb-1">
                     Password
                   </label>
                   <input
@@ -888,7 +888,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
                     value={recruiterPassword}
                     onChange={(e) => setRecruiterPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-[#1A1F3D] border border-white/10 focus:border-[#7C5CFC] rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none"
                   />
                 </div>
               </div>
@@ -900,7 +900,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4CE8] text-white font-bold text-xs tracking-wide transition-all shadow-lg shadow-[#7C5CFC]/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-xl bg-[#5E3A5C] hover:bg-[#B47A9A] text-[#F3E9EC] font-bold text-xs tracking-wide transition-all shadow-lg shadow-[#2C1B2F]/50 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>

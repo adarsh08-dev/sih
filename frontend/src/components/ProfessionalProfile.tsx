@@ -300,25 +300,25 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '-100%', opacity: 0.9 }}
               transition={{ type: 'spring', damping: 26, stiffness: 240, mass: 0.8 }}
-              className="w-screen max-w-md bg-[#0B0F2A] border-r border-white/10 shadow-2xl flex flex-col justify-between text-slate-100 pointer-events-auto"
+              className="w-screen max-w-md bg-[#0B0E1A] border-r border-[#5E3A5C]/40 shadow-2xl flex flex-col justify-between text-[#F3E9EC] pointer-events-auto font-sans"
             >
               
               {/* Scrollable Main Area */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6 sidebar-scrollbar">
                 
-                {/* Header: PROFESSIONAL PROFILE 11px tracking 1.6px #7C5CFC + badge 🔒 {p.role} */}
+                {/* Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold text-[#7C5CFC] tracking-[1.6px] uppercase">
+                    <span className="text-[11px] font-bold text-[#B47A9A] tracking-[1.6px] uppercase">
                       PROFESSIONAL PROFILE
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/6 text-white/60 font-semibold border border-white/10 flex items-center gap-1">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#2C1B2F] text-[#F3E9EC]/70 font-semibold border border-[#5E3A5C] flex items-center gap-1">
                       🔒 {p.role || currentRole}
                     </span>
                   </div>
                   <button 
                     onClick={onClose}
-                    className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-1.5 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C] text-[#F3E9EC]/60 hover:text-[#F3E9EC] border border-[#5E3A5C] transition-colors cursor-pointer"
                     title="Close"
                   >
                     <X className="w-4 h-4" />
@@ -327,9 +327,9 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
             {/* Profile Avatar Card */}
             <div className="flex flex-col items-center text-center space-y-3 pt-2">
-              {/* Avatar: 84px circle dashed border white/15 p-3px, img rounded-full object-cover + button 26px purple bottom-right */}
+              {/* Avatar */}
               <div className="relative">
-                <div className="w-[84px] h-[84px] rounded-full border-2 border-dashed border-white/15 p-[3px] flex items-center justify-center bg-white/5 shadow-inner">
+                <div className="w-[84px] h-[84px] rounded-full border-2 border-dashed border-[#5E3A5C] p-[3px] flex items-center justify-center bg-[#2C1B2F] shadow-inner">
                   {p.photo ? (
                     <img 
                       src={p.photo} 
@@ -337,7 +337,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full rounded-full bg-[#1A1F3D] flex items-center justify-center text-slate-400">
+                    <div className="w-full h-full rounded-full bg-[#00030E] flex items-center justify-center text-[#F3E9EC]/50">
                       <UserIcon className="w-9 h-9" />
                     </div>
                   )}
@@ -353,7 +353,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                 />
                 <label
                   htmlFor="profilePhotoEdit"
-                  className="absolute bottom-0 right-0 w-[26px] h-[26px] rounded-full bg-[#7C5CFC] hover:bg-[#6D4CE8] text-white flex items-center justify-center shadow-lg border-2 border-[#0B0F2A] cursor-pointer transition-all hover:scale-110 active:scale-95"
+                  className="absolute bottom-0 right-0 w-[26px] h-[26px] rounded-full bg-[#5E3A5C] hover:bg-[#B47A9A] text-[#F3E9EC] flex items-center justify-center shadow-lg border-2 border-[#0B0E1A] cursor-pointer transition-all hover:scale-110 active:scale-95"
                   title="Upload Photo"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -362,26 +362,26 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
               {/* Name & Subtitle */}
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-[#F3E9EC]">
                   {p.name || 'Adarsh Pratap Singh'}
                 </h3>
-                <p className="text-xs text-[#A78BFA] font-medium mt-0.5">
+                <p className="text-xs text-[#B47A9A] font-medium mt-0.5">
                   {getSubtitle()}
                 </p>
-                <p className="text-[11px] text-white/50 mt-0.5 truncate max-w-[320px]">
+                <p className="text-[11px] text-[#F3E9EC]/50 mt-0.5 truncate max-w-[320px]">
                   {p.college || 'Mahatma Jyotiba Phule Rohilkhand University, Bareilly'}
                 </p>
               </div>
 
-              {/* Location Row: [pulsing dot 6px #7C5CFC] [text 12px white/60 p.location] [Refresh Button 26x26] */}
+              {/* Location Row */}
               <div className="flex flex-col items-center gap-2">
                 {isManualLocation ? (
                   <div className="flex flex-col items-center gap-2 mt-1">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-[#7C5CFC]/40 shadow-md">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2C1B2F] border border-[#B47A9A]/40 shadow-md">
                       <input
                         type="text"
                         autoFocus
-                        className="bg-transparent text-xs text-white placeholder-white/40 outline-none w-48 font-medium"
+                        className="bg-transparent text-xs text-[#F3E9EC] placeholder-[#F3E9EC]/40 outline-none w-48 font-medium"
                         placeholder="e.g. Bareilly, Uttar Pradesh, India"
                         value={tempLocation}
                         onChange={(e) => setTempLocation(e.target.value)}
@@ -389,14 +389,14 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                       />
                       <button
                         onClick={() => handleManualLocationSubmit()}
-                        className="bg-[#7C5CFC] text-white p-1 rounded-full hover:bg-[#6D4AE0] transition-colors"
+                        className="bg-[#5E3A5C] text-[#F3E9EC] p-1 rounded-full hover:bg-[#B47A9A] transition-colors"
                         title="Save location"
                       >
                         <Check className="w-3 h-3" />
                       </button>
                       <button
                         onClick={() => setIsManualLocation(false)}
-                        className="text-white/40 hover:text-white px-1"
+                        className="text-[#F3E9EC]/40 hover:text-[#F3E9EC] px-1"
                         title="Cancel"
                       >
                         <X className="w-3 h-3" />
@@ -417,7 +417,7 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                           key={preset}
                           type="button"
                           onClick={() => handleManualLocationSubmit(preset)}
-                          className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 hover:bg-[#7C5CFC]/30 text-white/70 hover:text-white border border-white/10 transition-colors"
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-[#2C1B2F] hover:bg-[#5E3A5C] text-[#F3E9EC]/70 hover:text-[#F3E9EC] border border-[#5E3A5C] transition-colors"
                         >
                           {preset.split(',')[0]}
                         </button>
@@ -425,30 +425,30 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 mt-1 group">
-                    <span className={`w-1.5 h-1.5 rounded-full ${locationSuccess ? 'bg-emerald-400' : 'bg-[#7C5CFC]'} animate-pulse`} />
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2C1B2F] border border-[#5E3A5C] mt-1 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#B47A9A] animate-pulse" />
                     <span 
                       onClick={() => {
                         setTempLocation(p.location || '');
                         setIsManualLocation(true);
                       }}
-                      className="text-xs text-white/70 hover:text-white font-medium cursor-pointer transition-colors flex items-center gap-1"
+                      className="text-xs text-[#F3E9EC]/80 hover:text-[#F3E9EC] font-medium cursor-pointer transition-colors flex items-center gap-1"
                       title="Click to edit location"
                     >
                       {p.location || 'Bareilly, Uttar Pradesh, India'}
-                      <Edit2 className="w-2.5 h-2.5 opacity-0 group-hover:opacity-60 transition-opacity ml-0.5 text-white/50" />
+                      <Edit2 className="w-2.5 h-2.5 opacity-0 group-hover:opacity-60 transition-opacity ml-0.5 text-[#F3E9EC]/50" />
                     </span>
                     <button
                       type="button"
                       onClick={refreshLocation}
                       disabled={isLocationRefreshing}
-                      className="w-[26px] h-[26px] rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:bg-[#7C5CFC]/20 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
+                      className="w-[26px] h-[26px] rounded-full bg-[#0B0E1A] border border-[#5E3A5C] flex items-center justify-center text-[#F3E9EC]/50 hover:bg-[#5E3A5C] hover:text-[#F3E9EC] transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
                       title="Auto-detect Live GPS / Network Location"
                     >
                       {locationSuccess ? (
-                        <Check className="w-3 h-3 text-emerald-400" />
+                        <Check className="w-3 h-3 text-[#B47A9A]" />
                       ) : (
-                        <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#7C5CFC]' : ''}`} />
+                        <RefreshCw className={`w-3 h-3 ${isLocationRefreshing ? 'animate-spin text-[#B47A9A]' : ''}`} />
                       )}
                     </button>
                   </div>
@@ -474,28 +474,23 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
               </div>
             </div>
 
-            {/* Info Card: bg white/3 border white/5 rounded 12px p-12px space-y-10px */}
-            <div className="bg-white/3 border border-white/5 rounded-xl p-3.5 space-y-2.5 shadow-inner">
-              {/* Conditional Info Card based on role:
-                  - Student: ROLL NUMBER, EMAIL, BATCH, COLLEGE
-                  - HOD: DEPARTMENT, EMAIL, COLLEGE (NO ROLL NUMBER!)
-                  - Mentor: COMPANY, EMAIL, ROLE (NO ROLL NUMBER!)
-              */}
+            {/* Info Card */}
+            <div className="bg-[#2C1B2F] border border-[#5E3A5C] rounded-xl p-3.5 space-y-2.5 shadow-inner">
               {isStudent && (
                 <>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                    <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                       # Roll Number
                     </span>
-                    <span className="font-mono text-white font-medium">
+                    <span className="font-mono text-[#F3E9EC] font-medium">
                       {p.rollNo || '22001015001'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                    <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                       Academic Batch
                     </span>
-                    <span className="text-slate-200">
+                    <span className="text-[#F3E9EC]/80">
                       {p.year || '2025-29'}
                     </span>
                   </div>
@@ -504,10 +499,10 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
               {isHOD && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                  <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                     Department
                   </span>
-                  <span className="text-white font-medium">
+                  <span className="text-[#F3E9EC] font-medium">
                     {p.department || p.dept || 'Computer Science & IT'}
                   </span>
                 </div>
@@ -515,29 +510,29 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
               {isMentor && (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                  <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                     Company
                   </span>
-                  <span className="text-white font-medium">
+                  <span className="text-[#F3E9EC] font-medium">
                     {p.company || 'TCS Enterprise'}
                   </span>
                 </div>
               )}
 
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                   Email
                 </span>
-                <span className="text-slate-300 truncate max-w-[220px]">
+                <span className="text-[#F3E9EC]/80 truncate max-w-[220px]">
                   {p.email}
                 </span>
               </div>
 
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40 uppercase tracking-wider font-semibold text-[10px]">
+                <span className="text-[#F3E9EC]/40 uppercase tracking-wider font-semibold text-[10px]">
                   Institution / Affiliation
                 </span>
-                <span className="text-slate-300 truncate max-w-[200px] text-right">
+                <span className="text-[#F3E9EC]/80 truncate max-w-[200px] text-right">
                   {p.college || 'MJPRU Bareilly'}
                 </span>
               </div>
@@ -546,9 +541,9 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
             {/* Edit Profile Button */}
             <button
               onClick={() => setIsEditModalOpen(true)}
-              className="w-full py-2.5 px-4 rounded-xl border border-dashed border-white/20 hover:border-[#7C5CFC] hover:bg-[#7C5CFC]/10 text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl border border-dashed border-[#5E3A5C] hover:border-[#B47A9A] hover:bg-[#5E3A5C]/20 text-xs font-semibold text-[#F3E9EC]/80 hover:text-[#F3E9EC] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5 text-[#7C5CFC]" />
+              <Plus className="w-3.5 h-3.5 text-[#B47A9A]" />
               <span>+ Edit Profile / Experience</span>
             </button>
 
@@ -556,76 +551,76 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
             <div className="space-y-1.5 pt-1">
               <div 
                 onClick={() => setActiveModal('dna')}
-                className="p-3 rounded-xl bg-[#1A1F3D]/60 hover:bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/40 transition-all flex items-center justify-between cursor-pointer group"
+                className="p-3 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C]/30 border border-[#5E3A5C] hover:border-[#B47A9A] transition-all flex items-center justify-between cursor-pointer group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#5E3A5C]/40 text-[#B47A9A] flex items-center justify-center border border-[#5E3A5C]">
                     <BarChart3 className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-white">Skill DNA & Telemetry</div>
-                    <div className="text-[10px] text-white/50">Verified code design & algorithms</div>
+                    <div className="text-xs font-semibold text-[#F3E9EC]">Skill DNA & Telemetry</div>
+                    <div className="text-[10px] text-[#F3E9EC]/50">Verified code design & algorithms</div>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] border border-emerald-500/30">
+                <span className="px-2 py-0.5 rounded-full bg-[#5E3A5C]/40 text-[#B47A9A] font-bold text-[10px] border border-[#5E3A5C]">
                   84/100
                 </span>
               </div>
 
               <div 
                 onClick={() => setActiveModal('roadmap')}
-                className="p-3 rounded-xl bg-[#1A1F3D]/60 hover:bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/40 transition-all flex items-center justify-between cursor-pointer group"
+                className="p-3 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C]/30 border border-[#5E3A5C] hover:border-[#B47A9A] transition-all flex items-center justify-between cursor-pointer group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#7C5CFC]/20 text-[#A78BFA] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#5E3A5C]/40 text-[#B47A9A] flex items-center justify-center border border-[#5E3A5C]">
                     <Compass className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-white">Learning Roadmap</div>
-                    <div className="text-[10px] text-white/50">Curated milestone trajectory</div>
+                    <div className="text-xs font-semibold text-[#F3E9EC]">Learning Roadmap</div>
+                    <div className="text-[10px] text-[#F3E9EC]/50">Curated milestone trajectory</div>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white" />
+                <ChevronRight className="w-4 h-4 text-[#F3E9EC]/40 group-hover:text-[#F3E9EC]" />
               </div>
 
               <div 
                 onClick={() => setActiveModal('certifications')}
-                className="p-3 rounded-xl bg-[#1A1F3D]/60 hover:bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/40 transition-all flex items-center justify-between cursor-pointer group"
+                className="p-3 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C]/30 border border-[#5E3A5C] hover:border-[#B47A9A] transition-all flex items-center justify-between cursor-pointer group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#5E3A5C]/40 text-[#B47A9A] flex items-center justify-center border border-[#5E3A5C]">
                     <Award className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-white">Certifications & Passport</div>
-                    <div className="text-[10px] text-white/50">Verifiable blockchain credentials</div>
+                    <div className="text-xs font-semibold text-[#F3E9EC]">Certifications & Passport</div>
+                    <div className="text-[10px] text-[#F3E9EC]/50">Verifiable blockchain credentials</div>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white" />
+                <ChevronRight className="w-4 h-4 text-[#F3E9EC]/40 group-hover:text-[#F3E9EC]" />
               </div>
 
               <div 
                 onClick={() => setActiveModal('settings')}
-                className="p-3 rounded-xl bg-[#1A1F3D]/60 hover:bg-[#1A1F3D] border border-white/5 hover:border-[#7C5CFC]/40 transition-all flex items-center justify-between cursor-pointer group"
+                className="p-3 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C]/30 border border-[#5E3A5C] hover:border-[#B47A9A] transition-all flex items-center justify-between cursor-pointer group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-slate-500/20 text-slate-300 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#5E3A5C]/40 text-[#B47A9A] flex items-center justify-center border border-[#5E3A5C]">
                     <Settings className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-white">Portal Settings</div>
-                    <div className="text-[10px] text-white/50">Security, telemetry, preferences</div>
+                    <div className="text-xs font-semibold text-[#F3E9EC]">Portal Settings</div>
+                    <div className="text-[10px] text-[#F3E9EC]/50">Security, telemetry, preferences</div>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white" />
+                <ChevronRight className="w-4 h-4 text-[#F3E9EC]/40 group-hover:text-[#F3E9EC]" />
               </div>
             </div>
           </div>
 
           {/* Footer Ribbon */}
-          <div className="p-4 border-t border-white/10 bg-[#090E2B] flex items-center justify-between text-xs text-white/50">
+          <div className="p-4 border-t border-[#5E3A5C]/30 bg-[#00030E] flex items-center justify-between text-xs text-[#F3E9EC]/50">
             <span>Ladder AI</span>
-            <span className="text-[10px] text-[#7C5CFC]">v2.4.0 Live</span>
+            <span className="text-[10px] text-[#B47A9A] font-bold">v2.4.0 Live</span>
           </div>
         </motion.div>
       </div>
@@ -633,14 +628,14 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#0B0F2A] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-slate-200 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+          <div className="bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-[#F3E9EC] animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-[#5E3A5C] pb-3">
+              <h4 className="text-sm font-bold text-[#F3E9EC] flex items-center gap-2">
                 <span>Edit Profile Information</span>
               </h4>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
-                className="p-1 rounded-lg bg-white/5 text-slate-400 hover:text-white"
+                className="p-1 rounded-lg bg-[#2C1B2F] text-[#F3E9EC]/60 hover:text-[#F3E9EC]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -648,33 +643,33 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
             <form onSubmit={handleSaveEdit} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Full Name</label>
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">Full Name</label>
                 <input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                 />
               </div>
 
               {isStudent && (
                 <>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Roll Number</label>
+                    <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">Roll Number</label>
                     <input
                       type="text"
                       value={editRollNo}
                       onChange={(e) => setEditRollNo(e.target.value)}
-                      className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Academic Batch</label>
+                    <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">Academic Batch</label>
                     <input
                       type="text"
                       value={editYear}
                       onChange={(e) => setEditYear(e.target.value)}
-                      className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                      className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                     />
                   </div>
                 </>
@@ -682,33 +677,33 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
 
               {isMentor && (
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Company & Experience</label>
+                  <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">Company & Experience</label>
                   <input
                     type="text"
                     value={editCompany}
                     onChange={(e) => setEditCompany(e.target.value)}
-                    className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                    className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Department</label>
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">Department</label>
                 <input
                   type="text"
                   value={editDepartment}
                   onChange={(e) => setEditDepartment(e.target.value)}
-                  className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">University / College</label>
+                <label className="block text-[11px] font-semibold text-[#F3E9EC]/70 mb-1">University / College</label>
                 <input
                   type="text"
                   value={editCollege}
                   onChange={(e) => setEditCollege(e.target.value)}
-                  className="w-full bg-[#1A1F3D] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-[#7C5CFC]"
+                  className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] rounded-xl px-3 py-2 text-xs text-[#F3E9EC] outline-none"
                 />
               </div>
 
@@ -716,13 +711,13 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300"
+                  className="px-4 py-2 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C] text-xs font-semibold text-[#F3E9EC]/70"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#7C5CFC] hover:bg-[#6D4CE8] text-xs font-bold text-white shadow-md"
+                  className="px-4 py-2 rounded-xl bg-[#5E3A5C] hover:bg-[#B47A9A] text-xs font-bold text-[#F3E9EC] shadow-md"
                 >
                   Save Profile
                 </button>
@@ -735,48 +730,151 @@ export const ProfessionalProfile: React.FC<ProfessionalProfileProps> = ({
       {/* Sub-feature Dialogs */}
       {activeModal === 'dna' && (
         <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#0B0F2A] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-slate-200 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-emerald-400" />
+          <div className="bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-[#F3E9EC] animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-[#5E3A5C] pb-3">
+              <h4 className="text-sm font-bold text-[#F3E9EC] flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#B47A9A]" />
                 <span>Skill DNA Telemetry Analysis</span>
               </h4>
-              <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg bg-white/5 text-slate-400 hover:text-white">
+              <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg bg-[#2C1B2F] text-[#F3E9EC]/60 hover:text-[#F3E9EC]">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-3 text-xs">
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                Overall Index: <strong className="text-white text-sm">84 / 100</strong> (Top 8th Percentile)
+              <div className="p-3 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] text-[#F3E9EC]">
+                Overall Index: <strong className="text-[#B47A9A] text-sm">84 / 100</strong> (Top 8th Percentile)
               </div>
               <div className="space-y-2">
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
                     <span>Algorithmic Thinking</span>
-                    <span className="font-bold text-white">88%</span>
+                    <span className="font-bold text-[#F3E9EC]">88%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-400 rounded-full" style={{ width: '88%' }} />
+                  <div className="w-full h-1.5 bg-[#2C1B2F] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#B47A9A] rounded-full" style={{ width: '88%' }} />
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
                     <span>System Design & Architecture</span>
-                    <span className="font-bold text-white">72%</span>
+                    <span className="font-bold text-[#F3E9EC]">72%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-indigo-400 rounded-full" style={{ width: '72%' }} />
+                  <div className="w-full h-1.5 bg-[#2C1B2F] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#5E3A5C] rounded-full" style={{ width: '72%' }} />
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-[11px] mb-1">
                     <span>Code Quality & Testing</span>
-                    <span className="font-bold text-white">85%</span>
+                    <span className="font-bold text-[#F3E9EC]">85%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#7C5CFC] rounded-full" style={{ width: '85%' }} />
+                  <div className="w-full h-1.5 bg-[#2C1B2F] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#B47A9A] rounded-full" style={{ width: '85%' }} />
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'roadmap' && (
+        <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-[#F3E9EC] animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-[#5E3A5C] pb-3">
+              <h4 className="text-sm font-bold text-[#F3E9EC] flex items-center gap-2">
+                <Compass className="w-4 h-4 text-[#B47A9A]" />
+                <span>Learning Roadmap & Milestones</span>
+              </h4>
+              <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg bg-[#2C1B2F] text-[#F3E9EC]/60 hover:text-[#F3E9EC]">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2.5 text-xs">
+              <div className="p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-[#B47A9A] shrink-0" />
+                <div>
+                  <div className="font-semibold text-[#F3E9EC]">Complete 3 Verified Micro-Internships</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">Earned 12 XP · Verified on Blockchain</div>
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-[#B47A9A] shrink-0" />
+                <div>
+                  <div className="font-semibold text-[#F3E9EC]">Attend 5 Mentor Capsules</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">TCS & Google Senior Architects</div>
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-center gap-2.5 opacity-60">
+                <Clock className="w-4 h-4 text-[#B47A9A] shrink-0" />
+                <div>
+                  <div className="font-semibold text-[#F3E9EC]">Deploy Cloud-Native Distributed Microservice</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">Target: Jan 2027</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'certifications' && (
+        <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-[#F3E9EC] animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-[#5E3A5C] pb-3">
+              <h4 className="text-sm font-bold text-[#F3E9EC] flex items-center gap-2">
+                <Award className="w-4 h-4 text-[#B47A9A]" />
+                <span>Verified Certifications & Passport</span>
+              </h4>
+              <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg bg-[#2C1B2F] text-[#F3E9EC]/60 hover:text-[#F3E9EC]">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2 text-xs">
+              <div className="p-3 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-[#F3E9EC]">Express.js API Security & JWT</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">CloudSphere Systems · 94% Proof of Work</div>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-[#5E3A5C]/40 text-[#B47A9A] rounded border border-[#5E3A5C]">Minted</span>
+              </div>
+              <div className="p-3 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C] flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-[#F3E9EC]">PostgreSQL Query Optimizer Badge</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">DataCore Labs · 91% Proof of Work</div>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-[#5E3A5C]/40 text-[#B47A9A] rounded border border-[#5E3A5C]">Minted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'settings' && (
+        <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl text-[#F3E9EC] animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-[#5E3A5C] pb-3">
+              <h4 className="text-sm font-bold text-[#F3E9EC] flex items-center gap-2">
+                <Settings className="w-4 h-4 text-[#B47A9A]" />
+                <span>Portal Settings</span>
+              </h4>
+              <button onClick={() => setActiveModal(null)} className="p-1 rounded-lg bg-[#2C1B2F] text-[#F3E9EC]/60 hover:text-[#F3E9EC]">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C]">
+                <div>
+                  <div className="font-semibold text-[#F3E9EC]">High-Accuracy Geolocation</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">GPS coordinates saved for university sync</div>
+                </div>
+                <span className="text-[#B47A9A] font-bold">Enabled</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#2C1B2F] border border-[#5E3A5C]">
+                <div>
+                  <div className="font-semibold text-[#F3E9EC]">Role Guard Telemetry</div>
+                  <div className="text-[10px] text-[#F3E9EC]/50">Cryptographic role separation enabled</div>
+                </div>
+                <span className="text-[#B47A9A] font-bold">Active</span>
               </div>
             </div>
           </div>

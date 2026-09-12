@@ -747,7 +747,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
     <div ref={searchContainerRef} className="relative flex-1 min-w-0">
       {/* Search Input Container */}
       <div className="relative flex items-center">
-        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="w-3.5 h-3.5 text-[#F3E9EC]/50 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           ref={inputRef}
           type="text"
@@ -758,7 +758,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
             if (!isOpen) setIsOpen(true);
           }}
           placeholder={placeholderText}
-          className="w-full bg-[#0E1538] border border-[#1E2964] focus:border-[#7C5CFC] text-slate-200 placeholder-slate-400 text-xs rounded-xl pl-8 pr-16 py-1.5 sm:py-2 outline-none transition-all shadow-inner truncate"
+          className="w-full bg-[#2C1B2F] border border-[#5E3A5C] focus:border-[#B47A9A] text-[#F3E9EC] placeholder-[#F3E9EC]/50 text-xs rounded-xl pl-8 pr-16 py-1.5 sm:py-2 outline-none transition-all shadow-inner truncate"
         />
 
         {/* Right Badges / Shortcut / Clear button */}
@@ -769,13 +769,13 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                 setSearchQuery('');
                 inputRef.current?.focus();
               }}
-              className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1 rounded-md text-[#F3E9EC]/60 hover:text-[#F3E9EC] hover:bg-white/10 transition-colors"
               title="Clear search"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           ) : (
-            <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#141C48] border border-[#233175] text-[10px] text-slate-400 font-mono">
+            <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#0B0E1A] border border-[#5E3A5C] text-[10px] text-[#F3E9EC]/60 font-mono">
               <span className="text-[9px]">⌘</span>K
             </div>
           )}
@@ -784,24 +784,24 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
 
       {/* DROPDOWN POPOVER OVERLAY */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-[#0A0F2E] border border-[#2B3B8A] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md animate-scale-up min-w-[320px] sm:min-w-[480px] max-h-[80vh] flex flex-col">
+        <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-[#0B0E1A] border border-[#5E3A5C] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md animate-scale-up min-w-[320px] sm:min-w-[480px] max-h-[80vh] flex flex-col">
           {/* Header Bar */}
-          <div className="p-3 bg-[#0E1538] border-b border-[#1E2964] flex items-center justify-between gap-2">
+          <div className="p-3 bg-[#2C1B2F] border-b border-[#5E3A5C] flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 border ${roleInfo.bg} ${roleInfo.color}`}>
                 <RoleIcon className="w-3 h-3" />
                 <span>{roleInfo.name}</span>
               </span>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-[#F3E9EC]/70">
                 {searchQuery ? `${filteredResults.length} matches` : 'Global Omnisearch'}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 text-[10px] text-slate-400">
-              <span className="hidden sm:inline">Use <kbd className="px-1 py-0.5 rounded bg-[#141C48] text-slate-300 font-mono">↑</kbd> <kbd className="px-1 py-0.5 rounded bg-[#141C48] text-slate-300 font-mono">↓</kbd> to navigate</span>
+            <div className="flex items-center gap-2 text-[10px] text-[#F3E9EC]/60">
+              <span className="hidden sm:inline">Use <kbd className="px-1 py-0.5 rounded bg-[#0B0E1A] text-[#F3E9EC]/80 font-mono border border-[#5E3A5C]">↑</kbd> <kbd className="px-1 py-0.5 rounded bg-[#0B0E1A] text-[#F3E9EC]/80 font-mono border border-[#5E3A5C]">↓</kbd> to navigate</span>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#141C48]"
+                className="p-1 rounded-lg text-[#F3E9EC]/60 hover:text-[#F3E9EC] hover:bg-[#2C1B2F]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -810,7 +810,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
 
           {/* Category Filter Chips */}
           {searchQuery && portalCategories.length > 1 && (
-            <div className="px-3 py-2 bg-[#090E2C] border-b border-[#1A255C] flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+            <div className="px-3 py-2 bg-[#0B0E1A] border-b border-[#5E3A5C]/40 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
               {portalCategories.map(cat => {
                 const count = cat === 'All'
                   ? allPortalItems.filter(i => {
@@ -828,8 +828,8 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                       selectedCategory === cat
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-[#141C48]/60 text-slate-300 hover:bg-[#1C2760] hover:text-white border border-[#233175]'
+                        ? 'bg-[#5E3A5C] text-[#F3E9EC] shadow-sm border border-[#B47A9A]'
+                        : 'bg-[#2C1B2F] text-[#F3E9EC]/70 hover:bg-[#5E3A5C]/40 hover:text-[#F3E9EC] border border-[#5E3A5C]'
                     }`}
                   >
                     <span>{cat}</span>
@@ -841,13 +841,13 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
           )}
 
           {/* Results List / Suggested Searches */}
-          <div className="flex-1 overflow-y-auto max-h-[50vh] p-2 space-y-1 divide-y divide-[#141C48]">
+          <div className="flex-1 overflow-y-auto max-h-[50vh] p-2 space-y-1 divide-y divide-[#5E3A5C]/40">
             {searchQuery ? (
               filteredResults.length === 0 ? (
                 <div className="p-8 text-center space-y-2">
-                  <Search className="w-8 h-8 text-slate-500 mx-auto" />
-                  <p className="text-sm font-bold text-white">No matches found in {roleInfo.name}</p>
-                  <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                  <Search className="w-8 h-8 text-[#B47A9A]/50 mx-auto" />
+                  <p className="text-sm font-bold text-[#F3E9EC]">No matches found in {roleInfo.name}</p>
+                  <p className="text-xs text-[#F3E9EC]/60 max-w-xs mx-auto">
                     Try refining your keyword or explore suggested topics below.
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
@@ -855,7 +855,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(sug)}
-                        className="px-2.5 py-1 rounded-lg bg-[#141C48] hover:bg-[#1E2B68] text-xs text-indigo-300 border border-[#233175]"
+                        className="px-2.5 py-1 rounded-lg bg-[#2C1B2F] hover:bg-[#5E3A5C] text-xs text-[#B47A9A] border border-[#5E3A5C]"
                       >
                         {sug.text}
                       </button>
@@ -874,33 +874,33 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                       onMouseEnter={() => setHighlightedIndex(idx)}
                       className={`p-3 rounded-xl transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isHighlighted
-                          ? 'bg-gradient-to-r from-[#18235C] to-[#141C48] border border-indigo-500/50 shadow-md'
-                          : 'hover:bg-[#10173F] border border-transparent'
+                          ? 'bg-[#2C1B2F] border border-[#B47A9A] shadow-md'
+                          : 'hover:bg-[#2C1B2F]/60 border border-transparent'
                       }`}
                     >
                       <div className="flex items-start gap-3 min-w-0 flex-1">
-                        <div className="p-2 rounded-xl bg-[#090E2C] border border-[#1E2964] text-indigo-400 shrink-0 mt-0.5">
+                        <div className="p-2 rounded-xl bg-[#0B0E1A] border border-[#5E3A5C] text-[#B47A9A] shrink-0 mt-0.5">
                           <ItemIcon className="w-4 h-4" />
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs font-black text-white truncate">
+                            <span className="text-xs font-black text-[#F3E9EC] truncate">
                               {highlightMatch(item.title, searchQuery)}
                             </span>
 
-                            <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold uppercase tracking-wider bg-indigo-950/80 text-indigo-300 border border-indigo-700/40">
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold uppercase tracking-wider bg-[#2C1B2F] text-[#B47A9A] border border-[#5E3A5C]">
                               {item.category}
                             </span>
 
                             {item.badge && (
-                              <span className="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-950/60 text-cyan-300 border border-cyan-700/30">
+                              <span className="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-[#0B0E1A] text-[#F3E9EC]/80 border border-[#5E3A5C]">
                                 {item.badge}
                               </span>
                             )}
                           </div>
 
-                          <p className="text-[11px] text-slate-300 truncate mt-0.5">
+                          <p className="text-[11px] text-[#F3E9EC]/70 truncate mt-0.5">
                             {highlightMatch(item.subtitle, searchQuery)}
                           </p>
                         </div>
@@ -908,7 +908,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
 
                       <div className="flex items-center gap-2 shrink-0">
                         {item.tag && (
-                          <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border ${item.tagColor || 'text-indigo-300 bg-indigo-500/10 border-indigo-500/30'}`}>
+                          <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border ${item.tagColor || 'text-[#B47A9A] bg-[#2C1B2F] border-[#5E3A5C]'}`}>
                             {item.tag}
                           </span>
                         )}
@@ -916,8 +916,8 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                         <button
                           className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${
                             isHighlighted
-                              ? 'bg-indigo-600 text-white shadow'
-                              : 'bg-[#141C48] text-slate-300 hover:text-white'
+                              ? 'bg-[#5E3A5C] text-[#F3E9EC] shadow'
+                              : 'bg-[#2C1B2F] text-[#F3E9EC]/70 hover:text-[#F3E9EC]'
                           }`}
                         >
                           <span>{item.actionLabel || 'Jump'}</span>
@@ -931,8 +931,8 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
             ) : (
               /* Suggested / Popular Topics when query is empty */
               <div className="p-4 space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F3E9EC]/60 uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-[#B47A9A]" />
                   <span>Popular Searches & Quick Navigation in {roleInfo.name}</span>
                 </div>
 
@@ -941,22 +941,22 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                     <button
                       key={idx}
                       onClick={() => handleSuggestionClick(sug)}
-                      className="p-2.5 rounded-xl bg-[#0E1538] hover:bg-[#141C48] border border-[#1E2964] hover:border-indigo-500/40 text-left transition-all flex items-center justify-between group"
+                      className="p-2.5 rounded-xl bg-[#2C1B2F] hover:bg-[#5E3A5C]/40 border border-[#5E3A5C] hover:border-[#B47A9A] text-left transition-all flex items-center justify-between group"
                     >
                       <div className="min-w-0 pr-2">
-                        <div className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                        <div className="text-xs font-bold text-[#F3E9EC] group-hover:text-white truncate">
                           {sug.text}
                         </div>
-                        <div className="text-[10px] text-slate-400">{sug.category}</div>
+                        <div className="text-[10px] text-[#F3E9EC]/50">{sug.category}</div>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 transition-transform group-hover:translate-x-0.5 shrink-0" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#F3E9EC]/40 group-hover:text-[#B47A9A] transition-transform group-hover:translate-x-0.5 shrink-0" />
                     </button>
                   ))}
                 </div>
 
                 {/* Quick Portal Navigation Links */}
-                <div className="pt-2 border-t border-[#1E2964]">
-                  <div className="text-[11px] font-bold text-slate-400 mb-2">Explore Primary Modules:</div>
+                <div className="pt-2 border-t border-[#5E3A5C]/40">
+                  <div className="text-[11px] font-bold text-[#F3E9EC]/60 mb-2">Explore Primary Modules:</div>
                   <div className="flex flex-wrap gap-1.5">
                     {allPortalItems
                       .filter(i => i.category === 'Pages')
@@ -965,7 +965,7 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
                         <button
                           key={p.id}
                           onClick={() => handleItemSelect(p)}
-                          className="px-2.5 py-1 rounded-lg bg-[#090E2C] hover:bg-[#141C48] border border-[#233175] text-[11px] font-medium text-indigo-300 hover:text-white transition-colors"
+                          className="px-2.5 py-1 rounded-lg bg-[#2C1B2F] hover:bg-[#5E3A5C] border border-[#5E3A5C] text-[11px] font-medium text-[#B47A9A] hover:text-[#F3E9EC] transition-colors"
                         >
                           {p.title}
                         </button>
@@ -977,9 +977,9 @@ export const GlobalOmniSearch: React.FC<GlobalOmniSearchProps> = ({
           </div>
 
           {/* Footer Bar */}
-          <div className="p-2.5 bg-[#080C24] border-t border-[#1E2964] flex items-center justify-between text-[10px] text-slate-400 px-4">
+          <div className="p-2.5 bg-[#0B0E1A] border-t border-[#5E3A5C]/40 flex items-center justify-between text-[10px] text-[#F3E9EC]/50 px-4">
             <div className="flex items-center gap-1">
-              <span>Press <kbd className="px-1 py-0.5 rounded bg-[#141C48] text-slate-300 font-mono">↵ Enter</kbd> to select</span>
+              <span>Press <kbd className="px-1 py-0.5 rounded bg-[#2C1B2F] text-[#F3E9EC]/80 font-mono border border-[#5E3A5C]">↵ Enter</kbd> to select</span>
             </div>
             <div>
               <span>Searching real-time {roleInfo.name} database</span>
