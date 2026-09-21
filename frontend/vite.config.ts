@@ -229,7 +229,7 @@ RULES:
                 }
                 contents.push({ role: 'user', parts: [{ text: message }] });
 
-                const candidateModels = ['gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-2.0-flash'];
+                const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
                 for (const modelName of candidateModels) {
                   try {
                     const response = await ai.models.generateContent({
@@ -507,6 +507,50 @@ CREATE INDEX idx_cohort_readiness ON students(batch, career_readiness DESC);
 
         // 16. Chat API (AI Faculty Advisor)
         if (url.startsWith('/api/chat')) {
+          const body = await readBody();
+          const messages = body.messages || [];
+          const apiKey = process.env.GEMINI_API_KEY;
+
+          if (apiKey && apiKey.trim().length > 5 && messages.length > 0) {
+            try {
+              const { GoogleGenAI } = await import('@google/genai');
+              const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
+              const history = messages.slice(0, -1).map((m: any) => ({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+              }));
+              const userMessage = messages[messages.length - 1]?.text || '';
+
+              const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+              let replyText = '';
+              for (const modelName of candidateModels) {
+                try {
+                  const response = await ai.models.generateContent({
+                    model: modelName,
+                    contents: [...history, { role: 'user', parts: [{ text: userMessage }] }],
+                    config: {
+                      systemInstruction: "You are the Ladder AI Faculty Advisor for CSIT HOD Dr. Arvind Sharma. Help with student intervention, workshops, mentorship, and academic planning. Respond professionally, structured, and concisely, grounding answers in CSIT department context.",
+                      maxOutputTokens: 600
+                    }
+                  });
+                  if (response && response.text) {
+                    replyText = response.text.trim();
+                    break;
+                  }
+                } catch (mErr: any) {
+                  console.warn(`Model ${modelName} chat error:`, mErr?.message);
+                }
+              }
+
+              if (replyText) {
+                res.statusCode = 200;
+                return res.end(JSON.stringify({ reply: replyText, text: replyText }));
+              }
+            } catch (err: any) {
+              console.warn('AI chat error in dev middleware:', err.message);
+            }
+          }
+
           res.statusCode = 200;
           return res.end(JSON.stringify({
             reply: 'CSIT Academic Advisory: Curriculum aligns with industry standards. 84% student cohort on track for 2026-27 placement cycle.',

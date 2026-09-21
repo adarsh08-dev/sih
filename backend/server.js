@@ -625,7 +625,7 @@ app.post("/api/chat", async (req, res) => {
   const userMessage = messages[messages.length - 1].text;
 
   const chat = ai.chats.create({
-    model: "gemini-3.7-flash",
+    model: "gemini-2.5-flash",
     config: {
         systemInstruction: "You are an AI Faculty Advisor. Answer concisely, directly, and provide actionable advice for HODs and Faculty.",
         thinkingConfig: { thinkingLevel: 'minimal' }
@@ -1008,7 +1008,7 @@ app.post("/api/ai/helpdesk/ticket", async (req, res) => {
     const ai = getGenAiClient();
     if (ai) {
       const prompt = `A student opened a support ticket: Title: "${title}", Category: "${category}", Description: "${description}". Provide a brief 2-sentence immediate diagnosis and recommended first step.`;
-      for (const modelName of ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.0-flash"]) {
+      for (const modelName of ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"]) {
         try {
           const aiPromise = ai.models.generateContent({
             model: modelName,
@@ -1087,9 +1087,10 @@ app.use("/api", (req, res) => {
 
 /* ================= STATIC FILES & ROUTING ================= */
 const fs = require("fs");
+const rootDist = path.join(__dirname, "../dist");
 const frontendDist = path.join(__dirname, "../frontend/dist");
 const frontendPath = path.join(__dirname, "../frontend");
-const staticPath = fs.existsSync(frontendDist) ? frontendDist : frontendPath;
+const staticPath = fs.existsSync(rootDist) ? rootDist : (fs.existsSync(frontendDist) ? frontendDist : frontendPath);
 
 app.use(express.static(staticPath));
 
